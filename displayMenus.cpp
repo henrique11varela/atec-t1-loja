@@ -1,4 +1,8 @@
 #include "headerFiles/displayMenus.h"
+#include "headerFiles/efectuar_venda.h"
+#include "headerFiles/comprar_stock.h"
+#include "headerFiles/criacao_relatorios.h"
+#include "headerFiles/opcoes_cliente.h"
 
 //Display Menu 1
 bool displayMenu1()
