@@ -29,6 +29,12 @@ string Search(a, b, c, d, e, f, g) {
 string **stock; //STOCK 0-id 1-quantidade 2-nome 3-preço fabrica
 string **clientes; //CLIENTE 0-id 1-nome 2-telefone 3-morada
 string **vendas; //VENDA 0-id fatura 1-#id cliente 3-quantidade 4-valor entregue 5-data (auto)
+string **compras; //VENDA 0-id fatura 1-#id cliente 3-quantidade 4-valor entregue 5-data (auto)
+int sizeStock = 0;
+int sizeClientes = 0;
+int sizeVendas = 0;
+int sizeCompras = 0;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////Usefull
 /* search */
@@ -244,6 +250,28 @@ bool displayMainMenu()
 //////////////////////////////////////////////////////////////////////////////////////////Main
 int main()
 {
+    stock = new string*[100];
+    clientes = new string*[100];
+    vendas = new string*[100];
+    compras = new string*[100];
+    for (int i = 0; i < 100; i++)
+    {
+        stock[i] = new string[4];
+        clientes[i] = new string[4];
+        vendas[i] = new string[4];
+        compras[i] = new string[3];
+        for (int j = 0; j < 4; j++)
+        {
+            stock[i][j] = "";
+            clientes[i][j] = "";
+            vendas[i][j] = "";
+        }
+        for (int j = 0; j < 3; j++)
+        {
+            compras[i][j] = "";
+        }   
+    }
+    
     while (displayMainMenu())
     {
     };

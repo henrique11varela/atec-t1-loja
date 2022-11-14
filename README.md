@@ -1,33 +1,55 @@
 
 # atec-t1-loja
 
-A brief description of what this project does and who it's for
+Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Especialista em Tecnologias e Programação de Sistemas de Informação* que estou a tirar na ATEC.
 
+É um programa para ser utilizado numa loja para fazer a gestão de vendas, stock e clientes.
 
-## Base de dados em Matrizes
+---
+
+## Sobre o programa:
+
+### Funções principais
+
+dicionário  
+`& - pointer para tabela`
+`int - inteiro`
+`string - texto`
+
+#### Search
+`string search(string A, int B, & C, int D);`  
+>retorna o valor de C na posição D onde a posição B é igual a A.
+
+`string search(string A, int B, & C, int D, int E, & F, int G);`  
+>Junta as tabelas C e F onde C\[D] == F\[E] e retorna o valor de F\[G] onde C\[B] é A.
+
+`string *search(string A, int B, & C, int D, int E, & F, int G, bool H);`
+>Junta as tabelas C e F onde C\[D] == F\[E] e retorna todos os valores de F onde C\[B] é A.
+
+### Base de dados em Matrizes
 
 `pri - chave primaria`
 `c - composta`
 
 #### Stock
-| 0 pri | 1 | 2 | 3 |
+| *0 pri* | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| id |  quantidade | nome | preço de fabrica |
+| *id* |  quantidade | nome | preço de fabrica |
 
 #### Clientes
-| 0 pri | 1 | 2 | 3 |
+| *0 pri* | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| id |  nome | telefone | morada |
+| *id* |  nome | telefone | morada |
 
 #### Vendas
-| 0 pri | 1 | 2 | 3 |
+| *0 pri* | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| id de fatura | id cliente | valor entregue | data |
+| *id de fatura* | id cliente | valor entregue | data |
 
 #### Compras
-| 0 pri c | 1 pri c | 2 |
+| *0 pri c* | *1 pri c* | 2 |
 | :- | :- | :- |
-| id fatura | id produto | quantidade |
+| *id fatura* | *id produto* | quantidade |
 
 
 
