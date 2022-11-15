@@ -7,49 +7,49 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 
 ---
 
-## Sobre o programa:
+# Sobre o programa:
 
-### Funções principais
+## Funções principais
 
 dicionário  
 `& - pointer para tabela`
 `int - inteiro`
 `string - texto`
 
-#### Search
-`string search(string A, int B, & C, int D);`  
+### ImprovisedSQL
+`string select(string A, int B, & C, int D);`  
 >retorna o valor de C na posição D onde a posição B é igual a A.
 
-`string search(string A, int B, & C, int D, int E, & F, int G);`  
+`string joinSelect(string A, int B, & C, int D, int E, & F, int G);`  
 >Junta as tabelas C e F onde C\[D] == F\[E] e retorna o valor de F\[G] onde C\[B] é A.
 
-`string *search(string A, int B, & C, int D, int E, & F, int G, bool H);`
+`string *joinSelectArray(string A, int B, & C, int D, int E, & F, int G);`
 >Junta as tabelas C e F onde C\[D] == F\[E] e retorna todos os valores de F onde C\[B] é A.
 
 ### Base de dados em Matrizes
 
-`pri - chave primaria`
-`c - composta`
+Dicionário  
+`chave primaria`
 
 #### Stock
-| *0 pri* | 1 | 2 | 3 |
+| `0` | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| *id* |  quantidade | nome | preço de fabrica |
+| `id` |  quantidade | nome | preço de fabrica |
 
 #### Clientes
-| *0 pri* | 1 | 2 | 3 |
+| `0` | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| *id* |  nome | telefone | morada |
+| `id` |  nome | telefone | morada |
 
 #### Vendas
-| *0 pri* | 1 | 2 | 3 |
+| `0` | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| *id de fatura* | id cliente | valor entregue | data |
+| `id de fatura` | id cliente | valor entregue | data |
 
 #### Compras
-| *0 pri c* | *1 pri c* | 2 |
+| `0` | `1` | 2 |
 | :- | :- | :- |
-| *id fatura* | *id produto* | quantidade |
+| `id fatura` | `id produto` | quantidade |
 
 
 
