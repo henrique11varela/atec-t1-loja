@@ -51,6 +51,11 @@ Dicionário
 | :- | :- | :- |
 | `id fatura` | `id produto` | quantidade |
 
+#### Cart
+| `0` | 1 |
+| :- | :- |
+| `id produto` | quantidade |
 
 
 
+g++ main.cpp Source/*.cpp
