@@ -9,61 +9,117 @@ using namespace std;
 
     NOW:
         cart not working, not clearing
+        redo checkout
+
+
+    while(!(cin >> num)){
+        cout << "nao e um numero! tente novamente";
+        //limpa o erro, e o valor inserido
+        cin.clear();
+        //ignorar a mensagem de erro x vezes, neste caso 100, o que faz com que o user pode inserir ate 100 chars que nao vai dar erro
+        cin.ignore(100, '\n');
+    }
 
 */
-void debugTabelas(string **tabela, int *L, int C){
-    /*
-    for (int i = 0; i < *L; i++)
-    {
-        cout << endl
-             << "| ";
-        for (int j = 0; j < C; j++)
-        {
-            cout << tabela[i][j] << " | ";
-        }
-    }
-    cout << endl
-         << endl;
-    */
-};
-// custom cin
+
+//////////////////////////////////////////////////////////////////////////Custom display funcs
+
+/* custom cin
+only accepts and returns ints */
 int customCini(console_out *conout)
 {
     int choice;
-    cout << setposx(conout->getsize().X / 2 - 14) << setposy(conout->getsize().Y - 4) << "O----------------------------O" << endl
-         << setposx(conout->getsize().X / 2 - 14) << "|                            |" << endl
-         << setposx(conout->getsize().X / 2 - 14) << "O----------------------------O" << endl;
-    cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice;
+    cout << setposx(conout->getsize().X / 2 - 14)
+         << setposy(conout->getsize().Y - 4)
+         << "O----------------------------O"
+         << endl
+         << setposx(conout->getsize().X / 2 - 14)
+         << "|                            |"
+         << endl
+         << setposx(conout->getsize().X / 2 - 14)
+         << "O----------------------------O"
+         << endl;
+    for (int i = 0; i < conout->getsize().X; i++)
+    {
+        cout << setposx(i) << setposy(conout->getsize().Y - 1) << " ";
+    }
+
+    while (!(cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice))
+    {
+        cout << setposx(conout->getsize().X / 2 - 14)
+             << setposy(conout->getsize().Y - 3)
+             << "|                            |"
+             << endl
+             << endl
+             << setposx(conout->getsize().X / 2 - 14)
+             << settextcolor(console_text_colors::yellow)
+             << "insira um numero"
+             << settextcolor(console_text_colors::white);
+        cin.clear();
+        cin.ignore(100, '\n');
+    }
     return choice;
 };
+
+/* custom CIN 
+recieves and outputs strings */
 string customCins(console_out *conout)
 {
     string choice;
-    cout << setposx(conout->getsize().X / 2 - 14) << setposy(conout->getsize().Y - 4) << "##############################" << endl
-         << setposx(conout->getsize().X / 2 - 14) << "#                            #" << endl
-         << setposx(conout->getsize().X / 2 - 14) << "##############################" << endl;
+    cout << setposx(conout->getsize().X / 2 - 14)
+         << setposy(conout->getsize().Y - 4)
+         << "O----------------------------O"
+         << endl
+         << setposx(conout->getsize().X / 2 - 14)
+         << "|                            |"
+         << endl
+         << setposx(conout->getsize().X / 2 - 14)
+         << "O----------------------------O"
+         << endl;
     cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice;
     return choice;
 };
+
+/* custom cin
+only accepts and returns floats */
 float customCinf(console_out *conout)
 {
     float choice;
-    cout << setposx(conout->getsize().X / 2 - 14) << setposy(conout->getsize().Y - 4) << "##############################" << endl
-         << setposx(conout->getsize().X / 2 - 14) << "#                            #" << endl
-         << setposx(conout->getsize().X / 2 - 14) << "##############################" << endl;
-    cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice;
+    int Xpos = conout->getsize().X / 2 - 14;
+    cout << setposx(Xpos)
+         << setposy(conout->getsize().Y - 4)
+         << "O----------------------------O"
+         << endl
+         << setposx(Xpos)
+         << "|                            |"
+         << endl
+         << setposx(Xpos)
+         << "O----------------------------O"
+         << endl;
+    for (int i = Xpos; i < (Xpos + 30); i++)
+    {
+        cout << setposx(i) << setposy(conout->getsize().Y - 1) << " ";
+    }
+    while (!(cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice))
+    {
+        cout << setposx(conout->getsize().X / 2 - 14)
+             << setposy(conout->getsize().Y - 3)
+             << "|                            |"
+             << endl
+             << endl
+             << setposx(conout->getsize().X / 2 - 14)
+             << settextcolor(console_text_colors::yellow)
+             << "insira um numero"
+             << settextcolor(console_text_colors::white);
+        cin.clear();
+        cin.ignore(100, '\n');
+    }
     return choice;
 };
 
-void customCoutClearLine(console_out *conout)
-{
-    cout << setposx(0) << setposy(conout->getsize().Y - 6);
-    for (int i = 0; i < conout->getsize().X; i++)
-    {
-        cout << " ";
-    }
-};
-
+/* getBiggestStringSize
+string *text, int size_of_array
+returns size of biggest string in the array */
 int getBiggestStringSize(string *text, int size)
 {
     int length = 0;
@@ -77,7 +133,22 @@ int getBiggestStringSize(string *text, int size)
     return length;
 };
 
-//# improvSQL
+/* custome COUT
+console_out *conout, string text
+outputs ontop of the input box */
+void customCout(console_out *conout, string text)
+{
+    cout << setposx(0)
+         << setposy(conout->getsize().Y - 6);
+    for (int i = 0; i < conout->getsize().X; i++)
+    {
+        cout << " ";
+    }
+    cout << setposx(conout->getsize().X / 2 - text.length() / 2)
+         << text;
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////# improvSQL
 
 /* select
 string value, int index_value, **table, int index_return
@@ -203,24 +274,84 @@ int checkHighestId(string **table, int X)
     return output;
 };
 
-//# submenus
+/////////////////////////////////////////////////////////////////////////////////////Table display
+
+/* Displays Cart table
+console_out conout | string **stock | string **cart | int *sizeCart | bool left
+void*/
+void showCart(console_out *conout, string **stock, string **cart, int *sizeCart, bool left)
+{
+    if (*sizeCart != 0)
+    {
+        int biggestString[] = {0, 0};
+        for (int i = 0; i < *sizeCart; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                string item;
+                switch (j)
+                {
+                case 0:
+                    item = select(cart[i][0], 0, stock, 2);
+                    break;
+                case 1:
+                    item = cart[i][1];
+                    break;
+                }
+                if (item.length() > biggestString[j])
+                {
+                    biggestString[j] = item.length();
+                }
+            }
+        }
+        int Xpos = left ? 1 : (conout->getsize().X - (biggestString[0] + biggestString[1] + 3) - 1);
+        cout << setposx(Xpos)
+             << setposy(1)
+             << settextcolor(console_text_colors::red)
+             << ("CART")
+             << settextcolor(console_text_colors::white)
+             << endl;
+        cout << setposx(Xpos) << "O";
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + 1); i++)
+        {
+            cout << "-";
+        }
+        cout << "O" << endl;
+        for (int i = 0; i < *sizeCart; i++)
+        {
+            cout << setposx(Xpos)
+                 << "|"
+                 << select(cart[i][0], 0, stock, 2)
+                 << setposx(Xpos + biggestString[0] + 1)
+                 << "|"
+                 << cart[i][1]
+                 << "|"
+                 << endl;
+        }
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////# submenus
 //## Efectuar venda
 
-/* Selecionar produto */
+/* Selecionar produto 
+console_out *conout, string **cart, int *sizeCart
+submenu */
 void selecionarProduto(console_out *conout, string **cart, int *sizeCart)
 {
     int id, quantidade;
-    cout << setposx(conout->getsize().X / 2 - 31 / 2) << setposy(conout->getsize().Y - 6) << "O que vais querer comprar? (id)";
+    customCout(conout, "O que vais querer comprar? (id)");
     id = customCini(conout);
-    customCoutClearLine(conout);
-    cout << setposx(conout->getsize().X / 2 - 8 / 2) << setposy(conout->getsize().Y - 6) << "quanto? ";
+    customCout(conout, "quanto?");
     quantidade = customCini(conout);
-    customCoutClearLine(conout);
+    customCout(conout, "");
     cart[*sizeCart][0] = to_string(id);
     cart[*sizeCart][1] = to_string(quantidade);
     (*sizeCart)++;
 };
 
+
+/* para refazer */
 float precoTotalCart(string **stock, int *sizeStock, string **cart, int *sizeCart)
 {
     float total = 0;
@@ -271,14 +402,21 @@ void checkout(console_out *conout, string **stock, int *sizeStock, string **clie
     do
     {
         system("cls||clear");
-        cout << "CHECKOUT" << endl
+        cout << "CHECKOUT"
+             << endl
              << endl;
-        cout << "Valor sem lucro e sem IVA: " << precoAPagar << endl;
-        cout << "Valor a pagar: " << precoAPagar * 1.30 * 1.23 << endl
+        cout << "Valor sem lucro e sem IVA: "
+             << precoAPagar
+             << endl;
+        cout << "Valor a pagar: "
+             << precoAPagar * 1.30 * 1.23
+             << endl
              << endl;
 
-        cout << "1 - Pagar" << endl;
-        cout << "0 - Voltar" << endl
+        cout << "1 - Pagar"
+             << endl;
+        cout << "0 - Voltar"
+             << endl
              << endl;
         cout << ":";
         choice = customCini(conout);
@@ -302,13 +440,15 @@ void checkout(console_out *conout, string **stock, int *sizeStock, string **clie
 /* Criacao de artigo novo */
 void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
 {
-    cout << "CRIACAO DE ARTIGO NOVO" << endl
-         << endl;
+    system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 22 / 2)
+         << setposy(1)
+         << "CRIACAO DE ARTIGO NOVO";
     float preco_fabrica;
     string nome;
-    cout << "Insira o nome do artigo: ";
+    customCout(conout, "Insira o nome do artigo: ");
     nome = customCins(conout);
-    cout << "Preco base do artigo: ";
+    customCout(conout, "Preco base do artigo: ");
     preco_fabrica = customCinf(conout);
     stock[*sizeStock][0] = to_string(checkHighestId(stock, 0) + 1);
     stock[*sizeStock][1] = "0";
@@ -337,11 +477,14 @@ void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
 
 /* Alterar nome */
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////Main Menus
+
 /* Display Menu 1 EFECTUAR VENDA
 returns false when exiting menu*/
 void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    const int biggestString = 26;
+    string text[] = {"1 - Selecionar produto", "2 - Checkout", "3 - Imprimir talao no ecra", "0 - Voltar"};
+    const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
     {
@@ -349,19 +492,28 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            cout << *sizeCart << endl;
-            debugTabelas(cart, sizeCart, 2);
-
-            cout << setposx(conout->getsize().X / 2 - 14 / 2) << setposy(1) << "EFECTUAR VENDA" << endl
+            showCart(conout, stock, cart, sizeCart, false);
+            cout << setposx(conout->getsize().X / 2 - 14 / 2)
+                 << setposy(1)
+                 << "EFECTUAR VENDA"
+                 << endl
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "1 - Selecionar produto" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "2 - Checkout" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "3 - Imprimir talao no ecra" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "0 - Voltar" << endl
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[0]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - 17 / 2) << setposy(conout->getsize().Y - 6) << "Escolhe uma opcao";
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[1]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[2]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[3]
+                 << endl
+                 << endl;
+            customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
-            customCoutClearLine(conout);
+            customCout(conout, "");
         } while (choice < 0 || choice > 3);
         switch (choice)
         {
@@ -388,7 +540,8 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
 returns false when exiting menu*/
 void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    const int biggestString = 38;
+    string text[] = {"1 - Criacao de artigo novo", "2 - Adicionar stock a artigo existente", "3 - Eliminar produto", "0 - Voltar"};
+    const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
     {
@@ -396,20 +549,27 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-
-            cout << *sizeStock << endl;
-            debugTabelas(stock, sizeStock, 4);
-
-            cout << setposx(conout->getsize().X / 2 - 13 / 2) << setposy(1) << "COMPRAR STOCK" << endl
+            cout << setposx(conout->getsize().X / 2 - 13 / 2)
+                 << setposy(1)
+                 << "COMPRAR STOCK"
+                 << endl
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "1 - Criacao de artigo novo" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "2 - Adicionar stock a artigo existente" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "3 - Eliminar produto" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "0 - Voltar" << endl
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[0]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - 17 / 2) << setposy(conout->getsize().Y - 6) << "Escolhe uma opcao";
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[1]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[2]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[3]
+                 << endl
+                 << endl;
+            customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
-            customCoutClearLine(conout);
+            customCout(conout, "");
         } while (choice < 0 || choice > 3);
         switch (choice)
         {
@@ -436,7 +596,8 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
 returns false when exiting menu*/
 void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    const int biggestString = 36;
+    string text[] = {"1 - Relatorio de stock", "2 - Relatorio de vendas por produto", "3 - Relatorio total de vendas", "0 - Voltar"};
+    const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
     {
@@ -444,16 +605,27 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            cout << setposx(conout->getsize().X / 2 - 20 / 2) << setposy(1) << "CRIACAO DE RELATOROS" << endl
+            cout << setposx(conout->getsize().X / 2 - 20 / 2)
+                 << setposy(1)
+                 << "CRIACAO DE RELATOROS"
+                 << endl
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "1 - Relatorio de stock" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "2 - Relatorio de vendas por produto" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "3 - Relatorio total de vendas" << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << "0 - Voltar" << endl
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[0]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - 17 / 2) << setposy(conout->getsize().Y - 6) << "Escolhe uma opcao";
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[1]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[2]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[3]
+                 << endl
+                 << endl;
+            customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
-            customCoutClearLine(conout);
+            customCout(conout, "");
         } while (choice < 0 || choice > 3);
         switch (choice)
         {
@@ -489,16 +661,27 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            cout << setposx(conout->getsize().X / 2 - 17 / 2) << setposy(1) << "OPCOES DE CLIENTE" << endl
+            cout << setposx(conout->getsize().X / 2 - 17 / 2)
+                 << setposy(1)
+                 << "OPCOES DE CLIENTE"
+                 << endl
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[0] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[1] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[2] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[3] << endl
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[0]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - 17 / 2) << setposy(conout->getsize().Y - 6) << "Escolhe uma opcao";
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[1]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[2]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[3]
+                 << endl
+                 << endl;
+            customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
-            customCoutClearLine(conout);
+            customCout(conout, "");
         } while (choice < 0 || choice > 3);
         switch (choice)
         {
@@ -534,17 +717,30 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
         do
         {
             system("cls||clear");
-            cout << setposx(conout->getsize().X / 2 - 9 / 2) << setposy(1) << "MAIN MENU" << endl
+            cout << setposx(conout->getsize().X / 2 - 9 / 2)
+                 << setposy(1)
+                 << "MAIN MENU"
+                 << endl
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[0] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[1] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[2] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[3] << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2) << text[4] << endl
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[0]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - 17 / 2) << setposy(conout->getsize().Y - 6) << "Escolhe uma opcao";
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[1]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[2]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[3]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[4]
+                 << endl
+                 << endl;
+            customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
-            customCoutClearLine(conout);
+            customCout(conout, "");
         } while (choice < 0 || choice > 4);
         switch (choice)
         {
