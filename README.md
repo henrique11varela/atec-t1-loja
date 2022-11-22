@@ -34,7 +34,7 @@ Dicionário
 #### Stock
 | `0` | 1 | 2 | 3 |
 | :- | :- | :- | :- |
-| `id` |  quantidade | nome | preço de fabrica |
+| `id` |  nome | quantidade | preço de fabrica |
 
 #### Clientes
 | `0` | 1 | 2 | 3 |

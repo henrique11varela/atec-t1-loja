@@ -1,4 +1,6 @@
 #include "Headerfiles/conmanip.h"
+#include <sstream>
+#include <iomanip>
 
 using namespace conmanip;
 using namespace std;
@@ -10,21 +12,52 @@ using namespace std;
     NOW:
         cart not working, not clearing
         redo checkout
+        add prod not working
 
-
-    while(!(cin >> num)){
-        cout << "nao e um numero! tente novamente";
-        //limpa o erro, e o valor inserido
-        cin.clear();
-        //ignorar a mensagem de erro x vezes, neste caso 100, o que faz com que o user pode inserir ate 100 chars que nao vai dar erro
-        cin.ignore(100, '\n');
-    }
 
 */
 
+/* fills tables with default and example values */
+void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    // default values for stock
+    stock[*sizeStock][0] = to_string(*sizeStock);
+    stock[*sizeStock][1] = "Banana";
+    stock[*sizeStock][2] = "5";
+    stock[*sizeStock][3] = "0.70";
+    (*sizeStock)++;
+    stock[*sizeStock][0] = to_string(*sizeStock);
+    stock[*sizeStock][1] = "Pera";
+    stock[*sizeStock][2] = "10";
+    stock[*sizeStock][3] = "1.00";
+    (*sizeStock)++;
+    stock[*sizeStock][0] = to_string(*sizeStock);
+    stock[*sizeStock][1] = "Morango";
+    stock[*sizeStock][2] = "42";
+    stock[*sizeStock][3] = "0.50";
+    (*sizeStock)++;
+
+    // default values for clientes
+    clientes[*sizeClientes][0] = to_string(*sizeClientes);
+    clientes[*sizeClientes][1] = "Henrique";
+    clientes[*sizeClientes][2] = "935560176";
+    clientes[*sizeClientes][3] = "R. Henrique, 240";
+    (*sizeClientes)++;
+    clientes[*sizeClientes][0] = to_string(*sizeClientes);
+    clientes[*sizeClientes][1] = "Maria";
+    clientes[*sizeClientes][2] = "992485115";
+    clientes[*sizeClientes][3] = "R. Maria, 169";
+    (*sizeClientes)++;
+    clientes[*sizeClientes][0] = to_string(*sizeClientes);
+    clientes[*sizeClientes][1] = "Manuel";
+    clientes[*sizeClientes][2] = "112";
+    clientes[*sizeClientes][3] = "R. do Hospital, WeeWoo";
+    (*sizeClientes)++;
+};
+
 //////////////////////////////////////////////////////////////////////////Custom display funcs
 
-/* custom cin
+/* custom CIN
 only accepts and returns ints */
 int customCini(console_out *conout)
 {
@@ -61,7 +94,7 @@ int customCini(console_out *conout)
     return choice;
 };
 
-/* custom CIN 
+/* custom CIN
 recieves and outputs strings */
 string customCins(console_out *conout)
 {
@@ -80,7 +113,7 @@ string customCins(console_out *conout)
     return choice;
 };
 
-/* custom cin
+/* custom CIN
 only accepts and returns floats */
 float customCinf(console_out *conout)
 {
@@ -118,7 +151,6 @@ float customCinf(console_out *conout)
 };
 
 /* getBiggestStringSize
-string *text, int size_of_array
 returns size of biggest string in the array */
 int getBiggestStringSize(string *text, int size)
 {
@@ -134,7 +166,6 @@ int getBiggestStringSize(string *text, int size)
 };
 
 /* custome COUT
-console_out *conout, string text
 outputs ontop of the input box */
 void customCout(console_out *conout, string text)
 {
@@ -150,10 +181,9 @@ void customCout(console_out *conout, string text)
 
 //////////////////////////////////////////////////////////////////////////////////////////////# improvSQL
 
-/* select
-string value, int index_value, **table, int index_return
+/* selectSQL
 returns the content of the table in index_return where index_value is value*/
-string select(string value, int index_value, string **table, int index_return)
+string selectSQL(string value, int index_value, string **table, int index_return)
 {
     for (int i = 0; i < 100; i++)
     {
@@ -166,15 +196,13 @@ string select(string value, int index_value, string **table, int index_return)
 };
 
 /* joinSelect
-string value, int index_value, ** table1, int index_join1, int index_join2, **table2, int index_return
 returns the content of the table2[index_return] where table1[index_value] == value and table1[index_join1] == table2[index_join2]*/
 string joinSelect(string value, int index_value, string **table1, int index_join1, int index_join2, string **table2, int index_return)
 {
-    return select(select(value, index_value, table1, index_join1), index_join2, table2, index_return);
+    return selectSQL(selectSQL(value, index_value, table1, index_join1), index_join2, table2, index_return);
 };
 
 /* joinSelectArray
-string value, int index_value, **table1, int index_join1, int index_join2, **table2, int index_return, **table_return
 changes the contents in a temporary array table_return created before with the contents of a column of the table2[index_return] where table1[index_value] == value and table1[index_join1] == table2[index_join2]
 returns the size of the useful part of the array*/
 int joinSelectArray(string value, int index_value, string **table1, int index_join1, int index_join2, string **table2, int index_return, string *array_return)
@@ -198,7 +226,6 @@ int joinSelectArray(string value, int index_value, string **table1, int index_jo
 };
 
 /* check first empty line in table
-**table
 returns the index of the first empty line */
 int checkFirstEmptyLine(string **table)
 {
@@ -212,26 +239,32 @@ int checkFirstEmptyLine(string **table)
     return -1;
 };
 
-/* clean line from table
-string ** table, int Y
-returns true if successful, false if it failed*/
-bool cleanLine(string **table, int Y)
+/* check first line where table[Y][X] is value
+returns Y */
+int checkLineOf(string **table, int *tableSize, int X, string value)
 {
-    if (table[Y][0] != "")
+    for (int i = 0; i < 100; i++)
     {
-        for (int i = 0; i < sizeof(table[Y]) / sizeof(table[Y][0]); i++)
+        if (table[i][X] == value)
         {
-            table[Y][i] == "";
+            return i;
         }
-        return true;
     }
-    return false;
+    return -1;
+};
+
+/* clean line from table V*/
+void cleanLine(string **table, int Y, int C)
+{
+    for (int i = 0; i < C; i++)
+    {
+        table[Y][i] = "";
+    }
 };
 
 /* remove empty line in table
-**table
 returns true if successful, false if it failed*/
-bool compactTable(string **table)
+bool compactTable(string **table, int C)
 {
     int line = 0;
     while (line < 100)
@@ -242,11 +275,11 @@ bool compactTable(string **table)
         }
         else if (table[line][0] == "" && table[line + 1][0] != "")
         {
-            for (int i = 0; i < sizeof(table[line]) / sizeof(table[line][0]); i++)
+            for (int i = 0; i < C; i++)
             {
                 table[line][i] = table[line + 1][i];
             }
-            cleanLine(table, line);
+            cleanLine(table, line + 1, C);
         }
         line++;
     }
@@ -254,7 +287,6 @@ bool compactTable(string **table)
 };
 
 /* checks the highest value in a column from a table
-**table, int column
 returns the highest id from the table */
 int checkHighestId(string **table, int X)
 {
@@ -276,9 +308,69 @@ int checkHighestId(string **table, int X)
 
 /////////////////////////////////////////////////////////////////////////////////////Table display
 
-/* Displays Cart table
-console_out conout | string **stock | string **cart | int *sizeCart | bool left
-void*/
+/* Displays Stock table */
+void showStock(console_out *conout, string **stock, int *sizeStock, string **cart, bool left)
+{
+    if (*sizeStock != 0)
+    {
+        int biggestString[] = {0, 0, 0, 0};
+        for (int i = 0; i < *sizeStock; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                string item = stock[i][j];
+                if (item.length() > biggestString[j])
+                {
+                    biggestString[j] = item.length();
+                }
+            }
+        }
+        int Xpos = left ? 1 : (conout->getsize().X - (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 5) - 1);
+        cout << setposx(Xpos)
+             << setposy(1)
+             << settextcolor(console_text_colors::red)
+             << ("STOCK")
+             << settextcolor(console_text_colors::white)
+             << endl;
+        cout << setposx(Xpos) << "O";
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
+        {
+            cout << "-";
+        }
+        cout << "O" << endl;
+        for (int i = 0; i < *sizeStock; i++)
+        {
+            cout << setposx(Xpos)
+                 << "|"
+                 << stock[i][0]
+                 << setposx(Xpos + biggestString[0] + 1)
+                 << "|"
+                 << stock[i][1]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
+                 << "|"
+                 //<< (stockValue - cartValue)
+                 << stock[i][2]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3)
+                 << "|"
+                 << stock[i][3]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4)
+                 << "|"
+                 << endl;
+        }
+        cout << setposx(Xpos) << "O";
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
+        {
+            cout << "-";
+        }
+        cout << "O" << endl;
+        cout << setposx(Xpos)
+             << settextcolor(console_text_colors::light_blue)
+             << "id|name|quant|price"
+             << settextcolor(console_text_colors::white);
+    }
+};
+
+/* Displays Cart table */
 void showCart(console_out *conout, string **stock, string **cart, int *sizeCart, bool left)
 {
     if (*sizeCart != 0)
@@ -292,7 +384,7 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
                 switch (j)
                 {
                 case 0:
-                    item = select(cart[i][0], 0, stock, 2);
+                    item = selectSQL(cart[i][0], 0, stock, 1);
                     break;
                 case 1:
                     item = cart[i][1];
@@ -321,35 +413,61 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
         {
             cout << setposx(Xpos)
                  << "|"
-                 << select(cart[i][0], 0, stock, 2)
+                 << selectSQL(cart[i][0], 0, stock, 1)
                  << setposx(Xpos + biggestString[0] + 1)
                  << "|"
                  << cart[i][1]
                  << "|"
                  << endl;
         }
+        cout << setposx(Xpos) << "O";
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + 1); i++)
+        {
+            cout << "-";
+        }
+        cout << "O" << endl;
+        cout << setposx(Xpos)
+             << settextcolor(console_text_colors::light_blue)
+             << "nome|quant"
+             << settextcolor(console_text_colors::white);
     }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////# submenus
 //## Efectuar venda
 
-/* Selecionar produto 
-console_out *conout, string **cart, int *sizeCart
-submenu */
-void selecionarProduto(console_out *conout, string **cart, int *sizeCart)
+/* Selecionar produto
+submenu V*/
+void selecionarProduto(console_out *conout, string **stock, int *sizeStock, string **cart, int *sizeCart)
 {
-    int id, quantidade;
+    system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 18 / 2)
+         << setposy(1)
+         << "SELECIONAR PRODUTO";
+    showStock(conout, stock, sizeStock, cart, true);
+    showCart(conout, stock, cart, sizeCart, false);
+    int id, quantidade, quantStock;
     customCout(conout, "O que vais querer comprar? (id)");
     id = customCini(conout);
-    customCout(conout, "quanto?");
-    quantidade = customCini(conout);
+    string inCart = selectSQL(to_string(id), 0, cart, 1);
+    quantStock = stoi(selectSQL(to_string(id), 0, stock, 2)) - stoi((inCart == "") ? "0" : inCart);
+    do
+    {
+        customCout(conout, "quanto?");
+        quantidade = customCini(conout);
+    } while (quantStock < quantidade);
     customCout(conout, "");
-    cart[*sizeCart][0] = to_string(id);
-    cart[*sizeCart][1] = to_string(quantidade);
-    (*sizeCart)++;
+    if (inCart == "")
+    {
+        cart[*sizeCart][0] = to_string(id);
+        cart[*sizeCart][1] = to_string(quantidade);
+        (*sizeCart)++;
+    }
+    else
+    {
+        cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1] = to_string(stoi(cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1]) + quantidade);
+    }
 };
-
 
 /* para refazer */
 float precoTotalCart(string **stock, int *sizeStock, string **cart, int *sizeCart)
@@ -357,7 +475,7 @@ float precoTotalCart(string **stock, int *sizeStock, string **cart, int *sizeCar
     float total = 0;
     for (int i = 0; i < *sizeCart; i++)
     {
-        total += stoi(cart[i][1]) * stof(select(cart[i][0], 0, stock, 3));
+        total += stoi(cart[i][1]) * stof(selectSQL(cart[i][0], 0, stock, 3));
     }
     return total;
 };
@@ -387,14 +505,14 @@ float pagar(console_out *conout, string **vendas, int *sizeVendas, string **comp
         compras[*sizeCompras][1] = cart[i][0];
         compras[*sizeCompras][2] = cart[i][1];
         (*sizeCompras)++;
-        cleanLine(cart, i);
+        cleanLine(cart, i, 2);
     }
     *sizeCart = 0;
     return money - valor_pagar;
 };
 
 /* Checkout
-add values from cart to respective tables and delete cart*/
+add values from cart to respective tables and delete cart */
 void checkout(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     float precoAPagar = precoTotalCart(stock, sizeStock, cart, sizeCart);
@@ -451,15 +569,56 @@ void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
     customCout(conout, "Preco base do artigo: ");
     preco_fabrica = customCinf(conout);
     stock[*sizeStock][0] = to_string(checkHighestId(stock, 0) + 1);
-    stock[*sizeStock][1] = "0";
-    stock[*sizeStock][2] = nome;
-    stock[*sizeStock][3] = to_string(preco_fabrica);
+    stock[*sizeStock][1] = nome;
+    stock[*sizeStock][2] = "0";
+    stringstream ss;
+    ss << fixed << setprecision(2) << preco_fabrica;
+    stock[*sizeStock][3] = ss.str();
     (*sizeStock)++;
 };
 
 /* Adicionar stock a artigo existente */
+void adicionarStock(console_out *conout, string **cart, string **stock, int *sizeStock)
+{
+    system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 15 / 2)
+         << setposy(1)
+         << "ADICIONAR STOCK";
+    showStock(conout, stock, sizeStock, cart, true);
+    int id, quantidade;
+    do
+    {
+        customCout(conout, "Insira o id do artigo");
+        id = customCini(conout);
+    } while (checkLineOf(stock, sizeStock, 0, to_string(id)) == -1);
+    do
+    {
+        customCout(conout, "Quanto vai adicionar?");
+        quantidade = customCini(conout);
+    } while (quantidade < 0);
+
+    stock[checkLineOf(stock, sizeStock, 0, to_string(id))][2] = to_string(stoi(stock[checkLineOf(stock, sizeStock, 0, to_string(id))][2]) + quantidade);
+};
 
 /* Eliminar produto */
+void eliminarProduto(console_out *conout, string **cart, string **stock, int *sizeStock)
+{
+    system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 16 / 2)
+         << setposy(1)
+         << "ELIMINAR PRODUTO";
+    showStock(conout, stock, sizeStock, cart, true);
+    int id;
+    do
+    {
+        customCout(conout, "Insira o id do artigo");
+        id = customCini(conout);
+    } while (checkLineOf(stock, sizeStock, 0, to_string(id)) == -1);
+
+    cleanLine(stock, checkLineOf(stock, sizeStock, 0, to_string(id)), 4);
+    compactTable(stock, 4);
+    (*sizeStock)--;
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////Criação de relatorios
 
@@ -479,8 +638,7 @@ void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////Main Menus
 
-/* Display Menu 1 EFECTUAR VENDA
-returns false when exiting menu*/
+/* Display Menu 1 EFECTUAR VENDA */
 void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     string text[] = {"1 - Selecionar produto", "2 - Checkout", "3 - Imprimir talao no ecra", "0 - Voltar"};
@@ -492,6 +650,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
+            showStock(conout, stock, sizeStock, cart, true);
             showCart(conout, stock, cart, sizeCart, false);
             cout << setposx(conout->getsize().X / 2 - 14 / 2)
                  << setposy(1)
@@ -519,7 +678,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         {
         case 1:
             /* Selecionar produto */
-            selecionarProduto(conout, cart, sizeCart);
+            selecionarProduto(conout, stock, sizeStock, cart, sizeCart);
             break;
         case 2:
             /* Checkout */
@@ -536,8 +695,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
     }
 }
 
-/* Display Menu 2 COMPRAR STOCK
-returns false when exiting menu*/
+/* Display Menu 2 COMPRAR STOCK */
 void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     string text[] = {"1 - Criacao de artigo novo", "2 - Adicionar stock a artigo existente", "3 - Eliminar produto", "0 - Voltar"};
@@ -549,6 +707,7 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
+            showStock(conout, stock, sizeStock, cart, true);
             cout << setposx(conout->getsize().X / 2 - 13 / 2)
                  << setposy(1)
                  << "COMPRAR STOCK"
@@ -579,11 +738,11 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
             break;
         case 2:
             /* Adicionar stock a artigo existente */
-
+            adicionarStock(conout, cart, stock, sizeStock);
             break;
         case 3:
             /* Eliminar produto */
-
+            eliminarProduto(conout, cart, stock, sizeStock);
             break;
         default:
             repetition = false;
@@ -592,8 +751,7 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
     }
 }
 
-/* Display Menu 3 CRIACAO DE RELATOROS
-returns false when exiting menu*/
+/* Display Menu 3 CRIACAO DE RELATOROS */
 void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     string text[] = {"1 - Relatorio de stock", "2 - Relatorio de vendas por produto", "3 - Relatorio total de vendas", "0 - Voltar"};
@@ -648,8 +806,7 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
     }
 }
 
-/* Display Menu 4 OPCOES DE CLIENTE
-returns false when exiting menu*/
+/* Display Menu 4 OPCOES DE CLIENTE */
 void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     string text[] = {"1 - Criar cliente", "2 - Eliminar cliente", "3 - Alterar nome", "0 - Voltar"};
@@ -704,11 +861,10 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
     }
 }
 
-/* Display Main Menu
-returns false when exiting menu*/
+/* Display Main Menu */
 void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - gestao de clientes", "0 - Sair"};
+    string text[5] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - gestao de clientes", "0 - Sair"};
     const int biggestString = getBiggestStringSize(text, 5);
     bool repetition = true;
     while (repetition)
@@ -809,7 +965,19 @@ int main()
             cart[i][j] = "";
         }
     }
-
+    defaultValues(stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras, cart, &sizeCart);
+    system("cls||clear");
+    cout << setposx(conout.getsize().X / 2 - 10 / 2)
+         << setposy(9)
+         << "WELCOME TO"
+         << endl
+         << setposx(conout.getsize().X / 2 - 10 / 2)
+         << "FRUIT INC."
+         << endl
+         << endl
+         << setposx(conout.getsize().X / 2 - 12 / 2)
+         << "press enter...";
+    cin.ignore();
     displayMainMenu(&conout, stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras, cart, &sizeCart);
     system("cls||clear");
     return 0;
