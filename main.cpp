@@ -5,17 +5,20 @@
 using namespace conmanip;
 using namespace std;
 
-/*/////////////////////////////////////////////////////////////////////////////////TO DO
-    IN THE END:
-        clean unused parameters in display funcs
-
-    NOW:
-        cart not working, not clearing
-        redo checkout
-        add prod not working
-
-
+/*////TO DO
+to learn inicio do main
+https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
+// TODO: 
+// TODO: Criar cliente 
+// TODO: Eliminar cliente 
+// TODO: Alterar nome 
+// TODO: redo checkout
+// TODO: Imprimir talao no ecra
+// TODO: Relatorio de stock 
+// TODO: Relatorio de vendas por produto 
+// TODO: Relatorio total de vendas 
+// TODO: clean unused parameters in display funcs
 
 /* fills tables with default and example values */
 void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
@@ -55,7 +58,7 @@ void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeC
     (*sizeClientes)++;
 };
 
-//////////////////////////////////////////////////////////////////////////Custom display funcs
+// ! Custom display funcs
 
 /* custom CIN
 only accepts and returns ints */
@@ -165,7 +168,7 @@ int getBiggestStringSize(string *text, int size)
     return length;
 };
 
-/* custome COUT
+/* custom COUT
 outputs ontop of the input box */
 void customCout(console_out *conout, string text)
 {
@@ -179,7 +182,7 @@ void customCout(console_out *conout, string text)
          << text;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////# improvSQL
+// ! improvSQL
 
 /* selectSQL
 returns the content of the table in index_return where index_value is value*/
@@ -306,7 +309,7 @@ int checkHighestId(string **table, int X)
     return output;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////Table display
+// ! Table display
 
 /* Displays Stock table */
 void showStock(console_out *conout, string **stock, int *sizeStock, string **cart, bool left)
@@ -348,7 +351,6 @@ void showStock(console_out *conout, string **stock, int *sizeStock, string **car
                  << stock[i][1]
                  << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
                  << "|"
-                 //<< (stockValue - cartValue)
                  << stock[i][2]
                  << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3)
                  << "|"
@@ -433,7 +435,7 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////# submenus
+// !  submenus
 //## Efectuar venda
 
 /* Selecionar produto
@@ -480,37 +482,7 @@ float precoTotalCart(string **stock, int *sizeStock, string **cart, int *sizeCar
     return total;
 };
 
-float pagar(console_out *conout, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart, float valor_pagar)
-{
-    float money;
-    int numCliente;
-    do
-    {
-        system("cls||clear");
-        cout << "Insira o dinheiro: ";
-        money = customCinf(conout);
-    } while (money < valor_pagar);
-
-    cout << "Insira numero de cliente: ";
-    numCliente = customCini(conout);
-    int id_fatura = checkHighestId(vendas, 0) + 1;
-    vendas[*sizeVendas][0] = to_string(id_fatura);
-    vendas[*sizeVendas][1] = to_string(numCliente);
-    vendas[*sizeVendas][2] = to_string(money);
-    // vendas[*sizeVendas][2] = to_string(data);
-    (*sizeVendas)++;
-    for (int i = 0; i < *sizeCart; i++)
-    {
-        compras[*sizeCompras][0] = to_string(id_fatura);
-        compras[*sizeCompras][1] = cart[i][0];
-        compras[*sizeCompras][2] = cart[i][1];
-        (*sizeCompras)++;
-        cleanLine(cart, i, 2);
-    }
-    *sizeCart = 0;
-    return money - valor_pagar;
-};
-
+// TODO:
 /* Checkout
 add values from cart to respective tables and delete cart */
 void checkout(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
@@ -543,7 +515,7 @@ void checkout(console_out *conout, string **stock, int *sizeStock, string **clie
     {
     case 1:
         /* Selecionar produto */
-        pagar(conout, vendas, sizeVendas, cart, sizeCart, compras, sizeCompras, precoAPagar);
+        //pagar(conout, vendas, sizeVendas, cart, sizeCart, compras, sizeCompras, precoAPagar);
         break;
     default:
 
@@ -551,9 +523,10 @@ void checkout(console_out *conout, string **stock, int *sizeStock, string **clie
     }
 };
 
+// TODO:
 /* Imprimir talao no ecra */
 
-//////////////////////////////////////////////////////////////////////////////////////Comprar Stock
+// ! Comprar Stock
 
 /* Criacao de artigo novo */
 void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
@@ -620,23 +593,29 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
     (*sizeStock)--;
 };
 
-///////////////////////////////////////////////////////////////////////////////////////Criação de relatorios
+// ! Criação de relatorios
 
+// TODO:
 /* Relatorio de stock */
 
+// TODO:
 /* Relatorio de vendas por produto */
 
+// TODO:
 /* Relatorio total de vendas */
 
-////////////////////////////////////////////////////////////////////////////////////////Opçoes de cliente
+// ! Opçoes de cliente
 
+// TODO:
 /* Criar cliente */
 
+// TODO:
 /* Eliminar cliente */
 
+// TODO:
 /* Alterar nome */
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////Main Menus
+// ! Main Menus
 
 /* Display Menu 1 EFECTUAR VENDA */
 void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
@@ -923,9 +902,67 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////Main
+// ! Useless Flavor
+
+/* Displays an apple on screen */
+void apple(console_out conout, int xr, int yr)
+{
+    int x = xr - 18; 
+    cout << setposy(yr)
+         << setposx(x +29) << settextcolor(console_text_colors::green) <<"___\n"
+         << setposx(x + 26) << "_/`.-'`.\n"
+         << setposx(x + 16) << settextcolor(console_text_colors::yellow)<<"_"<< setposx(x + 24) << settextcolor(console_text_colors::green)<<"_/` .  _.'\n"<< settextcolor(console_text_colors::red)
+         << setposx(x + 7) << "..:::::."<< settextcolor(console_text_colors::yellow)<<"(_)   " << settextcolor(console_text_colors::green)<<"/` _.'_./\n"<< settextcolor(console_text_colors::red)
+         << setposx(x + 5) << ".oooooooooo"<< settextcolor(console_text_colors::yellow)<<"\\ \\"<< settextcolor(console_text_colors::red)<<"o" << settextcolor(console_text_colors::green)<<"/.-'__.'"<< settextcolor(console_text_colors::red)<<"o.\n"<< settextcolor(console_text_colors::red)
+         << setposx(x + 4) << ".ooooooooo`._"<< settextcolor(console_text_colors::yellow)<<"\\_|" << settextcolor(console_text_colors::green)<<"_.'`" << settextcolor(console_text_colors::red)<<"oooooob.\n"
+         << setposx(x + 2) << ".ooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&&"<< settextcolor(console_text_colors::red)<<"oooooob.\n"
+         << setposx(x + 1) << ".oooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@@@@"<< settextcolor(console_text_colors::red)<<"oooob.\n"
+         << setposx(x) << ".ooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&&@@@@@"<< settextcolor(console_text_colors::red)<<"ooob.\n"
+         << setposx(x) << "doooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@@"<< settextcolor(console_text_colors::red)<<"ooob\n"
+         << setposx(x) << "doooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@"<< settextcolor(console_text_colors::red)<<"oooob\n"
+         << setposx(x) << "dooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@"<< settextcolor(console_text_colors::red)<<"ooooob\n"
+         << setposx(x) << "dooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@"<< settextcolor(console_text_colors::red)<<"oooooob\n"
+         << setposx(x) << "`dooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@"<< settextcolor(console_text_colors::red)<<"ooooob'\n"
+         << setposx(x + 1) << "`doooooooooooooooooooooooooooooob'\n"
+         << setposx(x + 2) << "`doooooooooooooooooooooooooooob'\n"
+         << setposx(x + 3) << "`doooooooooooooooooooooooooob'\n"
+         << setposx(x + 4) << "`doooooooooooooooooooooooob'\n"
+         << setposx(x + 5) << "`doooooooooooooooooooooob'\n"
+         << setposx(x + 6) << "`dooooooooobodoooooooob'\n"
+         << setposx(x + 7) << "`doooooooob dooooooob'\n"
+         << setposx(x + 8) << "`\"\"\"\"\"\"\"' `\"\"\"\"\"\"'\"\n";
+};
+
+// ! Main
+
 int main()
 {
+    // get handle to the console window
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    // retrieve screen buffer info
+    CONSOLE_SCREEN_BUFFER_INFO scrBufferInfo;
+    GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
+    // current window size
+    short winWidth = scrBufferInfo.srWindow.Right - scrBufferInfo.srWindow.Left + 1;
+    short winHeight = scrBufferInfo.srWindow.Bottom - scrBufferInfo.srWindow.Top + 1;
+    // current screen buffer size
+    short scrBufferWidth = scrBufferInfo.dwSize.X;
+    short scrBufferHeight = scrBufferInfo.dwSize.Y;
+    // to remove the scrollbar, make sure the window height matches the screen buffer height
+    COORD newSize;
+    newSize.X = scrBufferWidth;
+    newSize.Y = winHeight;
+    // set the new screen buffer dimensions
+    int Status = SetConsoleScreenBufferSize(hOut, newSize);
+    if (Status == 0)
+    {
+        cout << "SetConsoleScreenBufferSize() failed! Reason : " << GetLastError() << endl;
+        exit(Status);
+    }
+    // print the current screen buffer dimensions
+    GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
+    cout << "Screen Buffer Size : " << scrBufferInfo.dwSize.X << " x " << scrBufferInfo.dwSize.Y << endl;
+
     console_out_context ctxout;
     console_out conout(ctxout);
     conout.settitle("ATEC LOJA");
@@ -980,5 +1017,21 @@ int main()
     cin.ignore();
     displayMainMenu(&conout, stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras, cart, &sizeCart);
     system("cls||clear");
+    apple(conout, conout.getsize().X / 2, 3);
+    cout << setposx(conout.getsize().X / 2 - 7 / 2)
+         << setposy(12)
+         << "Made by"
+         << endl
+         << setposx(conout.getsize().X / 2 - 22 / 2)
+         << "Henrique Varela Vieira"
+         << endl
+         << setposx(conout.getsize().X / 2 - 8 / 2)
+         << "T0123178"
+         << endl
+         << endl
+         << setposx(conout.getsize().X / 2 - 12 / 2)
+         << "press enter...";
+    cin.ignore();
+    cin.ignore();
     return 0;
 }
