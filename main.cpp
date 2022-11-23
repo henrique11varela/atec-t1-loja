@@ -435,8 +435,9 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
     }
 };
 
-// !  submenus
-//## Efectuar venda
+// ! Submenus
+
+// ! Efectuar venda
 
 /* Selecionar produto
 submenu V*/
