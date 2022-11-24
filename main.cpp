@@ -10,10 +10,6 @@ to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
 // TODO:
-// TODO: Criar cliente
-// TODO: Show cliente
-// TODO: Eliminar cliente
-// TODO: Alterar nome
 // TODO: redo checkout
 // TODO: Imprimir talao no ecra
 // TODO: Relatorio de stock
@@ -316,7 +312,8 @@ int checkHighestId(string **table, int X)
 
 // ! Table display
 
-/* Displays Clientes table */
+/* Displays Clientes table
+displays left if left == true, else displays centered*/
 void showClientes(console_out *conout, string **clientes, int *sizeClientes, bool left)
 {
     if (*sizeClientes != 0)
@@ -672,9 +669,31 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
 /* Relatorio total de vendas */
 
 // ! Opçoes de cliente
-/* introdução dos valores de novo cliente */
-void clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
+/* introdução dos valores de novo cliente
+returns id*/
+int clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
 {
+    string nome, telefone, morada;
+    customCout(conout, "Insira o nome:");
+    nome = customCins(conout);
+    customCout(conout, "Insira o numero de telefone:");
+    telefone = customCins(conout);
+    customCout(conout, "Insira a morada:");
+    morada = customCins(conout);
+    clientes[*sizeClientes][0] = to_string(checkHighestId(clientes, 0) + 1);
+    clientes[*sizeClientes][1] = nome;
+    clientes[*sizeClientes][2] = telefone;
+    clientes[*sizeClientes][3] = morada;
+    (*sizeClientes)++;
+    return stoi(clientes[(*sizeClientes) - 1][0]);
+};
+
+/* Criar cliente */
+void criarCliente(console_out *conout, string **clientes, int *sizeClientes)
+{
+    system("cls||clear");
+    showClientes(conout, clientes, sizeClientes, false);
+
     string nome, telefone, morada;
     customCout(conout, "Insira o nome:");
     nome = customCins(conout);
@@ -689,20 +708,44 @@ void clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
     (*sizeClientes)++;
 };
 
-// TODO:
-/* Criar cliente */
-void criarCliente(console_out *conout, string **clientes, int *sizeClientes)
+/* Eliminar cliente */
+void eliminarCliente(console_out *conout, string **clientes, int *sizeClientes)
 {
     system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 16 / 2)
+         << setposy(1)
+         << "ELIMINAR CLIENTE";
     showClientes(conout, clientes, sizeClientes, false);
-    clienteNovo(conout, clientes, sizeClientes);
+    int id;
+    do
+    {
+        customCout(conout, "Insira o numero de cliente");
+        id = customCini(conout);
+    } while (checkLineOf(clientes, sizeClientes, 0, to_string(id)) == -1);
+
+    cleanLine(clientes, checkLineOf(clientes, sizeClientes, 0, to_string(id)), 4);
+    compactTable(clientes, 4);
+    (*sizeClientes)--;
 };
 
 // TODO:
-/* Eliminar cliente */
-
-// TODO:
 /* Alterar nome */
+void alerarNomeCliente(console_out *conout, string **clientes, int *sizeClientes)
+{
+    system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 23 / 2)
+         << setposy(1)
+         << "ALTERAR NOME DO CLIENTE";
+    showClientes(conout, clientes, sizeClientes, false);
+    int id;
+    do
+    {
+        customCout(conout, "Insira o numero de cliente");
+        id = customCini(conout);
+    } while (checkLineOf(clientes, sizeClientes, 0, to_string(id)) == -1);
+    customCout(conout, "Insira o novo nome");
+    clientes[checkLineOf(clientes, sizeClientes, 0, to_string(id))][1] = customCins(conout);
+};
 
 // ! Main Menus
 
@@ -917,11 +960,11 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
             break;
         case 2:
             /* Eliminar cliente */
-
+            eliminarCliente(conout, clientes, sizeClientes);
             break;
         case 3:
             /* Alterar nome */
-
+            alerarNomeCliente(conout, clientes, sizeClientes);
             break;
         default:
             repetition = false;
@@ -1063,7 +1106,7 @@ int main()
     int consoleYsize = conout.getsize().Y;
 
     // vec[item][atributo]
-    string **stock = new string *[100];    // STOCK 0-id 1-quantidade 2-nome 3-preço_fabrica
+    string **stock = new string *[100];    // STOCK 0-id 1-nome 2-quantidade 3-preço_fabrica
     string **clientes = new string *[100]; // CLIENTE 0-id 1-nome 2-telefone 3-morada
     string **vendas = new string *[100];   // VENDA 0-id_fatura 1-#id_cliente 3-quantidade 4-valor_entregue 5-data_(auto)
     string **compras = new string *[100];  // COMPRAS 0-#id_fatura 1-#id_produto 2-quantidade
@@ -1108,7 +1151,9 @@ int main()
          << setposx(conout.getsize().X / 2 - 12 / 2)
          << "press enter...";
     cin.ignore();
+
     displayMainMenu(&conout, stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras, cart, &sizeCart);
+
     system("cls||clear");
     apple(conout, conout.getsize().X / 2, 3);
     cout << setposx(conout.getsize().X / 2 - 7 / 2)
@@ -1126,5 +1171,6 @@ int main()
          << "press enter...";
     cin.ignore();
     cin.ignore();
+    system("cls||clear");
     return 0;
 }
