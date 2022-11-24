@@ -9,15 +9,16 @@ using namespace std;
 to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
-// TODO: 
-// TODO: Criar cliente 
-// TODO: Eliminar cliente 
-// TODO: Alterar nome 
+// TODO:
+// TODO: Criar cliente
+// TODO: Show cliente
+// TODO: Eliminar cliente
+// TODO: Alterar nome
 // TODO: redo checkout
 // TODO: Imprimir talao no ecra
-// TODO: Relatorio de stock 
-// TODO: Relatorio de vendas por produto 
-// TODO: Relatorio total de vendas 
+// TODO: Relatorio de stock
+// TODO: Relatorio de vendas por produto
+// TODO: Relatorio total de vendas
 // TODO: clean unused parameters in display funcs
 
 /* fills tables with default and example values */
@@ -58,7 +59,7 @@ void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeC
     (*sizeClientes)++;
 };
 
-// ! Custom display funcs
+// ! Custom io funcs
 
 /* custom CIN
 only accepts and returns ints */
@@ -101,6 +102,7 @@ int customCini(console_out *conout)
 recieves and outputs strings */
 string customCins(console_out *conout)
 {
+    char first;
     string choice;
     cout << setposx(conout->getsize().X / 2 - 14)
          << setposy(conout->getsize().Y - 4)
@@ -112,8 +114,11 @@ string customCins(console_out *conout)
          << setposx(conout->getsize().X / 2 - 14)
          << "O----------------------------O"
          << endl;
-    cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice;
-    return choice;
+    conout->setposx(conout->getsize().X / 2 - 12);
+    conout->setposy(conout->getsize().Y - 3);
+    cin >> first;
+    getline(cin, choice);
+    return first + choice;
 };
 
 /* custom CIN
@@ -310,6 +315,67 @@ int checkHighestId(string **table, int X)
 };
 
 // ! Table display
+
+/* Displays Clientes table */
+void showClientes(console_out *conout, string **clientes, int *sizeClientes, bool left)
+{
+    if (*sizeClientes != 0)
+    {
+        int biggestString[] = {0, 0, 0, 0};
+        for (int i = 0; i < *sizeClientes; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                string item = clientes[i][j];
+                if (item.length() > biggestString[j])
+                {
+                    biggestString[j] = item.length();
+                }
+            }
+        }
+        int Xpos = left ? 1 : (conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 5) / 2);
+        cout << setposx(Xpos)
+             << setposy(1)
+             << settextcolor(console_text_colors::red)
+             << ("CLIENTES")
+             << settextcolor(console_text_colors::white)
+             << endl;
+        cout << setposx(Xpos) << "O";
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
+        {
+            cout << "-";
+        }
+        cout << "O" << endl;
+        for (int i = 0; i < *sizeClientes; i++)
+        {
+            cout << setposx(Xpos)
+                 << "|"
+                 << clientes[i][0]
+                 << setposx(Xpos + biggestString[0] + 1)
+                 << "|"
+                 << clientes[i][1]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
+                 << "|"
+                 << clientes[i][2]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3)
+                 << "|"
+                 << clientes[i][3]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4)
+                 << "|"
+                 << endl;
+        }
+        cout << setposx(Xpos) << "O";
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
+        {
+            cout << "-";
+        }
+        cout << "O" << endl;
+        cout << setposx(Xpos)
+             << settextcolor(console_text_colors::light_blue)
+             << "id|name|phone|address"
+             << settextcolor(console_text_colors::white);
+    }
+};
 
 /* Displays Stock table */
 void showStock(console_out *conout, string **stock, int *sizeStock, string **cart, bool left)
@@ -516,7 +582,7 @@ void checkout(console_out *conout, string **stock, int *sizeStock, string **clie
     {
     case 1:
         /* Selecionar produto */
-        //pagar(conout, vendas, sizeVendas, cart, sizeCart, compras, sizeCompras, precoAPagar);
+        // pagar(conout, vendas, sizeVendas, cart, sizeCart, compras, sizeCompras, precoAPagar);
         break;
     default:
 
@@ -606,9 +672,31 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
 /* Relatorio total de vendas */
 
 // ! Opçoes de cliente
+/* introdução dos valores de novo cliente */
+void clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
+{
+    string nome, telefone, morada;
+    customCout(conout, "Insira o nome:");
+    nome = customCins(conout);
+    customCout(conout, "Insira o numero de telefone:");
+    telefone = customCins(conout);
+    customCout(conout, "Insira a morada:");
+    morada = customCins(conout);
+    clientes[*sizeClientes][0] = to_string(checkHighestId(clientes, 0) + 1);
+    clientes[*sizeClientes][1] = nome;
+    clientes[*sizeClientes][2] = telefone;
+    clientes[*sizeClientes][3] = morada;
+    (*sizeClientes)++;
+};
 
 // TODO:
 /* Criar cliente */
+void criarCliente(console_out *conout, string **clientes, int *sizeClientes)
+{
+    system("cls||clear");
+    showClientes(conout, clientes, sizeClientes, false);
+    clienteNovo(conout, clientes, sizeClientes);
+};
 
 // TODO:
 /* Eliminar cliente */
@@ -798,21 +886,22 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            cout << setposx(conout->getsize().X / 2 - 17 / 2)
+            showClientes(conout, clientes, sizeClientes, true);
+            cout << setposx((conout->getsize().X / 4) * 3 - 17 / 2)
                  << setposy(1)
                  << "OPCOES DE CLIENTE"
                  << endl
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+            cout << setposx((conout->getsize().X / 4) * 3 - biggestString / 2)
                  << text[0]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+            cout << setposx((conout->getsize().X / 4) * 3 - biggestString / 2)
                  << text[1]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+            cout << setposx((conout->getsize().X / 4) * 3 - biggestString / 2)
                  << text[2]
                  << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+            cout << setposx((conout->getsize().X / 4) * 3 - biggestString / 2)
                  << text[3]
                  << endl
                  << endl;
@@ -824,7 +913,7 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
         {
         case 1:
             /* Criar cliente */
-
+            criarCliente(conout, clientes, sizeClientes);
             break;
         case 2:
             /* Eliminar cliente */
@@ -908,22 +997,25 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
 /* Displays an apple on screen */
 void apple(console_out conout, int xr, int yr)
 {
-    int x = xr - 18; 
+    int x = xr - 18;
     cout << setposy(yr)
-         << setposx(x +29) << settextcolor(console_text_colors::green) <<"___\n"
+         << setposx(x + 29) << settextcolor(console_text_colors::green) << "___\n"
          << setposx(x + 26) << "_/`.-'`.\n"
-         << setposx(x + 16) << settextcolor(console_text_colors::yellow)<<"_"<< setposx(x + 24) << settextcolor(console_text_colors::green)<<"_/` .  _.'\n"<< settextcolor(console_text_colors::red)
-         << setposx(x + 7) << "..:::::."<< settextcolor(console_text_colors::yellow)<<"(_)   " << settextcolor(console_text_colors::green)<<"/` _.'_./\n"<< settextcolor(console_text_colors::red)
-         << setposx(x + 5) << ".oooooooooo"<< settextcolor(console_text_colors::yellow)<<"\\ \\"<< settextcolor(console_text_colors::red)<<"o" << settextcolor(console_text_colors::green)<<"/.-'__.'"<< settextcolor(console_text_colors::red)<<"o.\n"<< settextcolor(console_text_colors::red)
-         << setposx(x + 4) << ".ooooooooo`._"<< settextcolor(console_text_colors::yellow)<<"\\_|" << settextcolor(console_text_colors::green)<<"_.'`" << settextcolor(console_text_colors::red)<<"oooooob.\n"
-         << setposx(x + 2) << ".ooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&&"<< settextcolor(console_text_colors::red)<<"oooooob.\n"
-         << setposx(x + 1) << ".oooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@@@@"<< settextcolor(console_text_colors::red)<<"oooob.\n"
-         << setposx(x) << ".ooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&&@@@@@"<< settextcolor(console_text_colors::red)<<"ooob.\n"
-         << setposx(x) << "doooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@@"<< settextcolor(console_text_colors::red)<<"ooob\n"
-         << setposx(x) << "doooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@"<< settextcolor(console_text_colors::red)<<"oooob\n"
-         << setposx(x) << "dooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@@"<< settextcolor(console_text_colors::red)<<"ooooob\n"
-         << setposx(x) << "dooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@@"<< settextcolor(console_text_colors::red)<<"oooooob\n"
-         << setposx(x) << "`dooooooooooooooooooooooooo"<< settextcolor(console_text_colors::light_red)<<"&@"<< settextcolor(console_text_colors::red)<<"ooooob'\n"
+         << setposx(x + 16) << settextcolor(console_text_colors::yellow) << "_" << setposx(x + 24) << settextcolor(console_text_colors::green) << "_/` .  _.'\n"
+         << settextcolor(console_text_colors::red)
+         << setposx(x + 7) << "..:::::." << settextcolor(console_text_colors::yellow) << "(_)   " << settextcolor(console_text_colors::green) << "/` _.'_./\n"
+         << settextcolor(console_text_colors::red)
+         << setposx(x + 5) << ".oooooooooo" << settextcolor(console_text_colors::yellow) << "\\ \\" << settextcolor(console_text_colors::red) << "o" << settextcolor(console_text_colors::green) << "/.-'__.'" << settextcolor(console_text_colors::red) << "o.\n"
+         << settextcolor(console_text_colors::red)
+         << setposx(x + 4) << ".ooooooooo`._" << settextcolor(console_text_colors::yellow) << "\\_|" << settextcolor(console_text_colors::green) << "_.'`" << settextcolor(console_text_colors::red) << "oooooob.\n"
+         << setposx(x + 2) << ".ooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&&" << settextcolor(console_text_colors::red) << "oooooob.\n"
+         << setposx(x + 1) << ".oooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&@@@@@@" << settextcolor(console_text_colors::red) << "oooob.\n"
+         << setposx(x) << ".ooooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&&@@@@@" << settextcolor(console_text_colors::red) << "ooob.\n"
+         << setposx(x) << "doooooooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&@@@@" << settextcolor(console_text_colors::red) << "ooob\n"
+         << setposx(x) << "doooooooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&@@@" << settextcolor(console_text_colors::red) << "oooob\n"
+         << setposx(x) << "dooooooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&@@@" << settextcolor(console_text_colors::red) << "ooooob\n"
+         << setposx(x) << "dooooooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&@@" << settextcolor(console_text_colors::red) << "oooooob\n"
+         << setposx(x) << "`dooooooooooooooooooooooooo" << settextcolor(console_text_colors::light_red) << "&@" << settextcolor(console_text_colors::red) << "ooooob'\n"
          << setposx(x + 1) << "`doooooooooooooooooooooooooooooob'\n"
          << setposx(x + 2) << "`doooooooooooooooooooooooooooob'\n"
          << setposx(x + 3) << "`doooooooooooooooooooooooooob'\n"
