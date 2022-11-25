@@ -59,3 +59,25 @@ Dicionário
 
 
 g++ main.cpp Source/*.cpp
+
+
+ ------------------- 
+|                   |
+|     Fruit inc.    |
+|                   |
+|  Cliente Manuel   |
+|                   |
+|                   |
+| 3 Banana     2.10 |
+| 4 Morango    3.60 |
+|                   |
+|                   |
+|                   |
+|                   |
+|                   |
+|                   |
+|                   |
+|    Total    10.00 |
+|                   |
+|                   |
+ ------------------- 

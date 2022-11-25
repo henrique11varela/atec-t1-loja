@@ -6,8 +6,6 @@ Project Description
 
 ### Todo
 
-- [ ] ReDo Checkout  
-- [ ] Imprimir talão  
 - [ ] Relatorio de stock  
 - [ ] relatorio de vendas por produto  
 - [ ] relatorio total de vendas  
@@ -17,9 +15,11 @@ Project Description
 
 ### In Progress
 
+- [ ] Imprimir talão  
 
 ### Done ✓
 
+- [x] ReDo Checkout  
 - [x] Pag Alterar Nome cliente  
 - [x] Pag Eliminar Cliente  
 - [x] Pag Criar Cliente  

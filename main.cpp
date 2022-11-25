@@ -1,6 +1,7 @@
 #include "Headerfiles/conmanip.h"
 #include <sstream>
 #include <iomanip>
+#include <locale.h>
 
 using namespace conmanip;
 using namespace std;
@@ -154,21 +155,6 @@ float customCinf(console_out *conout)
     return choice;
 };
 
-/* getBiggestStringSize
-returns size of biggest string in the array */
-int getBiggestStringSize(string *text, int size)
-{
-    int length = 0;
-    for (int i = 0; i < size; i++)
-    {
-        if (text[i].length() > length)
-        {
-            length = text[i].length();
-        }
-    }
-    return length;
-};
-
 /* custom COUT
 outputs ontop of the input box */
 void customCout(console_out *conout, string text)
@@ -310,6 +296,44 @@ int checkHighestId(string **table, int X)
     return output;
 };
 
+// ! Usefull funcs
+
+/* getBiggestStringSize
+returns size of biggest string in the array */
+int getBiggestStringSize(string *text, int size)
+{
+    int length = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (text[i].length() > length)
+        {
+            length = text[i].length();
+        }
+    }
+    return length;
+};
+
+/* precoTotalCart
+Calculates the value in the cart */
+float precoTotalCart(string **stock, int *sizeStock, string **cart, int *sizeCart)
+{
+    float total = 0;
+    for (int i = 0; i < *sizeCart; i++)
+    {
+        total += stoi(cart[i][1]) * stof(selectSQL(cart[i][0], 0, stock, 3));
+    }
+    return total;
+};
+
+/* setPrecision2
+returns float as a string with 2 decimal places */
+string setPrecision2(float input)
+{
+    stringstream ss;
+    ss << fixed << setprecision(2) << input;
+    return ss.str();
+};
+
 // ! Table display
 
 /* Displays Clientes table
@@ -436,7 +460,7 @@ void showStock(console_out *conout, string **stock, int *sizeStock, string **car
 };
 
 /* Displays Cart table */
-void showCart(console_out *conout, string **stock, string **cart, int *sizeCart, bool left)
+void showCart(console_out *conout, string **stock, int *sizeStock, string **cart, int *sizeCart, bool left)
 {
     if (*sizeCart != 0)
     {
@@ -482,9 +506,20 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
                  << setposx(Xpos + biggestString[0] + 1)
                  << "|"
                  << cart[i][1]
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
                  << "|"
                  << endl;
         }
+        string valor = setPrecision2(precoTotalCart(stock, sizeStock, cart, sizeCart) * 1.30 * 1.23);
+        char euro = 128;
+        cout << setposx(Xpos)
+             << "|"
+             << setposx((Xpos + biggestString[0] + biggestString[1] + 1) - valor.length())
+             << valor
+             << WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), L"€", wcslen(L"€"), NULL, NULL)
+             << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
+             << "|"
+             << endl;
         cout << setposx(Xpos) << "O";
         for (int i = 0; i < (biggestString[0] + biggestString[1] + 1); i++)
         {
@@ -496,6 +531,159 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
              << "nome|quant"
              << settextcolor(console_text_colors::white);
     }
+};
+
+// ! sub submenus
+
+/* introdução dos valores de novo cliente
+returns id*/
+int clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
+{
+    string nome, telefone, morada;
+    customCout(conout, "Insira o nome:");
+    nome = customCins(conout);
+    customCout(conout, "Insira o numero de telefone:");
+    telefone = customCins(conout);
+    customCout(conout, "Insira a morada:");
+    morada = customCins(conout);
+    clientes[*sizeClientes][0] = to_string(checkHighestId(clientes, 0) + 1);
+    clientes[*sizeClientes][1] = nome;
+    clientes[*sizeClientes][2] = telefone;
+    clientes[*sizeClientes][3] = morada;
+    (*sizeClientes)++;
+    return stoi(clientes[(*sizeClientes) - 1][0]);
+};
+
+/* pagamento e finalizacao da transacao */
+void pagamento(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    float precoAPagar = precoTotalCart(stock, sizeStock, cart, sizeCart);
+    system("cls||clear");
+    showCart(conout, stock, sizeStock, cart, sizeCart, false);
+    cout << setposx(conout->getsize().X / 2 - 9 / 2)
+         << setposy(1)
+         << "PAGAMENTO";
+    customCout(conout, "Insira o valor entregue");
+    float valorEntregue = customCinf(conout);
+    int jaCliente;
+    do
+    {
+        customCout(conout, "Ja e cliente? (1-Sim 0-Nao)");
+        jaCliente = customCini(conout);
+    } while (jaCliente < 0 || jaCliente > 1);
+    int idCliente;
+    if (jaCliente)
+    {
+        customCout(conout, "Insira o numero de cliente");
+        idCliente = customCini(conout);
+    }
+    else
+    {
+        cout << setposx(conout->getsize().X / 2 - 23 / 2)
+             << setposy(1)
+             << "CRIACAO DE NOVO CLIENTE";
+        idCliente = clienteNovo(conout, clientes, sizeClientes);
+        cout << setposy(3)
+             << setposx(conout->getsize().X / 2 - (27 + to_string(idCliente).length()) / 2)
+             << "O numero do novo cliente e "
+             << idCliente
+             << endl
+             << endl
+             << setposx(conout->getsize().X / 2 - 14 / 2)
+             << "press enter...";
+        customCout(conout, "");
+        cin.ignore();
+    }
+
+    // efectua venda e esvazia cart
+    int idFatura = checkHighestId(vendas, 0) + 1;
+    vendas[*sizeVendas][0] = idFatura;
+    vendas[*sizeVendas][1] = to_string(idCliente);
+    vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
+    vendas[*sizeVendas][3] = "01/01/2022";
+
+    for (int i = 0; i < *sizeCart; i++)
+    {
+        compras[*sizeCompras][0] = idFatura;
+        compras[*sizeCompras][1] = cart[i][0];
+        compras[*sizeCompras][2] = cart[i][1];
+        cleanLine(cart, i, 2);
+    }
+    *sizeCart = 0;
+};
+
+// todo:
+/* imprime o talao da ultima transacao */
+void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    // get 2d array with idprod + quant for a single idFatura to output  --> new func?
+    // 0-quantidade 1-produto 2-preço
+    // total
+    system("cls||clear");
+    int biggestString[] = {0, 0, 0};
+    for (int i = 0; i < *sizeCart; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            string item;
+            switch (j)
+            {
+            case 0: // quantidade
+                item = cart[i][1];
+                break;
+            case 1: // nome do produto
+                item = selectSQL(cart[i][0], 0, stock, 1);
+                break;
+            case 2: // preco
+                item = setPrecision2(stof(selectSQL(cart[i][0], 0, stock, 3)) * 1.30 * 1.23);
+                break;
+            }
+            if (item.length() > biggestString[j])
+            {
+                biggestString[j] = item.length();
+            }
+        }
+    }
+    int Xpos = conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + 5) / 2;
+    // top
+    cout << setposy(3)
+         << setposx(Xpos) << " ";
+    for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + 4); i++)
+    {
+        cout << "-";
+    }
+    cout << endl
+         << setposx(Xpos) << "|" << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3) << "|";
+
+    // body
+    for (int i = 0; i < *sizeCart; i++)
+    {
+        cout << setposx(Xpos)
+             << "| "
+             << cart[i][0]
+             << setposx(Xpos + biggestString[0] + 2)
+             << " "
+             << selectSQL(cart[i][0], 0, stock, 1)
+             << setposx(Xpos + biggestString[0] + biggestString[1] + 3)
+             << " "
+             << setPrecision2(stof(selectSQL(cart[i][0], 0, stock, 3)) * 1.30 * 1.23)
+             << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 4)
+             << " |"
+             << endl;
+    }
+    // tail
+    cout << setposx(Xpos) << " ";
+    for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + 4); i++)
+    {
+        cout << "-";
+    }
+    cout << " " << endl;
+    // cout << setposx(Xpos)
+    //      << settextcolor(console_text_colors::light_blue)
+    //      << "id|name|phone|address"
+    //      << settextcolor(console_text_colors::white);
+    cin.ignore();
+    cin.ignore();
 };
 
 // ! Submenus
@@ -511,7 +699,7 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
          << setposy(1)
          << "SELECIONAR PRODUTO";
     showStock(conout, stock, sizeStock, cart, true);
-    showCart(conout, stock, cart, sizeCart, false);
+    showCart(conout, stock, sizeStock, cart, sizeCart, false);
     int id, quantidade, quantStock;
     customCout(conout, "O que vais querer comprar? (id)");
     id = customCini(conout);
@@ -535,51 +723,39 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
     }
 };
 
-/* para refazer */
-float precoTotalCart(string **stock, int *sizeStock, string **cart, int *sizeCart)
-{
-    float total = 0;
-    for (int i = 0; i < *sizeCart; i++)
-    {
-        total += stoi(cart[i][1]) * stof(selectSQL(cart[i][0], 0, stock, 3));
-    }
-    return total;
-};
-
 // TODO:
 /* Checkout
 add values from cart to respective tables and delete cart */
 void checkout(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     float precoAPagar = precoTotalCart(stock, sizeStock, cart, sizeCart);
-    int choice;
+    string text[] = {"1 - Pagar", "0 - Voltar"};
+    const int biggestString = getBiggestStringSize(text, 2);
+    int choice = -1;
     do
     {
         system("cls||clear");
-        cout << "CHECKOUT"
+        showCart(conout, stock, sizeStock, cart, sizeCart, false);
+        cout << setposx(conout->getsize().X / 2 - 8 / 2)
+             << setposy(1)
+             << "CHECKOUT"
+             << endl
+             << endl
+             << setposx(conout->getsize().X / 2 - biggestString / 2)
+             << text[0]
+             << endl
+             << setposx(conout->getsize().X / 2 - biggestString / 2)
+             << text[1]
              << endl
              << endl;
-        cout << "Valor sem lucro e sem IVA: "
-             << precoAPagar
-             << endl;
-        cout << "Valor a pagar: "
-             << precoAPagar * 1.30 * 1.23
-             << endl
-             << endl;
-
-        cout << "1 - Pagar"
-             << endl;
-        cout << "0 - Voltar"
-             << endl
-             << endl;
-        cout << ":";
+        customCout(conout, "Escolhe uma opcao");
         choice = customCini(conout);
+        customCout(conout, "");
     } while (choice < 0 || choice > 1);
     switch (choice)
     {
     case 1:
-        /* Selecionar produto */
-        // pagar(conout, vendas, sizeVendas, cart, sizeCart, compras, sizeCompras, precoAPagar);
+        pagamento(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
         break;
     default:
 
@@ -669,24 +845,6 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
 /* Relatorio total de vendas */
 
 // ! Opçoes de cliente
-/* introdução dos valores de novo cliente
-returns id*/
-int clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
-{
-    string nome, telefone, morada;
-    customCout(conout, "Insira o nome:");
-    nome = customCins(conout);
-    customCout(conout, "Insira o numero de telefone:");
-    telefone = customCins(conout);
-    customCout(conout, "Insira a morada:");
-    morada = customCins(conout);
-    clientes[*sizeClientes][0] = to_string(checkHighestId(clientes, 0) + 1);
-    clientes[*sizeClientes][1] = nome;
-    clientes[*sizeClientes][2] = telefone;
-    clientes[*sizeClientes][3] = morada;
-    (*sizeClientes)++;
-    return stoi(clientes[(*sizeClientes) - 1][0]);
-};
 
 /* Criar cliente */
 void criarCliente(console_out *conout, string **clientes, int *sizeClientes)
@@ -728,9 +886,8 @@ void eliminarCliente(console_out *conout, string **clientes, int *sizeClientes)
     (*sizeClientes)--;
 };
 
-// TODO:
 /* Alterar nome */
-void alerarNomeCliente(console_out *conout, string **clientes, int *sizeClientes)
+void alterarNomeCliente(console_out *conout, string **clientes, int *sizeClientes)
 {
     system("cls||clear");
     cout << setposx(conout->getsize().X / 2 - 23 / 2)
@@ -762,7 +919,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         {
             system("cls||clear");
             showStock(conout, stock, sizeStock, cart, true);
-            showCart(conout, stock, cart, sizeCart, false);
+            showCart(conout, stock, sizeStock, cart, sizeCart, false);
             cout << setposx(conout->getsize().X / 2 - 14 / 2)
                  << setposy(1)
                  << "EFECTUAR VENDA"
@@ -794,10 +951,11 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         case 2:
             /* Checkout */
             checkout(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+            imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         case 3:
             /* Imprimir talao no ecra */
-
+            imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         default:
             repetition = false;
@@ -964,7 +1122,7 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
             break;
         case 3:
             /* Alterar nome */
-            alerarNomeCliente(conout, clientes, sizeClientes);
+            alterarNomeCliente(conout, clientes, sizeClientes);
             break;
         default:
             repetition = false;
@@ -1073,6 +1231,7 @@ void apple(console_out conout, int xr, int yr)
 
 int main()
 {
+    setlocale(LC_ALL, "");
     // get handle to the console window
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     // retrieve screen buffer info
