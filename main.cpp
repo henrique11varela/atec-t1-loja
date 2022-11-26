@@ -565,48 +565,50 @@ void pagamento(console_out *conout, string **stock, int *sizeStock, string **cli
          << "PAGAMENTO";
     customCout(conout, "Insira o valor entregue");
     float valorEntregue = customCinf(conout);
-    int jaCliente;
+
+    int idCliente = -1;
+    bool jaECliente;
+    bool querSerCliente;
+    string resposta;
     do
     {
-        customCout(conout, "Ja e cliente? (1-Sim 0-Nao)");
-        jaCliente = customCini(conout);
-    } while (jaCliente < 0 || jaCliente > 1);
-    int idCliente;
-    if (jaCliente)
-    {
+        customCout(conout, "Ja e cliente? (S/N)");
+        resposta = customCins(conout);
+    } while (resposta != "s" && resposta != "S" && resposta != "n" && resposta != "N");
+    jaECliente = (resposta == "s" || resposta == "S") ? true : false;
+    if (jaECliente)
+    {   
         customCout(conout, "Insira o numero de cliente");
         idCliente = customCini(conout);
     }
     else
     {
-        cout << setposx(conout->getsize().X / 2 - 23 / 2)
-             << setposy(1)
-             << "CRIACAO DE NOVO CLIENTE";
-        idCliente = clienteNovo(conout, clientes, sizeClientes);
-        cout << setposy(3)
-             << setposx(conout->getsize().X / 2 - (27 + to_string(idCliente).length()) / 2)
-             << "O numero do novo cliente e "
-             << idCliente
-             << endl
-             << endl
-             << setposx(conout->getsize().X / 2 - 14 / 2)
-             << "press enter...";
-        customCout(conout, "");
-        cin.ignore();
+        string resposta;
+        do
+        {
+            customCout(conout, "Quer ser cliente? (S/N)");
+            resposta = customCins(conout);
+        } while (resposta != "s" && resposta != "S" && resposta != "n" && resposta != "N");
+        querSerCliente = (resposta == "s" || resposta == "S") ? true : false;
+        if (querSerCliente)
+        {
+            clienteNovo(conout, clientes, sizeClientes);
+        }
     }
 
-    // efectua venda e esvazia cart
-    int idFatura = checkHighestId(vendas, 0) + 1;
+    string idFatura = to_string(checkHighestId(vendas, 0) + 1);
     vendas[*sizeVendas][0] = idFatura;
     vendas[*sizeVendas][1] = to_string(idCliente);
     vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
     vendas[*sizeVendas][3] = "01/01/2022";
-
     for (int i = 0; i < *sizeCart; i++)
     {
         compras[*sizeCompras][0] = idFatura;
         compras[*sizeCompras][1] = cart[i][0];
         compras[*sizeCompras][2] = cart[i][1];
+        (*sizeCompras)++;
+        int lineInStock = checkLineOf(stock, sizeStock, 0, cart[i][0]);
+        stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
         cleanLine(cart, i, 2);
     }
     *sizeCart = 0;
@@ -614,14 +616,23 @@ void pagamento(console_out *conout, string **stock, int *sizeStock, string **cli
 
 // todo:
 /* imprime o talao da ultima transacao */
-void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart, int idFatura)
 {
-    // get 2d array with idprod + quant for a single idFatura to output  --> new func?
-    // 0-quantidade 1-produto 2-preço
-    // total
     system("cls||clear");
+    string tempTable[100][2];
+    int sizeTempTable = 0;
+    for (int i = 0; i < *sizeCompras; i++)
+    {
+        if (compras[i][0] == to_string(idFatura))
+        {
+            tempTable[sizeTempTable][0] = compras[i][1];
+            tempTable[sizeTempTable][1] = compras[i][2];
+            sizeTempTable++;
+        }
+    }
+
     int biggestString[] = {0, 0, 0};
-    for (int i = 0; i < *sizeCart; i++)
+    for (int i = 0; i < sizeTempTable; i++)
     {
         for (int j = 0; j < 3; j++)
         {
@@ -629,13 +640,13 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
             switch (j)
             {
             case 0: // quantidade
-                item = cart[i][1];
+                item = tempTable[i][1];
                 break;
             case 1: // nome do produto
-                item = selectSQL(cart[i][0], 0, stock, 1);
+                item = selectSQL(tempTable[i][0], 0, stock, 1);
                 break;
             case 2: // preco
-                item = setPrecision2(stof(selectSQL(cart[i][0], 0, stock, 3)) * 1.30 * 1.23);
+                item = setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 1.23 * stoi(tempTable[i][1]));
                 break;
             }
             if (item.length() > biggestString[j])
@@ -647,7 +658,7 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
     int Xpos = conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + 5) / 2;
     // top
     cout << setposy(3)
-         << setposx(Xpos) << " ";
+         << setposx(Xpos + 1);
     for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + 4); i++)
     {
         cout << "-";
@@ -656,17 +667,17 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
          << setposx(Xpos) << "|" << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3) << "|";
 
     // body
-    for (int i = 0; i < *sizeCart; i++)
+    for (int i = 0; i < sizeTempTable; i++)
     {
         cout << setposx(Xpos)
              << "| "
-             << cart[i][0]
+             << tempTable[i][1]
              << setposx(Xpos + biggestString[0] + 2)
              << " "
-             << selectSQL(cart[i][0], 0, stock, 1)
+             << selectSQL(tempTable[i][0], 0, stock, 1)
              << setposx(Xpos + biggestString[0] + biggestString[1] + 3)
              << " "
-             << setPrecision2(stof(selectSQL(cart[i][0], 0, stock, 3)) * 1.30 * 1.23)
+             << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 1.23)
              << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 4)
              << " |"
              << endl;
@@ -951,11 +962,10 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         case 2:
             /* Checkout */
             checkout(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
-            imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+            imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart, checkHighestId(vendas, 0));
             break;
         case 3:
             /* Imprimir talao no ecra */
-            imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         default:
             repetition = false;
@@ -1297,6 +1307,11 @@ int main()
             cart[i][j] = "";
         }
     }
+    clientes[0][0] = "-1";
+    clientes[0][1] = "Anonymous";
+    clientes[0][2] = "NA";
+    clientes[0][3] = "NA";
+    sizeClientes++;
     defaultValues(stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras, cart, &sizeCart);
     system("cls||clear");
     cout << setposx(conout.getsize().X / 2 - 10 / 2)
