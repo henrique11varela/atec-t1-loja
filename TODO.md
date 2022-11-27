@@ -6,7 +6,6 @@ Project Description
 
 ### Todo
 
-- [ ] fix new client anonymous talao  
 - [ ] Add vendas default values  
 - [ ] confirm function that asks if sure and returns true/false  
 - [ ] Relatorio de stock  
@@ -20,6 +19,7 @@ Project Description
 
 ### Done ✓
 
+- [x] fix new client anonymous talao  
 - [x] showStock preçobase e final  
 - [x] imprimir venda cliente inexistente  
 - [x] Imprimir talão  

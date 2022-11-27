@@ -11,8 +11,6 @@ to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
 // TODO:
-// TODO: redo checkout
-// TODO: Imprimir talao no ecra
 // TODO: Relatorio de stock
 // TODO: Relatorio de vendas por produto
 // TODO: Relatorio total de vendas
@@ -22,38 +20,66 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
 void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     // default values for stock
-    stock[*sizeStock][0] = to_string(*sizeStock);
+    stock[*sizeStock][0] = to_string(*sizeStock); //0
     stock[*sizeStock][1] = "Banana";
     stock[*sizeStock][2] = "5";
     stock[*sizeStock][3] = "0.70";
     (*sizeStock)++;
-    stock[*sizeStock][0] = to_string(*sizeStock);
+    stock[*sizeStock][0] = to_string(*sizeStock); //1
     stock[*sizeStock][1] = "Pera";
     stock[*sizeStock][2] = "10";
     stock[*sizeStock][3] = "1.00";
     (*sizeStock)++;
-    stock[*sizeStock][0] = to_string(*sizeStock);
+    stock[*sizeStock][0] = to_string(*sizeStock); //2
     stock[*sizeStock][1] = "Morango";
     stock[*sizeStock][2] = "42";
     stock[*sizeStock][3] = "0.50";
     (*sizeStock)++;
 
     // default values for clientes
-    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1);
+    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); //0
     clientes[*sizeClientes][1] = "Henrique";
     clientes[*sizeClientes][2] = "935560176";
     clientes[*sizeClientes][3] = "R. Henrique, 240";
     (*sizeClientes)++;
-    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1);
+    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); //1
     clientes[*sizeClientes][1] = "Maria";
     clientes[*sizeClientes][2] = "992485115";
     clientes[*sizeClientes][3] = "R. Maria, 169";
     (*sizeClientes)++;
-    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1);
+    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); //2
     clientes[*sizeClientes][1] = "Manuel";
     clientes[*sizeClientes][2] = "112";
     clientes[*sizeClientes][3] = "R. do Hospital, WeeWoo";
     (*sizeClientes)++;
+
+    // default values for vendas e compras
+    vendas[*sizeVendas][0] = to_string(*sizeVendas); //0
+    vendas[*sizeVendas][1] = "0";
+    vendas[*sizeVendas][2] = "20";
+    vendas[*sizeVendas][3] = "02/01/2022";
+    compras[*sizeCompras][0] = to_string(*sizeVendas);
+    compras[*sizeCompras][1] = "1";
+    compras[*sizeCompras][2] = "3";
+    (*sizeCompras)++;
+    compras[*sizeCompras][0] = to_string(*sizeVendas);
+    compras[*sizeCompras][1] = "0";
+    compras[*sizeCompras][2] = "5";
+    (*sizeCompras)++;
+    (*sizeVendas)++;
+    vendas[*sizeVendas][0] = to_string(*sizeVendas);//1
+    vendas[*sizeVendas][1] = "1";
+    vendas[*sizeVendas][2] = "10";
+    vendas[*sizeVendas][3] = "02/01/2022";
+    compras[*sizeCompras][0] = to_string(*sizeVendas);
+    compras[*sizeCompras][1] = "0";
+    compras[*sizeCompras][2] = "3";
+    (*sizeCompras)++;
+    compras[*sizeCompras][0] = to_string(*sizeVendas);
+    compras[*sizeCompras][1] = "2";
+    compras[*sizeCompras][2] = "2";
+    (*sizeCompras)++;
+    (*sizeVendas)++;
 };
 
 // ! Useless Flavor
@@ -487,7 +513,7 @@ void showStock(console_out *conout, string **stock, int *sizeStock, string **car
                  << stock[i][2]
                  << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3)
                  << "|"
-                 << setPrecision2(stof(stock[i][3] ) * (venda ? (1.30 * 1.23) : 1))
+                 << setPrecision2(stof(stock[i][3]) * (venda ? (1.30 * 1.23) : 1))
                  << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4)
                  << "|"
                  << endl;
@@ -610,6 +636,11 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
                 }
             }
         }
+        if (biggestString[1] == 0)
+        {
+            biggestString[1] = 9;
+        }
+
         int Xpos = left ? 1 : (conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + 4) / 2);
         cout << setposx(Xpos)
              << setposy(1)
@@ -625,12 +656,18 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
         cout << "O" << endl;
         for (int i = 0; i < *sizeVendas; i++)
         {
+            string nomeCliente = selectSQL(vendas[i][1], 0, clientes, 1);
+            if (nomeCliente == "")
+            {
+                nomeCliente = "Eliminado";
+            }
             cout << setposx(Xpos)
                  << "|"
                  << vendas[i][0]
                  << setposx(Xpos + biggestString[0] + 1)
                  << "|"
-                 << selectSQL(vendas[i][1], 0, clientes, 1)
+                 << nomeCliente
+                 //<< selectSQL(vendas[i][1], 0, clientes, 1)
                  << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
                  << "|"
                  << vendas[i][3]
@@ -715,7 +752,7 @@ void pagamento(console_out *conout, string **stock, int *sizeStock, string **cli
         querSerCliente = (resposta == "s" || resposta == "S") ? true : false;
         if (querSerCliente)
         {
-            clienteNovo(conout, clientes, sizeClientes);
+            idCliente = clienteNovo(conout, clientes, sizeClientes);
         }
     }
     string idFatura = to_string(checkHighestId(vendas, 0) + 1);
@@ -784,6 +821,7 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
     }
     string baseText[] = {"FRUIT INC"};
     string nomeCliente = selectSQL(selectSQL(to_string(idFatura), 0, vendas, 1), 0, clientes, 1);
+    nomeCliente = nomeCliente == "" ? "Eliminado" : nomeCliente;
     string data = selectSQL(to_string(idFatura), 0, vendas, 3);
     string total = setPrecision2(precoTotalCart(stock, sizeStock, tempTable, &sizeTempTable) * 1.30 * 1.23);
     string entregue = setPrecision2(stof(selectSQL(to_string(idFatura), 0, vendas, 2)));
@@ -851,12 +889,13 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
     } while (checkLineOf(stock, sizeStock, 0, to_string(id)) == -1);
 
     string inCart = selectSQL(to_string(id), 0, cart, 1);
-    quantStock = stoi(selectSQL(to_string(id), 0, stock, 2)) - stoi((inCart == "") ? "0" : inCart);
+    int numCart = stoi((inCart == "") ? "0" : inCart);
+    quantStock = stoi(selectSQL(to_string(id), 0, stock, 2)) - numCart;
     do
     {
         customCout(conout, "quanto?");
         quantidade = customCini(conout);
-    } while (quantStock < quantidade);
+    } while (quantStock < quantidade || (numCart + quantidade) < 0);
     customCout(conout, "");
     if (quantidade != 0)
     {
@@ -871,9 +910,17 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
             cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1] = to_string(stoi(cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1]) + quantidade);
         }
     }
+    for (int i = 0; i < *sizeCart; i++)
+    {
+        if (cart[i][1] == "0")
+        {
+            cleanLine(cart, i, 2);
+            compactTable(cart, 2);
+            (*sizeCart)--;
+        }
+    }
 };
 
-// TODO:
 /* Checkout
 add values from cart to respective tables and delete cart */
 void checkout(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
@@ -983,19 +1030,7 @@ void criarCliente(console_out *conout, string **clientes, int *sizeClientes)
 {
     system("cls||clear");
     showClientes(conout, clientes, sizeClientes, false);
-
-    string nome, telefone, morada;
-    customCout(conout, "Insira o nome:");
-    nome = customCins(conout);
-    customCout(conout, "Insira o numero de telefone:");
-    telefone = customCins(conout);
-    customCout(conout, "Insira a morada:");
-    morada = customCins(conout);
-    clientes[*sizeClientes][0] = to_string(checkHighestId(clientes, 0) + 1);
-    clientes[*sizeClientes][1] = nome;
-    clientes[*sizeClientes][2] = telefone;
-    clientes[*sizeClientes][3] = morada;
-    (*sizeClientes)++;
+    clienteNovo(conout, clientes, sizeClientes);
 };
 
 /* Eliminar cliente */
@@ -1333,7 +1368,23 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
             displayMenu4(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         default:
-            repetition = false;
+            string choice;
+            do
+            {
+                system("cls||clear");
+                cout << setposx(conout->getsize().X / 2 - 8 / 2)
+                     << setposy(1)
+                     << settextcolor(console_text_colors::red)
+                     << "ATENCAO";
+                customCout(conout, "Queres mesmo fechar a aplicacao? (S/N)");
+                choice = customCins(conout);
+                customCout(conout, "");
+            } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
+            if (choice == "s" || choice == "S")
+            {
+                repetition = false;
+            }
+            cout << settextcolor(console_text_colors::white);
             break;
         }
     }
