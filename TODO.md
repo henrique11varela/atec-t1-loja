@@ -6,19 +6,21 @@ Project Description
 
 ### Todo
 
+- [ ] Add vendas default values  
+- [ ] confirm function that asks if sure and returns true/false  
 - [ ] Relatorio de stock  
 - [ ] relatorio de vendas por produto  
 - [ ] relatorio total de vendas  
 - [ ] clean unused parameters in display funcs  
 - [ ] Exit clauses  
-- [ ] imprimir venda cliente inexistente  
 
 ### In Progress
 
-- [ ] Imprimir talão  
 
 ### Done ✓
 
+- [x] imprimir venda cliente inexistente  
+- [x] Imprimir talão  
 - [x] ReDo Checkout  
 - [x] Pag Alterar Nome cliente  
 - [x] Pag Eliminar Cliente  
