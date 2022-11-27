@@ -445,7 +445,7 @@ void showClientes(console_out *conout, string **clientes, int *sizeClientes, boo
 };
 
 /* Displays Stock table */
-void showStock(console_out *conout, string **stock, int *sizeStock, string **cart, bool left)
+void showStock(console_out *conout, string **stock, int *sizeStock, string **cart, bool left, bool venda)
 {
     if (*sizeStock != 0)
     {
@@ -487,7 +487,7 @@ void showStock(console_out *conout, string **stock, int *sizeStock, string **car
                  << stock[i][2]
                  << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3)
                  << "|"
-                 << stock[i][3]
+                 << setPrecision2(stof(stock[i][3] ) * (venda ? (1.30 * 1.23) : 1))
                  << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4)
                  << "|"
                  << endl;
@@ -841,11 +841,15 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
     cout << setposx(conout->getsize().X / 2 - 18 / 2)
          << setposy(1)
          << "SELECIONAR PRODUTO";
-    showStock(conout, stock, sizeStock, cart, true);
+    showStock(conout, stock, sizeStock, cart, true, true);
     showCart(conout, stock, sizeStock, cart, sizeCart, false);
     int id, quantidade, quantStock;
-    customCout(conout, "O que vais querer comprar? (id)");
-    id = customCini(conout);
+    do
+    {
+        customCout(conout, "O que vais querer comprar? (id)");
+        id = customCini(conout);
+    } while (checkLineOf(stock, sizeStock, 0, to_string(id)) == -1);
+
     string inCart = selectSQL(to_string(id), 0, cart, 1);
     quantStock = stoi(selectSQL(to_string(id), 0, stock, 2)) - stoi((inCart == "") ? "0" : inCart);
     do
@@ -854,15 +858,18 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
         quantidade = customCini(conout);
     } while (quantStock < quantidade);
     customCout(conout, "");
-    if (inCart == "")
+    if (quantidade != 0)
     {
-        cart[*sizeCart][0] = to_string(id);
-        cart[*sizeCart][1] = to_string(quantidade);
-        (*sizeCart)++;
-    }
-    else
-    {
-        cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1] = to_string(stoi(cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1]) + quantidade);
+        if (inCart == "")
+        {
+            cart[*sizeCart][0] = to_string(id);
+            cart[*sizeCart][1] = to_string(quantidade);
+            (*sizeCart)++;
+        }
+        else
+        {
+            cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1] = to_string(stoi(cart[checkLineOf(cart, sizeCart, 0, to_string(id))][1]) + quantidade);
+        }
     }
 };
 
@@ -922,7 +929,7 @@ void adicionarStock(console_out *conout, string **cart, string **stock, int *siz
     cout << setposx(conout->getsize().X / 2 - 15 / 2)
          << setposy(1)
          << "ADICIONAR STOCK";
-    showStock(conout, stock, sizeStock, cart, true);
+    showStock(conout, stock, sizeStock, cart, true, false);
     int id, quantidade;
     do
     {
@@ -945,7 +952,7 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
     cout << setposx(conout->getsize().X / 2 - 16 / 2)
          << setposy(1)
          << "ELIMINAR PRODUTO";
-    showStock(conout, stock, sizeStock, cart, true);
+    showStock(conout, stock, sizeStock, cart, true, false);
     int id;
     do
     {
@@ -1043,7 +1050,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            showStock(conout, stock, sizeStock, cart, true);
+            showStock(conout, stock, sizeStock, cart, true, true);
             showCart(conout, stock, sizeStock, cart, sizeCart, false);
             cout << setposx(conout->getsize().X / 2 - 14 / 2)
                  << setposy(1)
@@ -1115,7 +1122,7 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            showStock(conout, stock, sizeStock, cart, true);
+            showStock(conout, stock, sizeStock, cart, true, false);
             cout << setposx(conout->getsize().X / 2 - 13 / 2)
                  << setposy(1)
                  << "COMPRAR STOCK"
