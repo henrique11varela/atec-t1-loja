@@ -6,7 +6,7 @@ Project Description
 
 ### Todo
 
-- [ ] Relatorio de stock  
+- [ ] prevenir repetidos  
 - [ ] relatorio de vendas por produto  
 - [ ] relatorio total de vendas  
 - [ ] clean unused parameters in display funcs  
@@ -18,6 +18,7 @@ Project Description
 
 ### Done ✓
 
+- [x] Relatorio de stock  
 - [x] Add vendas default values  
 - [x] fix new client anonymous talao  
 - [x] showStock preçobase e final  

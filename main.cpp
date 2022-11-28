@@ -1,6 +1,7 @@
 #include "Headerfiles/conmanip.h"
 #include <sstream>
 #include <iomanip>
+#include <ctime>
 #include <locale.h>
 
 using namespace conmanip;
@@ -755,11 +756,13 @@ void pagamento(console_out *conout, string **stock, int *sizeStock, string **cli
             idCliente = clienteNovo(conout, clientes, sizeClientes);
         }
     }
+    time_t t = time(nullptr);
+    tm *now = localtime(&t);
     string idFatura = to_string(checkHighestId(vendas, 0) + 1);
     vendas[*sizeVendas][0] = idFatura;
     vendas[*sizeVendas][1] = to_string(idCliente);
     vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
-    vendas[*sizeVendas][3] = "01/01/2022";
+    vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
     (*sizeVendas)++;
     for (int i = 0; i < *sizeCart; i++)
     {
@@ -853,7 +856,7 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
              << setposx(Xpos)
              << whiteBG(conout, width)
              << setposx(Xpos + biggestString[0] + biggestString[1] + 4)
-             << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 1.23)
+             << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 0.23)
              << endl;
     }
     // tail
@@ -1018,14 +1021,75 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
 
 // ! Criação de relatorios
 
-// TODO:
 /* Relatorio de stock */
+void relatorioStock(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    system("cls||clear");
+    showStock(conout, stock, sizeStock, cart, true, false);
+
+    int Xpos = conout->getsize().X - 1;
+    cout << setposx(Xpos)
+         << setposy(2);
+    // vars to display
+    int stockTotal = 0;   // quantidade total de stock
+    float valorTotal = 0; // valor monetario do stock todo
+    for (int i = 0; i < *sizeStock; i++)
+    {
+        int quantidadeAtual = stoi(stock[i][2]);
+        stockTotal += quantidadeAtual;
+        valorTotal += quantidadeAtual * stof(stock[i][3]);
+    }
+
+    cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Total stock: " << stockTotal << endl;
+    cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Valor total: " << setPrecision2(valorTotal) << endl;
+    cout << setposx(Xpos - 16 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << setPrecision2(valorTotal * 0.3) << endl;
+    cin.ignore();
+    cin.ignore();
+};
 
 // TODO:
 /* Relatorio de vendas por produto */
 
 // TODO:
 /* Relatorio total de vendas */
+void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    system("cls||clear");
+    string text[] = {"Produto mais vendido: ", "Produto menos vendido: ", "Produto com mais lucro: ", "Cliente que mais comprou: "};
+    string output[] = {"", "", "", ""}; // maisVendido, menosVendido, maisLucro, melhorCliente
+
+    int middle = conout->getsize().X / 2;
+    int biggestString[] = {0, 0};
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            string item;
+            switch (j)
+            {
+            case 0:
+                item = text[i];
+                break;
+            case 1:
+                item = output[i];
+                break;
+            }
+            if (item.length() > biggestString[j])
+            {
+                biggestString[j] = item.length();
+            }
+        }
+    }
+    cout << setposy(2)
+         << setposx(middle - 25 / 2) << "RELATORIO TOTAL DE VENDAS" << endl
+         << endl
+         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[0] << output[0] << endl
+         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[1] << output[1] << endl
+         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[2] << output[2] << endl
+         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[3] << output[3] << endl;
+    cin.ignore();
+    cin.ignore();
+};
 
 // ! Opçoes de cliente
 
@@ -1208,7 +1272,7 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Menu 3 CRIACAO DE RELATOROS */
 void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Relatorio de stock", "2 - Relatorio de vendas por produto", "3 - Relatorio total de vendas", "0 - Voltar"};
+    string text[] = {"1 - Relatorio de stock", "2 - Relatorio de vendas por produto", "3 - Relatorio de vendas por cliente", "4 - Relatorio total de vendas", "0 - Voltar"};
     const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
@@ -1221,37 +1285,44 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
                  << setposy(1)
                  << "CRIACAO DE RELATOROS"
                  << endl
-                 << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << endl
+                 << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[0]
-                 << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << endl
+                 << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[1]
-                 << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << endl
+                 << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[2]
-                 << endl;
-            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << endl
+                 << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[3]
+                 << endl
+                 << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[4]
                  << endl
                  << endl;
             customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
             customCout(conout, "");
-        } while (choice < 0 || choice > 3);
+        } while (choice < 0 || choice > 4);
         switch (choice)
         {
         case 1:
             /* Relatorio de stock */
-
+            relatorioStock(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         case 2:
             /* Relatorio de vendas por produto */
 
             break;
         case 3:
-            /* Relatorio total de vendas */
+            /* Relatorio de vendas por cliente */
 
+            break;
+        case 4:
+            /* Relatorio total de vendas */
+            relatorioTotalVendas(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         default:
             repetition = false;
