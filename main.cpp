@@ -20,41 +20,41 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
 void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     // default values for stock
-    stock[*sizeStock][0] = to_string(*sizeStock); //0
+    stock[*sizeStock][0] = to_string(*sizeStock); // 0
     stock[*sizeStock][1] = "Banana";
     stock[*sizeStock][2] = "5";
     stock[*sizeStock][3] = "0.70";
     (*sizeStock)++;
-    stock[*sizeStock][0] = to_string(*sizeStock); //1
+    stock[*sizeStock][0] = to_string(*sizeStock); // 1
     stock[*sizeStock][1] = "Pera";
     stock[*sizeStock][2] = "10";
     stock[*sizeStock][3] = "1.00";
     (*sizeStock)++;
-    stock[*sizeStock][0] = to_string(*sizeStock); //2
+    stock[*sizeStock][0] = to_string(*sizeStock); // 2
     stock[*sizeStock][1] = "Morango";
     stock[*sizeStock][2] = "42";
     stock[*sizeStock][3] = "0.50";
     (*sizeStock)++;
 
     // default values for clientes
-    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); //0
+    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 0
     clientes[*sizeClientes][1] = "Henrique";
     clientes[*sizeClientes][2] = "935560176";
     clientes[*sizeClientes][3] = "R. Henrique, 240";
     (*sizeClientes)++;
-    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); //1
+    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 1
     clientes[*sizeClientes][1] = "Maria";
     clientes[*sizeClientes][2] = "992485115";
     clientes[*sizeClientes][3] = "R. Maria, 169";
     (*sizeClientes)++;
-    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); //2
+    clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 2
     clientes[*sizeClientes][1] = "Manuel";
     clientes[*sizeClientes][2] = "112";
     clientes[*sizeClientes][3] = "R. do Hospital, WeeWoo";
     (*sizeClientes)++;
 
     // default values for vendas e compras
-    vendas[*sizeVendas][0] = to_string(*sizeVendas); //0
+    vendas[*sizeVendas][0] = to_string(*sizeVendas); // 0
     vendas[*sizeVendas][1] = "0";
     vendas[*sizeVendas][2] = "20";
     vendas[*sizeVendas][3] = "02/01/2022";
@@ -67,7 +67,7 @@ void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeC
     compras[*sizeCompras][2] = "5";
     (*sizeCompras)++;
     (*sizeVendas)++;
-    vendas[*sizeVendas][0] = to_string(*sizeVendas);//1
+    vendas[*sizeVendas][0] = to_string(*sizeVendas); // 1
     vendas[*sizeVendas][1] = "1";
     vendas[*sizeVendas][2] = "10";
     vendas[*sizeVendas][3] = "02/01/2022";
@@ -819,27 +819,25 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
             }
         }
     }
-    string baseText[] = {"FRUIT INC"};
-    string nomeCliente = selectSQL(selectSQL(to_string(idFatura), 0, vendas, 1), 0, clientes, 1);
+    string numCliente = selectSQL(to_string(idFatura), 0, vendas, 1);
+    string nomeCliente = selectSQL(numCliente, 0, clientes, 1);
     nomeCliente = nomeCliente == "" ? "Eliminado" : nomeCliente;
     string data = selectSQL(to_string(idFatura), 0, vendas, 3);
-    string total = setPrecision2(precoTotalCart(stock, sizeStock, tempTable, &sizeTempTable) * 1.30 * 1.23);
+    string total = setPrecision2(precoTotalCart(stock, sizeStock, tempTable, &sizeTempTable) * 1.30);
     string entregue = setPrecision2(stof(selectSQL(to_string(idFatura), 0, vendas, 2)));
-    string troco = setPrecision2(stof(entregue) - stof(total));
+    string troco = setPrecision2(stof(entregue) - stof(total) * 1.23);
     int Xpos = conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + 3) / 2;
     // top
     int width = biggestString[0] + biggestString[1] + biggestString[2] + 5;
     cout << setposy(3)
          << setposx(Xpos)
-         << whiteBG(conout, width)
-         << endl;
-
-    cout << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - baseText[0].length() / 2) << baseText[0] << endl
+         << whiteBG(conout, width) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - 9 / 2) << "FRUIT INC" << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - nomeCliente.length() / 2 - (nomeCliente.length() % 2 ? 1 : 0)) << nomeCliente << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - (7 + to_string(idFatura).length()) / 2) << "Fatura " << idFatura << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - nomeCliente.length() / 2 - (nomeCliente.length() % 2 ? 1 : 0) - numCliente.length() / 2 - 1) << numCliente << " " << nomeCliente << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - data.length() / 2) << data << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl;
-
     // body
     for (int i = 0; i < sizeTempTable; i++)
     {
@@ -847,18 +845,24 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
              << whiteBG(conout, width)
              << setposx(Xpos + 1)
              << tempTable[i][1]
-             << setposx(Xpos + biggestString[0] + 2)
-             << " "
+             << setposx(Xpos + biggestString[0] + 3)
              << selectSQL(tempTable[i][0], 0, stock, 1)
-             << setposx(Xpos + biggestString[0] + biggestString[1] + 3)
-             << " "
+             << setposx(Xpos + biggestString[0] + biggestString[1] + 4)
+             << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30)
+             << endl
+             << setposx(Xpos)
+             << whiteBG(conout, width)
+             << setposx(Xpos + biggestString[0] + biggestString[1] + 4)
              << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 1.23)
              << endl;
     }
-
     // tail
     cout << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - total.length()) << "Total " << total << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - total.length()) << "Total " << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - total.length()) << "s/IVA " << total << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 6 - total.length()) << "Valor IVA " << setPrecision2(stof(total) * 0.23) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - setPrecision2(stof(total) * 1.23).length()) << "c/IVA " << setPrecision2(stof(total) * 1.23) << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 5 - entregue.length()) << "Entregue " << entregue << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - troco.length()) << "Troco " << troco << endl
          << setposx(Xpos) << whiteBG(conout, width);
@@ -1134,7 +1138,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
                     customCout(conout, "Escolha fatura");
                     fatura = customCini(conout);
                 } while (checkLineOf(vendas, sizeVendas, 0, to_string(fatura)) == -1);
-                imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart, checkHighestId(vendas, 0));
+                imprimirTalao(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart, fatura);
             }
 
             break;
@@ -1423,9 +1427,7 @@ int main()
 
     console_out_context ctxout;
     console_out conout(ctxout);
-    conout.settitle("ATEC LOJA");
-    int consoleXsize = conout.getsize().X;
-    int consoleYsize = conout.getsize().Y;
+    conout.settitle("FRUIT INC.");
 
     // vec[item][atributo]
     string **stock = new string *[100];    // STOCK 0-id 1-nome 2-quantidade 3-preço_fabrica

@@ -6,19 +6,19 @@ Project Description
 
 ### Todo
 
-- [ ] Add vendas default values  
-- [ ] confirm function that asks if sure and returns true/false  
 - [ ] Relatorio de stock  
 - [ ] relatorio de vendas por produto  
 - [ ] relatorio total de vendas  
 - [ ] clean unused parameters in display funcs  
 - [ ] Exit clauses  
+- [ ] confirm function that asks if sure and returns true/false  
 
 ### In Progress
 
 
 ### Done ✓
 
+- [x] Add vendas default values  
 - [x] fix new client anonymous talao  
 - [x] showStock preçobase e final  
 - [x] imprimir venda cliente inexistente  
