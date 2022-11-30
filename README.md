@@ -9,6 +9,35 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 
 # Sobre o programa:
 
+## Custom IO functions
+
+### Custom Inputs
+
+`customCini(console_out conout)`
+`customCinf(console_out conout)`
+>Custom input que só aceita numeros, "i" só retorna int, "f" só retorna float
+
+`customCins(conout_out conout)`
+>Custom input que retorna a linha toda como uma string
+
+### Custom Output
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Funções principais
 
 dicionário  

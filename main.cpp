@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+#include <stdio.h>
 #include <locale.h>
 
 using namespace conmanip;
@@ -131,13 +132,10 @@ string whiteBG(console_out *conout, int width)
 
 // ! Custom io funcs
 
-/* custom CIN
-only accepts and returns ints */
-int customCini(console_out *conout)
+void inputBox(console_out *conout)
 {
-    int choice;
     cout << setposx(conout->getsize().X / 2 - 14)
-         << setposy(conout->getsize().Y - 4)
+         << setposy(conout->getsize().Y - 5)
          << "O----------------------------O"
          << endl
          << setposx(conout->getsize().X / 2 - 14)
@@ -150,17 +148,25 @@ int customCini(console_out *conout)
     {
         cout << setposx(i) << setposy(conout->getsize().Y - 1) << " ";
     }
+    conout->setposx(conout->getsize().X / 2 - 12);
+    conout->setposy(conout->getpos().Y - 3);
+};
 
-    while (!(cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice))
-    {
-        cout << setposx(conout->getsize().X / 2 - 14)
-             << setposy(conout->getsize().Y - 3)
-             << "|                            |"
-             << endl
-             << endl
+/* custom CIN
+only accepts and returns ints */
+int customCini(console_out *conout)
+{
+    inputBox(conout);
+    int choice;
+    while (!(cin >> choice))
+    {        
+        inputBox(conout);
+        cout << setposy(conout->getpos().Y + 2)
              << setposx(conout->getsize().X / 2 - 14)
              << settextcolor(console_text_colors::yellow)
              << "insira um numero"
+             << setposx(conout->getsize().X / 2 - 12)
+             << setposy(conout->getpos().Y - 2)
              << settextcolor(console_text_colors::white);
         cin.clear();
         cin.ignore(100, '\n');
@@ -172,20 +178,9 @@ int customCini(console_out *conout)
 recieves and outputs strings */
 string customCins(console_out *conout)
 {
+    inputBox(conout);
     char first;
     string choice;
-    cout << setposx(conout->getsize().X / 2 - 14)
-         << setposy(conout->getsize().Y - 4)
-         << "O----------------------------O"
-         << endl
-         << setposx(conout->getsize().X / 2 - 14)
-         << "|                            |"
-         << endl
-         << setposx(conout->getsize().X / 2 - 14)
-         << "O----------------------------O"
-         << endl;
-    conout->setposx(conout->getsize().X / 2 - 12);
-    conout->setposy(conout->getsize().Y - 3);
     cin >> first;
     getline(cin, choice);
     return first + choice;
@@ -195,32 +190,17 @@ string customCins(console_out *conout)
 only accepts and returns floats */
 float customCinf(console_out *conout)
 {
+    inputBox(conout);
     float choice;
-    int Xpos = conout->getsize().X / 2 - 14;
-    cout << setposx(Xpos)
-         << setposy(conout->getsize().Y - 4)
-         << "O----------------------------O"
-         << endl
-         << setposx(Xpos)
-         << "|                            |"
-         << endl
-         << setposx(Xpos)
-         << "O----------------------------O"
-         << endl;
-    for (int i = Xpos; i < (Xpos + 30); i++)
+    while (!(cin >> choice))
     {
-        cout << setposx(i) << setposy(conout->getsize().Y - 1) << " ";
-    }
-    while (!(cin >> setposx(conout->getsize().X / 2 - 12) >> setposy(conout->getsize().Y - 3) >> choice))
-    {
-        cout << setposx(conout->getsize().X / 2 - 14)
-             << setposy(conout->getsize().Y - 3)
-             << "|                            |"
-             << endl
-             << endl
+        inputBox(conout);
+        cout << setposy(conout->getpos().Y + 2)
              << setposx(conout->getsize().X / 2 - 14)
              << settextcolor(console_text_colors::yellow)
              << "insira um numero"
+             << setposx(conout->getsize().X / 2 - 12)
+             << setposy(conout->getpos().Y - 2)
              << settextcolor(console_text_colors::white);
         cin.clear();
         cin.ignore(100, '\n');
@@ -370,6 +350,15 @@ int checkHighestId(string **table, int X)
 };
 
 // ! Usefull funcs
+
+void pressEnter(console_out *conout, int num)
+{
+    customCout(conout, "press enter...");
+    for (int i = 0; i < num; i++)
+    {
+        cin.ignore();
+    }
+};
 
 /* getBiggestStringSize
 returns size of biggest string in the array */
@@ -777,6 +766,11 @@ void pagamento(console_out *conout, string **stock, int *sizeStock, string **cli
     *sizeCart = 0;
 };
 
+
+// ! Submenus
+
+// ! Efectuar venda
+
 /* imprime o talao da transacao escolhida em idFatura*/
 void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart, int idFatura)
 {
@@ -870,13 +864,8 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - troco.length()) << "Troco " << troco << endl
          << setposx(Xpos) << whiteBG(conout, width);
     cout << setbgcolor(console_bg_colors::black) << settextcolor(console_text_colors::white) << endl;
-    cin.ignore();
-    cin.ignore();
+    pressEnter(conout, 2);
 };
-
-// ! Submenus
-
-// ! Efectuar venda
 
 /* Selecionar produto
 submenu V*/
@@ -1043,12 +1032,14 @@ void relatorioStock(console_out *conout, string **stock, int *sizeStock, string 
     cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Total stock: " << stockTotal << endl;
     cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Valor total: " << setPrecision2(valorTotal) << endl;
     cout << setposx(Xpos - 16 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << setPrecision2(valorTotal * 0.3) << endl;
-    cin.ignore();
-    cin.ignore();
+    pressEnter(conout, 2);
 };
 
 // TODO:
 /* Relatorio de vendas por produto */
+
+// TODO:
+/* Relatorio de vendas por cliente */
 
 // TODO:
 /* Relatorio total de vendas */
@@ -1087,8 +1078,7 @@ void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, s
          << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[1] << output[1] << endl
          << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[2] << output[2] << endl
          << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[3] << output[3] << endl;
-    cin.ignore();
-    cin.ignore();
+    pressEnter(conout, 2);
 };
 
 // ! Opçoes de cliente
@@ -1548,14 +1538,13 @@ int main()
          << "FRUIT INC."
          << endl
          << endl
-         << setposx(conout.getsize().X / 2 - 12 / 2)
-         << "press enter...";
-    cin.ignore();
+         << setposx(conout.getsize().X / 2 - 12 / 2);
+    pressEnter(&conout, 1);
 
     displayMainMenu(&conout, stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras, cart, &sizeCart);
 
     system("cls||clear");
-    apple(&conout, conout.getsize().X / 2, 3);
+    apple(&conout, conout.getsize().X / 2, 1);
     cout << setposx(conout.getsize().X / 2 - 7 / 2)
          << setposy(12)
          << "Made by"
@@ -1567,10 +1556,8 @@ int main()
          << "T0123178"
          << endl
          << endl
-         << setposx(conout.getsize().X / 2 - 12 / 2)
-         << "press enter...";
-    cin.ignore();
-    cin.ignore();
+         << setposx(conout.getsize().X / 2 - 12 / 2);
+    pressEnter(&conout, 1);
     system("cls||clear");
     return 0;
 }
