@@ -159,7 +159,7 @@ int customCini(console_out *conout)
     inputBox(conout);
     int choice;
     while (!(cin >> choice))
-    {        
+    {
         inputBox(conout);
         cout << setposy(conout->getpos().Y + 2)
              << setposx(conout->getsize().X / 2 - 14)
@@ -526,7 +526,7 @@ void showCart(console_out *conout, string **stock, int *sizeStock, string **cart
 {
     if (*sizeCart != 0)
     {
-        int biggestString[] = {0, 0};
+        int biggestString[] = {3, 0};
         for (int i = 0; i < *sizeCart; i++)
         {
             for (int j = 0; j < 2; j++)
@@ -595,6 +595,7 @@ void showCart(console_out *conout, string **stock, int *sizeStock, string **cart
     }
 };
 
+/* Displays Vendas table */
 void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **clientes, int *sizeClientes, bool left)
 {
     if (*sizeVendas != 0)
@@ -766,7 +767,6 @@ void pagamento(console_out *conout, string **stock, int *sizeStock, string **cli
     *sizeCart = 0;
 };
 
-
 // ! Submenus
 
 // ! Efectuar venda
@@ -823,9 +823,21 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
     string total = setPrecision2(precoTotalCart(stock, sizeStock, tempTable, &sizeTempTable) * 1.30);
     string entregue = setPrecision2(stof(selectSQL(to_string(idFatura), 0, vendas, 2)));
     string troco = setPrecision2(stof(entregue) - stof(total) * 1.23);
-    int Xpos = conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + 3) / 2;
+    int big = biggestString[0] + biggestString[1] + biggestString[2] + 3;
+    if (big < 16)
+    {
+        big = 16;
+    }
+
+    int Xpos = conout->getsize().X / 2 - big / 2;
+
     // top
     int width = biggestString[0] + biggestString[1] + biggestString[2] + 5;
+    if (width < 16)
+    {
+        width = 16;
+    }
+
     cout << setposy(3)
          << setposx(Xpos)
          << whiteBG(conout, width) << endl
@@ -838,30 +850,32 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
     // body
     for (int i = 0; i < sizeTempTable; i++)
     {
+        string semIVA = setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30);
+        string soIVA = setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 0.23);
         cout << setposx(Xpos)
              << whiteBG(conout, width)
              << setposx(Xpos + 1)
              << tempTable[i][1]
              << setposx(Xpos + biggestString[0] + 3)
              << selectSQL(tempTable[i][0], 0, stock, 1)
-             << setposx(Xpos + biggestString[0] + biggestString[1] + 4)
-             << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30)
+             << setposx(Xpos + width - semIVA.length() - 1)
+             << semIVA
              << endl
              << setposx(Xpos)
              << whiteBG(conout, width)
-             << setposx(Xpos + biggestString[0] + biggestString[1] + 4)
-             << setPrecision2(stof(selectSQL(tempTable[i][0], 0, stock, 3)) * 1.30 * 0.23)
+             << setposx(Xpos + width - soIVA.length() - 1)
+             << soIVA
              << endl;
     }
     // tail
     cout << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - total.length()) << "Total " << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - total.length()) << "s/IVA " << total << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 6 - total.length()) << "Valor IVA " << setPrecision2(stof(total) * 0.23) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - total.length()) << "Total " << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - total.length()) << "s/IVA " << total << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 11 - total.length()) << "Valor IVA " << setPrecision2(stof(total) * 0.23) << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - setPrecision2(stof(total) * 1.23).length()) << "c/IVA " << setPrecision2(stof(total) * 1.23) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 5 - entregue.length()) << "Entregue " << entregue << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] - 2 - troco.length()) << "Troco " << troco << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - setPrecision2(stof(total) * 1.23).length()) << "c/IVA " << setPrecision2(stof(total) * 1.23) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 10 - entregue.length()) << "Entregue " << entregue << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - troco.length()) << "Troco " << troco << endl
          << setposx(Xpos) << whiteBG(conout, width);
     cout << setbgcolor(console_bg_colors::black) << settextcolor(console_text_colors::white) << endl;
     pressEnter(conout, 2);
@@ -1029,9 +1043,9 @@ void relatorioStock(console_out *conout, string **stock, int *sizeStock, string 
         valorTotal += quantidadeAtual * stof(stock[i][3]);
     }
 
-    cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Total stock: " << stockTotal << endl;
-    cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Valor total: " << setPrecision2(valorTotal) << endl;
-    cout << setposx(Xpos - 16 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << setPrecision2(valorTotal * 0.3) << endl;
+    cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Total stock: " << settextcolor(console_text_colors::light_yellow) << stockTotal << settextcolor(console_text_colors::white) << endl;
+    cout << setposx(Xpos - 19 - setPrecision2(valorTotal).length()) << "Valor total s/IVA: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal) << settextcolor(console_text_colors::white) << endl;
+    cout << setposx(Xpos - 16 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 0.3) << settextcolor(console_text_colors::white) << endl;
     pressEnter(conout, 2);
 };
 
@@ -1041,13 +1055,75 @@ void relatorioStock(console_out *conout, string **stock, int *sizeStock, string 
 // TODO:
 /* Relatorio de vendas por cliente */
 
-// TODO:
 /* Relatorio total de vendas */
 void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     system("cls||clear");
     string text[] = {"Produto mais vendido: ", "Produto menos vendido: ", "Produto com mais lucro: ", "Cliente que mais comprou: "};
     string output[] = {"", "", "", ""}; // maisVendido, menosVendido, maisLucro, melhorCliente
+
+    // produto mais vendido e menos vendido
+    int quantMaior = INT_MIN;
+    int quantMenor = INT_MAX;
+    float lucro = INT_MIN;
+    for (int i = 0; i < *sizeStock; i++)
+    {
+        int quantTemp = 0;
+        for (int j = 0; j < *sizeCompras; j++)
+        {
+            if (stock[i][0] == compras[j][1])
+            {
+                quantTemp += stoi(compras[j][2]);
+            }
+        }
+        // prod mais vendido
+        if (quantTemp > quantMaior)
+        {
+            quantMaior = quantTemp;
+            ;
+            output[0] = stock[i][1] + " " + to_string(quantMaior);
+        }
+        // prod menos vendido
+        if (quantTemp < quantMenor)
+        {
+            quantMenor = quantTemp;
+            output[1] = stock[i][1] + " " + to_string(quantMenor);
+        }
+        // mais lucro
+        float lucroTemp = quantTemp * stof(selectSQL(to_string(i), 0, stock, 3)) * 0.30;
+        if (lucroTemp > lucro)
+        {
+            lucro = lucroTemp;
+            output[2] = stock[i][1] + " " + setPrecision2(lucro);
+        }
+    }
+
+    // melhor cliente
+    float valorCliente = INT_MIN;
+    for (int i = 0; i < *sizeClientes; i++) // por cada cliente
+    {
+        float valorClienteTemp = 0;
+        for (int j = 0; j < *sizeVendas; j++) // por cada venda
+        {
+            if (vendas[j][1] == clientes[i][0])
+            {
+                for (int k = 0; k < *sizeCompras; k++) // por cada compra
+                {
+                    if (compras[k][0] == vendas[j][0])
+                    {
+                        float valorDoProduto = stof(selectSQL(compras[k][1], 0, stock, 3));
+                        int quantDoProduto = stoi(compras[k][2]);
+                        valorClienteTemp += valorDoProduto * quantDoProduto * 0.30;
+                    }
+                }
+            }
+        }
+        if (valorClienteTemp > valorCliente)
+        {
+            valorCliente = valorClienteTemp;
+            output[3] = clientes[i][1] + " " + setPrecision2(valorCliente);
+        }
+    }
 
     int middle = conout->getsize().X / 2;
     int biggestString[] = {0, 0};
@@ -1071,13 +1147,14 @@ void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, s
             }
         }
     }
+
     cout << setposy(2)
          << setposx(middle - 25 / 2) << "RELATORIO TOTAL DE VENDAS" << endl
          << endl
-         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[0] << output[0] << endl
-         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[1] << output[1] << endl
-         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[2] << output[2] << endl
-         << setposx(middle - (biggestString[0] - biggestString[1]) / 2) << text[3] << output[3] << endl;
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[0] << settextcolor(console_text_colors::light_yellow) << output[0] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[1] << settextcolor(console_text_colors::light_yellow) << output[1] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[2] << settextcolor(console_text_colors::light_yellow) << output[2] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[3] << settextcolor(console_text_colors::light_yellow) << output[3] << settextcolor(console_text_colors::white) << endl;
     pressEnter(conout, 2);
 };
 
