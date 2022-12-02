@@ -6,15 +6,15 @@ Project Description
 
 ### Todo
 
-- [ ] prevenir repetidos  
 - [ ] relatorio de vendas por produto  
-- [ ] relatorio total de vendas  
+- [ ] prevenir repetidos  
 - [ ] clean unused parameters in display funcs  
 - [ ] Exit clauses  
 - [ ] confirm function that asks if sure and returns true/false  
 
 ### In Progress
 
+- [ ] relatorio total de vendas  
 
 ### Done ✓
 

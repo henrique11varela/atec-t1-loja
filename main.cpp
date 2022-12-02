@@ -18,6 +18,14 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
 // TODO: Relatorio total de vendas
 // TODO: clean unused parameters in display funcs
 
+/*
+while (checkLineOf(table, size, col, value) != -1)
+    {
+        customCout(conout, "");
+        value = customCins(conout);
+    }
+*/
+
 /* fills tables with default and example values */
 void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
@@ -688,6 +696,11 @@ int clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
     string nome, telefone, morada;
     customCout(conout, "Insira o nome:");
     nome = customCins(conout);
+    while (checkLineOf(clientes, sizeClientes, 1, nome) != -1)
+    {
+        customCout(conout, "Cliente ja existente, insira de novo:");
+        nome = customCins(conout);
+    }
     customCout(conout, "Insira o numero de telefone:");
     telefone = customCins(conout);
     customCout(conout, "Insira a morada:");
@@ -968,6 +981,11 @@ void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
     string nome;
     customCout(conout, "Insira o nome do artigo: ");
     nome = customCins(conout);
+    while (checkLineOf(stock, sizeStock, 1, nome) != -1)
+    {
+        customCout(conout, "Artigo ja existente, insira novo: ");
+        nome = customCins(conout);
+    }
     customCout(conout, "Preco base do artigo: ");
     preco_fabrica = customCinf(conout);
     stock[*sizeStock][0] = to_string(checkHighestId(stock, 0) + 1);
@@ -1051,9 +1069,121 @@ void relatorioStock(console_out *conout, string **stock, int *sizeStock, string 
 
 // TODO:
 /* Relatorio de vendas por produto */
+void relatorioVendasProduto(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    system("cls||clear");
+    showStock(conout, stock, sizeStock, cart, true, false);
+    customCout(conout, "Insira o nome do produto");
+    string produto = customCins(conout); // nome do produto
+    while (checkLineOf(stock, sizeStock, 1, produto) == -1)
+    {
+        customCout(conout, "Produto nao encontrado, insira de novo");
+        produto = customCins(conout);
+    }
+    /*
+    quanto em stock
+    quantos prods vendidos
+    possivel lucro
+    quanto lucro ja deu
+    */
+    // Calculate output
+
+    // Display output
+    system("cls||clear");
+    string text[] = {": ", ": ", ": ", ": "};
+    string output[] = {"", "", "", ""};
+    int middle = conout->getsize().X / 2;
+    int biggestString[] = {0, 0};
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            string item;
+            switch (j)
+            {
+            case 0:
+                item = text[i];
+                break;
+            case 1:
+                item = output[i];
+                break;
+            }
+            if (item.length() > biggestString[j])
+            {
+                biggestString[j] = item.length();
+            }
+        }
+    }
+    cout << setposy(2)
+         << setposx(middle - 31 / 2) << "RELATORIO DE VENDAS POR PRODUTO" << endl
+         << endl
+         << setposx(middle - produto.length() / 2) << produto << endl
+         << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[0] << settextcolor(console_text_colors::light_yellow) << output[0] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[1] << settextcolor(console_text_colors::light_yellow) << output[1] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[2] << settextcolor(console_text_colors::light_yellow) << output[2] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[3] << settextcolor(console_text_colors::light_yellow) << output[3] << settextcolor(console_text_colors::white) << endl;
+    pressEnter(conout, 1);
+};
 
 // TODO:
 /* Relatorio de vendas por cliente */
+void relatorioVendasCliente(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    system("cls||clear");
+    showClientes(conout, clientes, sizeClientes, false);
+    customCout(conout, "Insira o nome do cliente");
+    string cliente = customCins(conout); // nome do cliente
+    while (checkLineOf(clientes, sizeClientes, 1, cliente) == -1)
+    {
+        customCout(conout, "Cliente nao encontrado, insira de novo");
+        cliente = customCins(conout);
+    }
+    /*
+    quantas vendas
+    quantos produtos comprou
+    quanto gastou
+    lucro que deu
+    */
+    // Calculate output
+
+    // Display output
+    system("cls||clear");
+    string text[] = {": ", ": ", ": ", ": "};
+    string output[] = {"", "", "", ""};
+    int middle = conout->getsize().X / 2;
+    int biggestString[] = {0, 0};
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            string item;
+            switch (j)
+            {
+            case 0:
+                item = text[i];
+                break;
+            case 1:
+                item = output[i];
+                break;
+            }
+            if (item.length() > biggestString[j])
+            {
+                biggestString[j] = item.length();
+            }
+        }
+    }
+    cout << setposy(2)
+         << setposx(middle - 31 / 2) << "RELATORIO DE VENDAS POR CLIENTE" << endl
+         << endl
+         << setposx(middle - cliente.length() / 2) << cliente << endl
+         << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[0] << settextcolor(console_text_colors::light_yellow) << output[0] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[1] << settextcolor(console_text_colors::light_yellow) << output[1] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[2] << settextcolor(console_text_colors::light_yellow) << output[2] << settextcolor(console_text_colors::white) << endl
+         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[3] << settextcolor(console_text_colors::light_yellow) << output[3] << settextcolor(console_text_colors::white) << endl;
+    pressEnter(conout, 1);
+};
 
 /* Relatorio total de vendas */
 void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
@@ -1381,11 +1511,11 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
             break;
         case 2:
             /* Relatorio de vendas por produto */
-
+            relatorioVendasProduto(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         case 3:
             /* Relatorio de vendas por cliente */
-
+            relatorioVendasCliente(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
         case 4:
             /* Relatorio total de vendas */
