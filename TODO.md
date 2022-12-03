@@ -6,18 +6,17 @@ Project Description
 
 ### Todo
 
-- [ ] relatorio de vendas por produto  
-- [ ] prevenir repetidos  
+- [ ] Reescrever textos  
+- [ ] setLocale(PT)  
 - [ ] clean unused parameters in display funcs  
-- [ ] Exit clauses  
-- [ ] confirm function that asks if sure and returns true/false  
 
 ### In Progress
 
-- [ ] relatorio total de vendas  
 
 ### Done ✓
 
+- [x] prevenir repetidos  
+- [x] relatorio de vendas por produto  
 - [x] Relatorio de stock  
 - [x] Add vendas default values  
 - [x] fix new client anonymous talao  

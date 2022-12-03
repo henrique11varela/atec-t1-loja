@@ -13,9 +13,6 @@ to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
 // TODO:
-// TODO: Relatorio de stock
-// TODO: Relatorio de vendas por produto
-// TODO: Relatorio total de vendas
 // TODO: clean unused parameters in display funcs
 
 /*
@@ -138,6 +135,14 @@ string whiteBG(console_out *conout, int width)
     return "";
 };
 
+void euro(console_out *conout)
+{
+    cout << WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), L"€", wcslen(L"€"), NULL, NULL)
+         << setposx(conout->getposx() - 1)
+         << " "
+         << setposx(conout->getposx() - 1);
+};
+
 // ! Custom io funcs
 
 void inputBox(console_out *conout)
@@ -244,50 +249,6 @@ string selectSQL(string value, int index_value, string **table, int index_return
         }
     }
     return "";
-};
-
-/* joinSelect
-returns the content of the table2[index_return] where table1[index_value] == value and table1[index_join1] == table2[index_join2]*/
-string joinSelect(string value, int index_value, string **table1, int index_join1, int index_join2, string **table2, int index_return)
-{
-    return selectSQL(selectSQL(value, index_value, table1, index_join1), index_join2, table2, index_return);
-};
-
-/* joinSelectArray
-changes the contents in a temporary array table_return created before with the contents of a column of the table2[index_return] where table1[index_value] == value and table1[index_join1] == table2[index_join2]
-returns the size of the useful part of the array*/
-int joinSelectArray(string value, int index_value, string **table1, int index_join1, int index_join2, string **table2, int index_return, string *array_return)
-{
-    int sizeArr = 0;
-    for (int i = 0; i < 100; i++)
-    {
-        if (table1[i][index_value] == value)
-        {
-            for (int j = 0; j < 100; j++)
-            {
-                if (table1[i][index_join1] == table2[j][index_join2])
-                {
-                    array_return[sizeArr] = table2[j][index_return];
-                    sizeArr++;
-                }
-            }
-        }
-    }
-    return sizeArr;
-};
-
-/* check first empty line in table
-returns the index of the first empty line */
-int checkFirstEmptyLine(string **table)
-{
-    for (int i = 0; i < 100; i++)
-    {
-        if (table[i][0] == "")
-        {
-            return i;
-        }
-    }
-    return -1;
 };
 
 /* check first line where table[Y][X] is value
@@ -493,7 +454,7 @@ void showStock(console_out *conout, string **stock, int *sizeStock, string **car
              << settextcolor(console_text_colors::white)
              << endl;
         cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4); i++)
         {
             cout << "-";
         }
@@ -512,12 +473,13 @@ void showStock(console_out *conout, string **stock, int *sizeStock, string **car
                  << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + 3)
                  << "|"
                  << setPrecision2(stof(stock[i][3]) * (venda ? (1.30 * 1.23) : 1))
-                 << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4)
-                 << "|"
+                 << setposx(Xpos + biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4);
+            euro(conout);
+            cout << "|"
                  << endl;
         }
         cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
+        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4); i++)
         {
             cout << "-";
         }
@@ -581,13 +543,12 @@ void showCart(console_out *conout, string **stock, int *sizeStock, string **cart
                  << endl;
         }
         string valor = setPrecision2(precoTotalCart(stock, sizeStock, cart, sizeCart) * 1.30 * 1.23);
-        char euro = 128;
         cout << setposx(Xpos)
              << "|"
              << setposx((Xpos + biggestString[0] + biggestString[1] + 1) - valor.length())
-             << valor
-             << WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), L"€", wcslen(L"€"), NULL, NULL)
-             << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
+             << valor;
+        euro(conout);
+        cout << setposx(Xpos + biggestString[0] + biggestString[1] + 2)
              << "|"
              << endl;
         cout << setposx(Xpos) << "O";
@@ -832,23 +793,24 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
     string numCliente = selectSQL(to_string(idFatura), 0, vendas, 1);
     string nomeCliente = selectSQL(numCliente, 0, clientes, 1);
     nomeCliente = nomeCliente == "" ? "Eliminado" : nomeCliente;
+    numCliente = numCliente == "-1" ? " " : numCliente;
     string data = selectSQL(to_string(idFatura), 0, vendas, 3);
     string total = setPrecision2(precoTotalCart(stock, sizeStock, tempTable, &sizeTempTable) * 1.30);
     string entregue = setPrecision2(stof(selectSQL(to_string(idFatura), 0, vendas, 2)));
     string troco = setPrecision2(stof(entregue) - stof(total) * 1.23);
-    int big = biggestString[0] + biggestString[1] + biggestString[2] + 3;
-    if (big < 16)
+    int big = biggestString[0] + biggestString[1] + biggestString[2] + 4;
+    if (big < 17)
     {
-        big = 16;
+        big = 17;
     }
 
     int Xpos = conout->getsize().X / 2 - big / 2;
 
     // top
     int width = biggestString[0] + biggestString[1] + biggestString[2] + 5;
-    if (width < 16)
+    if (width < 17)
     {
-        width = 16;
+        width = 17;
     }
 
     cout << setposy(3)
@@ -869,26 +831,38 @@ void imprimirTalao(console_out *conout, string **stock, int *sizeStock, string *
              << whiteBG(conout, width)
              << setposx(Xpos + 1)
              << tempTable[i][1]
-             << setposx(Xpos + biggestString[0] + 3)
+             << setposx(Xpos + biggestString[0] + 2)
              << selectSQL(tempTable[i][0], 0, stock, 1)
-             << setposx(Xpos + width - semIVA.length() - 1)
-             << semIVA
-             << endl
+             << setposx(Xpos + width - semIVA.length() - 2)
+             << semIVA;
+        euro(conout);
+        cout << endl
              << setposx(Xpos)
              << whiteBG(conout, width)
-             << setposx(Xpos + width - soIVA.length() - 1)
-             << soIVA
-             << endl;
+             << setposx(Xpos + width - soIVA.length() - 2)
+             << soIVA;
+        euro(conout);
+        cout << endl;
     }
     // tail
     cout << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - total.length()) << "Total " << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - total.length()) << "s/IVA " << total << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 11 - total.length()) << "Valor IVA " << setPrecision2(stof(total) * 0.23) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - total.length()) << "Total " << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - total.length()) << "s/IVA " << total;
+    euro(conout);
+    cout << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 12 - total.length()) << "Valor IVA " << setPrecision2(stof(total) * 0.23);
+    euro(conout);
+    cout << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - setPrecision2(stof(total) * 1.23).length()) << "c/IVA " << setPrecision2(stof(total) * 1.23) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 10 - entregue.length()) << "Entregue " << entregue << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - troco.length()) << "Troco " << troco << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - setPrecision2(stof(total) * 1.23).length()) << "c/IVA " << setPrecision2(stof(total) * 1.23);
+    euro(conout);
+    cout << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 11 - entregue.length()) << "Entregue " << entregue;
+    euro(conout);
+    cout << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - troco.length()) << "Troco " << troco;
+    euro(conout);
+    cout << endl
          << setposx(Xpos) << whiteBG(conout, width);
     cout << setbgcolor(console_bg_colors::black) << settextcolor(console_text_colors::white) << endl;
     pressEnter(conout, 2);
@@ -1034,10 +1008,18 @@ void eliminarProduto(console_out *conout, string **cart, string **stock, int *si
         customCout(conout, "Insira o id do artigo");
         id = customCini(conout);
     } while (checkLineOf(stock, sizeStock, 0, to_string(id)) == -1);
-
-    cleanLine(stock, checkLineOf(stock, sizeStock, 0, to_string(id)), 4);
-    compactTable(stock, 4);
-    (*sizeStock)--;
+    string choice;
+    do
+    {
+        customCout(conout, "Queres mesmo eliminar o produto? (S/N)");
+        choice = customCins(conout);
+    } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
+    if (choice == "s" || choice == "S")
+    {
+        cleanLine(stock, checkLineOf(stock, sizeStock, 0, to_string(id)), 4);
+        compactTable(stock, 4);
+        (*sizeStock)--;
+    }
 };
 
 // ! Criação de relatorios
@@ -1061,13 +1043,16 @@ void relatorioStock(console_out *conout, string **stock, int *sizeStock, string 
         valorTotal += quantidadeAtual * stof(stock[i][3]);
     }
 
-    cout << setposx(Xpos - 13 - setPrecision2(valorTotal).length()) << "Total stock: " << settextcolor(console_text_colors::light_yellow) << stockTotal << settextcolor(console_text_colors::white) << endl;
-    cout << setposx(Xpos - 19 - setPrecision2(valorTotal).length()) << "Valor total s/IVA: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal) << settextcolor(console_text_colors::white) << endl;
-    cout << setposx(Xpos - 16 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 0.3) << settextcolor(console_text_colors::white) << endl;
+    cout << setposx(Xpos - 15 - setPrecision2(valorTotal).length()) << "Total stock: " << settextcolor(console_text_colors::light_yellow) << stockTotal << settextcolor(console_text_colors::white) << endl;
+    cout << setposx(Xpos - 21 - setPrecision2(valorTotal).length()) << "Valor total s/IVA: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal);
+    euro(conout);
+    cout << settextcolor(console_text_colors::white) << endl;
+    cout << setposx(Xpos - 18 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 0.3);
+    euro(conout);
+    cout << settextcolor(console_text_colors::white) << endl;
     pressEnter(conout, 2);
 };
 
-// TODO:
 /* Relatorio de vendas por produto */
 void relatorioVendasProduto(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
@@ -1080,18 +1065,31 @@ void relatorioVendasProduto(console_out *conout, string **stock, int *sizeStock,
         customCout(conout, "Produto nao encontrado, insira de novo");
         produto = customCins(conout);
     }
-    /*
-    quanto em stock
-    quantos prods vendidos
-    possivel lucro
-    quanto lucro ja deu
-    */
-    // Calculate output
-
-    // Display output
     system("cls||clear");
-    string text[] = {": ", ": ", ": ", ": "};
+    int quantidadeInfo = 4;
+    string text[] = {"Quantidade em stock: ", "Quantidade vendida: ", "Possivel lucro: ", "Lucro ja adquirido: "};
     string output[] = {"", "", "", ""};
+
+    // quantos em stock
+    output[0] = selectSQL(produto, 1, stock, 2);
+
+    // quantos prods vendidos
+    int quantosVendidos = 0;
+    for (int i = 0; i < *sizeCompras; i++)
+    {
+        if (compras[i][1] == selectSQL(produto, 1, stock, 0))
+        {
+            quantosVendidos += stoi(compras[i][2]);
+        }
+    }
+    output[1] = to_string(quantosVendidos);
+
+    // possivel lucro
+    output[2] = setPrecision2(stoi(output[0]) * stof(selectSQL(produto, 1, stock, 3)) * 0.30);
+
+    // lucro ja dado
+    output[3] = setPrecision2(stoi(output[1]) * stof(selectSQL(produto, 1, stock, 3)) * 0.30);
+
     int middle = conout->getsize().X / 2;
     int biggestString[] = {0, 0};
     for (int i = 0; i < 4; i++)
@@ -1118,15 +1116,19 @@ void relatorioVendasProduto(console_out *conout, string **stock, int *sizeStock,
          << setposx(middle - 31 / 2) << "RELATORIO DE VENDAS POR PRODUTO" << endl
          << endl
          << setposx(middle - produto.length() / 2) << produto << endl
-         << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[0] << settextcolor(console_text_colors::light_yellow) << output[0] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[1] << settextcolor(console_text_colors::light_yellow) << output[1] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[2] << settextcolor(console_text_colors::light_yellow) << output[2] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[3] << settextcolor(console_text_colors::light_yellow) << output[3] << settextcolor(console_text_colors::white) << endl;
+         << endl;
+    for (int i = 0; i < quantidadeInfo; i++)
+    {
+        cout << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[i] << settextcolor(console_text_colors::light_yellow) << output[i];
+        if (i == 2 || i == 3)
+        {
+            euro(conout);
+        }
+        cout << settextcolor(console_text_colors::white) << endl;
+    }
     pressEnter(conout, 1);
 };
 
-// TODO:
 /* Relatorio de vendas por cliente */
 void relatorioVendasCliente(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
@@ -1139,18 +1141,35 @@ void relatorioVendasCliente(console_out *conout, string **stock, int *sizeStock,
         customCout(conout, "Cliente nao encontrado, insira de novo");
         cliente = customCins(conout);
     }
-    /*
-    quantas vendas
-    quantos produtos comprou
-    quanto gastou
-    lucro que deu
-    */
+    system("cls||clear");
+    string text[] = {"Quantidade de compras: ", "Quantidade de produtos comprados: ", "Valor gasto: ", "Lucro dado: "};
+    string output[] = {"", "", "", ""};
     // Calculate output
 
+    int quantDeCompras = 0;
+    int quantItemComprado = 0;
+    float valorGasto = 0;
+    for (int i = 0; i < *sizeVendas; i++)
+    {
+        if (vendas[i][1] == selectSQL(cliente, 1, clientes, 0))
+        {
+            for (int j = 0; j < *sizeCompras; j++)
+            {
+                if (vendas[i][0] == compras[j][0])
+                {
+                    quantItemComprado += stoi(compras[j][2]);
+                    valorGasto += stoi(compras[j][2]) * stof(selectSQL(compras[j][1], 0, stock, 3));
+                }
+            }
+            quantDeCompras++;
+        }
+    }
+    output[0] = to_string(quantDeCompras);
+    output[1] = to_string(quantItemComprado);
+    output[2] = setPrecision2(valorGasto * 1.30 * 1.23);
+    output[3] = setPrecision2(valorGasto * 0.30);
+
     // Display output
-    system("cls||clear");
-    string text[] = {": ", ": ", ": ", ": "};
-    string output[] = {"", "", "", ""};
     int middle = conout->getsize().X / 2;
     int biggestString[] = {0, 0};
     for (int i = 0; i < 4; i++)
@@ -1177,11 +1196,16 @@ void relatorioVendasCliente(console_out *conout, string **stock, int *sizeStock,
          << setposx(middle - 31 / 2) << "RELATORIO DE VENDAS POR CLIENTE" << endl
          << endl
          << setposx(middle - cliente.length() / 2) << cliente << endl
-         << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[0] << settextcolor(console_text_colors::light_yellow) << output[0] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[1] << settextcolor(console_text_colors::light_yellow) << output[1] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[2] << settextcolor(console_text_colors::light_yellow) << output[2] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[3] << settextcolor(console_text_colors::light_yellow) << output[3] << settextcolor(console_text_colors::white) << endl;
+         << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[i] << settextcolor(console_text_colors::light_yellow) << output[i];
+        if (i == 2 || i == 3)
+        {
+            euro(conout);
+        }
+        cout << settextcolor(console_text_colors::white) << endl;
+    }
     pressEnter(conout, 1);
 };
 
@@ -1280,11 +1304,16 @@ void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, s
 
     cout << setposy(2)
          << setposx(middle - 25 / 2) << "RELATORIO TOTAL DE VENDAS" << endl
-         << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[0] << settextcolor(console_text_colors::light_yellow) << output[0] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[1] << settextcolor(console_text_colors::light_yellow) << output[1] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[2] << settextcolor(console_text_colors::light_yellow) << output[2] << settextcolor(console_text_colors::white) << endl
-         << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[3] << settextcolor(console_text_colors::light_yellow) << output[3] << settextcolor(console_text_colors::white) << endl;
+         << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << setposx(middle - (biggestString[0] + biggestString[1]) / 2) << text[i] << settextcolor(console_text_colors::light_yellow) << output[i];
+        if (i == 2 || i == 3)
+        {
+            euro(conout);
+        }
+        cout << settextcolor(console_text_colors::white) << endl;
+    }
     pressEnter(conout, 2);
 };
 
@@ -1312,10 +1341,18 @@ void eliminarCliente(console_out *conout, string **clientes, int *sizeClientes)
         customCout(conout, "Insira o numero de cliente");
         id = customCini(conout);
     } while (checkLineOf(clientes, sizeClientes, 0, to_string(id)) == -1);
-
-    cleanLine(clientes, checkLineOf(clientes, sizeClientes, 0, to_string(id)), 4);
-    compactTable(clientes, 4);
-    (*sizeClientes)--;
+    string choice;
+    do
+    {
+        customCout(conout, "Queres mesmo eliminar o cliente? (S/N)");
+        choice = customCins(conout);
+    } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
+    if (choice == "s" || choice == "S")
+    {
+        cleanLine(clientes, checkLineOf(clientes, sizeClientes, 0, to_string(id)), 4);
+        compactTable(clientes, 4);
+        (*sizeClientes)--;
+    }
 };
 
 /* Alterar nome */
@@ -1531,7 +1568,7 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Menu 4 OPCOES DE CLIENTE */
 void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Criar cliente", "2 - Eliminar cliente", "3 - Alterar nome", "0 - Voltar"};
+    string text[] = {"1 - Criar cliente", "2 - Alterar nome", "3 - Eliminar cliente", "0 - Voltar"};
     const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
@@ -1570,12 +1607,12 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
             criarCliente(conout, clientes, sizeClientes);
             break;
         case 2:
-            /* Eliminar cliente */
-            eliminarCliente(conout, clientes, sizeClientes);
-            break;
-        case 3:
             /* Alterar nome */
             alterarNomeCliente(conout, clientes, sizeClientes);
+            break;
+        case 3:
+            /* Eliminar cliente */
+            eliminarCliente(conout, clientes, sizeClientes);
             break;
         default:
             repetition = false;
