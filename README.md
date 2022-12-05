@@ -100,3 +100,17 @@ Total
 Entregue  
 Troco  
 Codigo de barras  
+
+
+
+
+
+clientes
+sizeClientes
+vendas
+sizeVendas
+compras
+sizeCompras
+cart
+sizeCart
+

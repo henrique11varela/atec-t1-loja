@@ -6,15 +6,16 @@ Project Description
 
 ### Todo
 
+- [ ] cliente muda nome nao confere repetidos  
 - [ ] Reescrever textos  
 - [ ] setLocale(PT)  
-- [ ] clean unused parameters in display funcs  
 
 ### In Progress
 
 
 ### Done ✓
 
+- [x] clean unused parameters in display funcs  
 - [x] prevenir repetidos  
 - [x] relatorio de vendas por produto  
 - [x] Relatorio de stock  
