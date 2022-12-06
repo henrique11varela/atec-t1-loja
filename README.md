@@ -1,7 +1,5 @@
 ![top image](./Other/cabecalho.png)
 
-# atec-t1-loja
-
 Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Especialista em Tecnologias e Programação de Sistemas de Informação* que estou a tirar na ATEC.
 
 É um programa para ser utilizado pelo trabalhador numa loja para fazer a gestão de vendas, stock e clientes.
