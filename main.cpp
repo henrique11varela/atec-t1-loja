@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <ctime>
 #include <stdio.h>
-#include <locale.h>
 
 using namespace conmanip;
 using namespace std;
@@ -249,6 +248,27 @@ int checkLineOf(string **table, int X, string value)
     return -1;
 };
 
+/* checks the highest non-negative value in a column from a table
+returns the highest value from that column
+returns -1 if failed to find any value*/
+int checkHighestId(string **table, int X)
+{
+    int output = -1;
+    for (int i = 0; i < 100; i++)
+    {
+        if (table[i][X] == "")
+        {
+            return output;
+        }
+        int value = stoi(table[i][X]);
+        if (value > output)
+        {
+            output = value;
+        }
+    }
+    return output;
+};
+
 /* clean line from table */
 void cleanLine(string **table, int Y, int C)
 {
@@ -280,27 +300,6 @@ bool compactTable(string **table, int C)
         line++;
     }
     return false;
-};
-
-/* checks the highest non-negative value in a column from a table
-returns the highest value from that column
-returns -1 if failed to find any value*/
-int checkHighestId(string **table, int X)
-{
-    int output = -1;
-    for (int i = 0; i < 100; i++)
-    {
-        if (table[i][X] == "")
-        {
-            return output;
-        }
-        int value = stoi(table[i][X]);
-        if (value > output)
-        {
-            output = value;
-        }
-    }
-    return output;
 };
 
 // ! Usefull funcs
@@ -1114,7 +1113,7 @@ void relatorioVendasCliente(console_out *conout, string **stock, string **client
 {
     system("cls||clear");
     showClientes(conout, clientes, sizeClientes, false);
-    customCout(conout, "Insira o nome do cliente"); //input client name
+    customCout(conout, "Insira o nome do cliente"); // input client name
     string cliente = customCins(conout);
     while (checkLineOf(clientes, 1, cliente) == -1)
     {
@@ -1341,8 +1340,15 @@ void alterarNomeCliente(console_out *conout, string **clientes, int *sizeCliente
         customCout(conout, "Insira o numero de cliente");
         id = customCini(conout);
     } while (checkLineOf(clientes, 0, to_string(id)) == -1);
+    string newName;
     customCout(conout, "Insira o novo nome"); // input new name
-    clientes[checkLineOf(clientes, 0, to_string(id))][1] = customCins(conout);
+    newName = customCins(conout);
+    while (checkLineOf(clientes, 1, newName) != -1)
+    {
+        customCout(conout, "Cliente ja existe, insira o novo nome"); // input new name
+        newName = customCins(conout);
+    }
+    clientes[checkLineOf(clientes, 0, to_string(id))][1] = newName;
 };
 
 // ! Main Menus
@@ -1596,7 +1602,7 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Main Menu */
 void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[5] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - gestao de clientes", "0 - Sair"};
+    string text[5] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - Gestao de clientes", "0 - Sair"};
     const int biggestString = getBiggestStringSize(text, 5);
     bool repetition = true;
     while (repetition)
@@ -1675,33 +1681,27 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
 
 int main()
 {
-    // get handle to the console window
+    // remover scrollbars
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    // retrieve screen buffer info
     CONSOLE_SCREEN_BUFFER_INFO scrBufferInfo;
     GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
-    // current window size
     short winWidth = scrBufferInfo.srWindow.Right - scrBufferInfo.srWindow.Left + 1;
     short winHeight = scrBufferInfo.srWindow.Bottom - scrBufferInfo.srWindow.Top + 1;
-    // current screen buffer size
     short scrBufferWidth = scrBufferInfo.dwSize.X;
     short scrBufferHeight = scrBufferInfo.dwSize.Y;
-    // to remove the scrollbar, make sure the window height matches the screen buffer height
     COORD newSize;
     newSize.X = scrBufferWidth;
     newSize.Y = winHeight;
-    // set the new screen buffer dimensions
     int Status = SetConsoleScreenBufferSize(hOut, newSize);
     if (Status == 0)
     {
         cout << "SetConsoleScreenBufferSize() failed! Reason : " << GetLastError() << endl;
         exit(Status);
     }
-    // print the current screen buffer dimensions
     GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
     cout << "Screen Buffer Size : " << scrBufferInfo.dwSize.X << " x " << scrBufferInfo.dwSize.Y << endl;
 
-    setlocale(LC_ALL, "");
+    //setlocale(LC_ALL, "");
     console_out_context ctxout;
     console_out conout(ctxout);
     conout.settitle("FRUIT INC.");

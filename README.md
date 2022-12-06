@@ -1,9 +1,10 @@
+![top image](./Other/cabecalho.png)
 
 # atec-t1-loja
 
 Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Especialista em Tecnologias e Programação de Sistemas de Informação* que estou a tirar na ATEC.
 
-É um programa para ser utilizado numa loja para fazer a gestão de vendas, stock e clientes.
+É um programa para ser utilizado pelo trabalhador numa loja para fazer a gestão de vendas, stock e clientes.
 
 ---
 
@@ -13,104 +14,94 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 
 ### Custom Inputs
 
-`customCini(console_out conout)`
-`customCinf(console_out conout)`
->Custom input que só aceita numeros, "i" só retorna int, "f" só retorna float
+`int customCini(console_out conout)`
+`float customCinf(console_out conout)`
+>Custom input que só aceita numeros, "i" só retorna int, "f" só retorna float.
 
-`customCins(conout_out conout)`
->Custom input que retorna a linha toda como uma string
+`string customCins(conout_out conout)`
+>Custom input que retorna a linha toda como uma string.
 
 ### Custom Output
 
+`void customCout(console_out *conout, string text)`
+>Imprime o *text* centrado por cima da input box.
+
+`string setPrecision2(float input)`
+>Retorna uma string da *input* com duas casas decimais.
+
+## ImprovSQL
+
+### Select
+
+`string selectSQL(int index_return, string **table, int index_value, string value)`
+>Retorna o valor da *table* na coluna *index_return* onde a coluna *index_value* é igual a *value*.
+
+### Gestão de tabelas
+
+`int checkLineOf(string **table, int X, string value)` 
+>Retorna o index da linha da *table* onde a coluna *X* é igual a *value*, retorna *-1* se não existe.
+
+`int checkHighestId(string **table, int X)`
+>Retorna o maior valor numérico da coluna *X* da *table* .
+
+`void cleanLine(string **table, int Y, int C)`
+>Apaga os valores da *table* na linha *Y*. *C* é o número de colunas da *table*.
+
+`bool compactTable(string **table, int C)`
+>Movimenta todos os valores da *table* "para cima" de modo a compactar a tabela eliminando espaços vazios.
+
+### Display das tabelas
+
+`void showClientes(console_out *conout, string **clientes, int *sizeClientes, bool left)`  
+`void showStock(console_out *conout, string **stock, int *sizeStock, bool left, bool venda)`  
+`void showCart(console_out *conout, string **stock, string **cart, int *sizeCart, bool left)`  
+`void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **clientes, bool left)`  
+>Imprime as tabelas de *clientes*, *stock*, *cart* e *vendas* na consola.
+
+## Outros
+
+- Todas as tabelas têm um maximo de 100 linhas e são matrizes de strings.
+- Para fazer a confirmação das inputs usei os `customCini` e `customCinf` de maneira a só aceitar números quando necessário.
+- Para ler strings completas (incluindo espaços) usei o `customCins`.  
+- Para evitar repetições de dados usei o `checkLineOf`, se retornasse *-1* então não existia na tabela e aceitava a input.  
+- Sempre que se elimina algo, pede para confirmar a ação.
+- Nos relatórios por produto/cliente a pesquisa é feita apartir do nome em vez do id.  
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Funções principais
-
-dicionário  
-`& - pointer para tabela`
-`int - inteiro`
-`string - texto`
-
-### ImprovisedSQL
-`string select(string A, int B, & C, int D);`  
->retorna o valor de C na posição D onde a posição B é igual a A.
-
-`string joinSelect(string A, int B, & C, int D, int E, & F, int G);`  
->Junta as tabelas C e F onde C\[D] == F\[E] e retorna o valor de F\[G] onde C\[B] é A.
-
-`string *joinSelectArray(string A, int B, & C, int D, int E, & F, int G);`
->Junta as tabelas C e F onde C\[D] == F\[E] e retorna todos os valores de F onde C\[B] é A.
-
-### Base de dados em Matrizes
+## Base de dados em Matrizes
 
 Dicionário  
 `chave primaria`
 
 #### Stock
 | `0` | 1 | 2 | 3 |
-| :- | :- | :- | :- |
+|-|-|-|-|
 | `id` |  nome | quantidade | preço de fabrica |
 
 #### Clientes
 | `0` | 1 | 2 | 3 |
-| :- | :- | :- | :- |
+|-|-|-|-|
 | `id` |  nome | telefone | morada |
 
 #### Vendas
 | `0` | 1 | 2 | 3 |
-| :- | :- | :- | :- |
+|-|-|-|-|
 | `id de fatura` | id cliente | valor entregue | data |
 
 #### Compras
 | `0` | `1` | 2 |
-| :- | :- | :- |
+|-|-|-|
 | `id fatura` | `id produto` | quantidade |
 
 #### Cart
+(é uma tabela que guarda valores temporariamente)
 | `0` | 1 |
-| :- | :- |
+|-|-|
 | `id produto` | quantidade |
 
+---
 
+## Esquema dos menus + Tabelas das bases de dados
 
-g++ main.cpp Source/*.cpp
-
-
-
-
-Nome loja  
-Data  
-Cliente  
-Quantidade produto preco (varias Xs)  
-Total  
-Entregue  
-Troco  
-Codigo de barras  
-
-
-
-
-
-clientes
-sizeClientes
-vendas
-sizeVendas
-compras
-sizeCompras
-cart
-sizeCart
-
+![Esquema dos menus](./Other/esquema.png)

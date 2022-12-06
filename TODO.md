@@ -6,15 +6,15 @@ Project Description
 
 ### Todo
 
-- [ ] cliente muda nome nao confere repetidos  
-- [ ] Reescrever textos  
 - [ ] setLocale(PT)  
+- [ ] Reescrever textos  
 
 ### In Progress
 
 
 ### Done ✓
 
+- [x] cliente muda nome nao confere repetidos  
 - [x] clean unused parameters in display funcs  
 - [x] prevenir repetidos  
 - [x] relatorio de vendas por produto  
