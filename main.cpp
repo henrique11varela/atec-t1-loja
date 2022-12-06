@@ -381,12 +381,7 @@ void showClientes(console_out *conout, string **clientes, int *sizeClientes, boo
              << ("CLIENTES")
              << settextcolor(console_text_colors::white)
              << endl;
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4) << "O" << setfill(' ') << endl;
         // content
         for (int i = 1; i < *sizeClientes; i++)
         {
@@ -407,12 +402,7 @@ void showClientes(console_out *conout, string **clientes, int *sizeClientes, boo
                  << endl;
         }
         // bottom box
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 3); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4) << "O" << setfill(' ') << endl;
         // legend
         cout << setposx(Xpos)
              << settextcolor(console_text_colors::light_blue)
@@ -449,12 +439,8 @@ void showStock(console_out *conout, string **stock, int *sizeStock, bool left, b
              << ("STOCK")
              << settextcolor(console_text_colors::white)
              << endl;
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 5) << "O" << setfill(' ') << endl;
+
         // contents
         for (int i = 0; i < *sizeStock; i++)
         {
@@ -477,11 +463,8 @@ void showStock(console_out *conout, string **stock, int *sizeStock, bool left, b
         }
         // bottom box
         cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 5) << "O" << setfill(' ') << endl;
+
         // legend
         cout << setposx(Xpos)
              << settextcolor(console_text_colors::light_blue)
@@ -526,12 +509,7 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
              << ("CART")
              << settextcolor(console_text_colors::white)
              << endl;
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + 1); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + 2) << "O" << setfill(' ') << endl;
         // contents
         for (int i = 0; i < *sizeCart; i++)
         {
@@ -556,12 +534,7 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
              << "|"
              << endl;
         // bottom box
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + 1); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+                cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + 2) << "O" << setfill(' ') << endl;
         // legend
         cout << setposx(Xpos)
              << settextcolor(console_text_colors::light_blue)
@@ -616,12 +589,7 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
              << ("Vendas")
              << settextcolor(console_text_colors::white)
              << endl;
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + 2); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + 3) << "O" << setfill(' ') << endl;
         // contents
         for (int i = 0; i < *sizeVendas; i++)
         {
@@ -645,12 +613,7 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
                  << endl;
         }
         // bottom box
-        cout << setposx(Xpos) << "O";
-        for (int i = 0; i < (biggestString[0] + biggestString[1] + biggestString[2] + 2); i++)
-        {
-            cout << "-";
-        }
-        cout << "O" << endl;
+        cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + 3) << "O" << setfill(' ') << endl;
         // legend
         cout << setposx(Xpos)
              << settextcolor(console_text_colors::light_blue)
@@ -1701,7 +1664,7 @@ int main()
     GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
     cout << "Screen Buffer Size : " << scrBufferInfo.dwSize.X << " x " << scrBufferInfo.dwSize.Y << endl;
 
-    //setlocale(LC_ALL, "");
+    // setlocale(LC_ALL, "");
     console_out_context ctxout;
     console_out conout(ctxout);
     conout.settitle("FRUIT INC.");
