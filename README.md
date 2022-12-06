@@ -64,6 +64,7 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 - Para evitar repetições de dados usei o `checkLineOf`, se retornasse *-1* então não existia na tabela e aceitava a input.  
 - Sempre que se elimina algo, pede para confirmar a ação.
 - Nos relatórios por produto/cliente a pesquisa é feita apartir do nome em vez do id.  
+- Para a manipulação da consola usei a livraria [cppconlib](https://github.com/mariusbancila/cppconlib) do [mariusbancila](https://github.com/mariusbancila).
 
 
 
