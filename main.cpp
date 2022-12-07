@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <ctime>
 #include <stdio.h>
+#include <fstream>
 
 using namespace conmanip;
 using namespace std;
@@ -13,7 +14,7 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
 */
 
 /* fills tables with default and example values ACLEAN*/
-void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
+/*void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
 {
     // default values for stock
     stock[*sizeStock][0] = to_string(*sizeStock); // 0
@@ -76,6 +77,99 @@ void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeC
     compras[*sizeCompras][2] = "2";
     (*sizeCompras)++;
     (*sizeVendas)++;
+};*/
+
+/* reads the text file and fills the table with the contents
+"|" == separator, "||" == endl, "|||" == end of file
+returns false if failed to open file */
+bool txtGet(string fileName, string **table, int *sizeTable)
+{
+    ifstream inputFile;
+    inputFile.open(fileName);
+    if (!inputFile.is_open())
+    {
+        return false;
+    }
+    for (int i = 0; i < 100; i++)
+    {
+        if (inputFile.eof())
+        {
+            break;
+        }
+        else
+        {
+            int j = 0, k = 0;
+            bool eol = false;
+            while (!eol)
+            {
+                string temp;
+                inputFile >> temp;
+                if (inputFile.fail())
+                {
+                    cout << fileName << "'s empty";
+                    return false;
+                }
+                if (temp == "|")
+                {
+                    j++;
+                    k = 0;
+                }
+                else if (temp == "||")
+                {
+                    (*sizeTable)++;
+                    eol = true;
+                }
+                else if (temp == "|||")
+                {
+                    (*sizeTable)++;
+                    return true;
+                }
+                else
+                {
+                    if (k > 0)
+                    {
+                        table[i][j] += " ";
+                    }
+                    table[i][j] += temp;
+                    k++;
+                }
+            }
+        }
+    }
+    inputFile.close();
+    return true;
+};
+
+/* writes the contents of the table in the text file
+"|" == separator, "||" == endl, "|||" == end of file
+returns false if failed to open file */
+bool txtSet(string fileName, string **table, int sizeTable, int C)
+{
+    ofstream outputFile;
+    outputFile.open(fileName);
+    if (!outputFile.is_open())
+    {
+        return false;
+    }
+    for (int i = 0; i < sizeTable; i++)
+    {
+        for (int j = 0; j < C; j++)
+        {
+            if (j > 0)
+            {
+                outputFile << " ";
+            }
+            outputFile << table[i][j] << " |";
+        }
+        outputFile << "|";
+        if (i != sizeTable - 1)
+        {
+            outputFile << endl;
+        }
+    }
+    outputFile << "|";
+    outputFile.close();
+    return true;
 };
 
 // ! Useless Flavor
@@ -1698,12 +1792,16 @@ int main()
             cart[i][j] = "";
         }
     }
-    clientes[0][0] = "-1";
+    /*clientes[0][0] = "-1";
     clientes[0][1] = "Anonymous";
     clientes[0][2] = "NA";
-    clientes[0][3] = "NA";
+    clientes[0][3] = "NA";*/
     sizeClientes++;
-    defaultValues(stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras);
+    //defaultValues(stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras);
+    txtGet("Tables/stock.txt", stock, &sizeStock);
+    txtGet("Tables/clientes.txt", clientes, &sizeClientes);
+    txtGet("Tables/vendas.txt", vendas, &sizeVendas);
+    txtGet("Tables/compras.txt", compras, &sizeCompras);
     system("cls||clear");
     cout << setposx(conout.getsize().X / 2 - 10 / 2)
          << setposy(9)
@@ -1730,6 +1828,10 @@ int main()
          << endl
          << endl
          << setposx(conout.getsize().X / 2 - 12 / 2);
+    txtSet("Tables/stock.txt", stock, sizeStock, 4);
+    txtSet("Tables/clientes.txt", clientes, sizeClientes, 4);
+    txtSet("Tables/vendas.txt", vendas, sizeVendas, 4);
+    txtSet("Tables/compras.txt", compras, sizeCompras, 3);
     pressEnter(&conout, 1, true);
     system("cls||clear");
     return 0;
