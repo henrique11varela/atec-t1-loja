@@ -113,10 +113,7 @@ void apple(console_out *conout, int xr, int yr)
 string whiteBG(console_out *conout, int width)
 {
     cout << setbgcolor(console_bg_colors::white) << settextcolor(console_text_colors::black);
-    for (int i = 0; i < width; i++)
-    {
-        cout << " ";
-    }
+    cout << setw(width) << " ";
     conout->setposx(conout->getposx() - width);
     return "";
 };
