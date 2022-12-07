@@ -48,6 +48,12 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 `bool compactTable(string **table, int C)`
 >Movimenta todos os valores da *table* "para cima" de modo a compactar a tabela eliminando espaços vazios.
 
+`bool txtGet(string fileName, string **table, int *sizeTable)`
+>Importa os valores do ficheiro *fileName* para a tabela *table*.
+
+`bool txtSet(string fileName, string **table, int sizeTable, int C)`
+>Exporta os valores da tabela *table* para o ficheiro *fileName*.
+
 ### Display das tabelas
 
 `void showClientes(console_out *conout, string **clientes, int *sizeClientes, bool left)`  
@@ -65,6 +71,8 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 - Sempre que se elimina algo, pede para confirmar a ação.
 - Nos relatórios por produto/cliente a pesquisa é feita apartir do nome em vez do id.  
 - Para a manipulação da consola usei a livraria [cppconlib](https://github.com/mariusbancila/cppconlib) do [mariusbancila](https://github.com/mariusbancila).
+- Para a importação e exportação da base de dados usei a livraria fstream.
+- O sorteio da venda tem 20% de chance de oferecer a compra.
 
 
 

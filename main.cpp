@@ -808,7 +808,8 @@ void pagamento(console_out *conout, string **stock, string **clientes, int *size
     *sizeCart = 0;
 };
 
-void sorteio(console_out *conout, string **stock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+/* oferece a compra */
+void offer(console_out *conout, string **stock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     float precoAPagar = precoTotalCart(stock, cart, sizeCart);
     system("cls||clear");
@@ -867,7 +868,8 @@ void sorteio(console_out *conout, string **stock, string **clientes, int *sizeCl
     *sizeCart = 0;
 };
 
-void extra(console_out *conout, string **stock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+/* faz o sorteio */
+void sorteio(console_out *conout, string **stock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
     int randomValue = rand() % 100;
     if (randomValue >= 20)
@@ -876,7 +878,7 @@ void extra(console_out *conout, string **stock, string **clientes, int *sizeClie
     }
     else
     {
-        sorteio(conout, stock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+        offer(conout, stock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
     }
 };
 
@@ -1076,7 +1078,7 @@ void checkout(console_out *conout, string **stock, string **clientes, int *sizeC
     } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
     if (choice == "s" || choice == "S")
     {
-        extra(conout, stock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+        sorteio(conout, stock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
         imprimirTalao(conout, stock, clientes, vendas, compras, sizeCompras, checkHighestId(vendas, 0));
     }
 };
