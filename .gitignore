@@ -1,5 +1,5 @@
 # ignore executable
-*.exe
+a.exe
 
 # ignore .vscode
 .vscode/
