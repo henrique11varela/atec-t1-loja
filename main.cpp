@@ -13,8 +13,8 @@ to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
 
-/* fills tables with default and example values ACLEAN*/
-/*void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
+/* fills tables with default and example values*/
+void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
 {
     // default values for stock
     stock[*sizeStock][0] = to_string(*sizeStock); // 0
@@ -34,6 +34,11 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
     (*sizeStock)++;
 
     // default values for clientes
+    clientes[0][0] = "-1";
+    clientes[0][1] = "Anonymous";
+    clientes[0][2] = "NA";
+    clientes[0][3] = "NA";
+    (*sizeClientes)++;
     clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 0
     clientes[*sizeClientes][1] = "Henrique";
     clientes[*sizeClientes][2] = "935560176";
@@ -77,7 +82,7 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
     compras[*sizeCompras][2] = "2";
     (*sizeCompras)++;
     (*sizeVendas)++;
-};*/
+};
 
 /* reads the text file and fills the table with the contents
 "|" == separator, "||" == endl, "|||" == end of file
@@ -670,7 +675,6 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
                 {
                     biggestString[1] = 9;
                 }
-                
             }
         }
         if (biggestString[1] == 0)
@@ -945,7 +949,7 @@ void imprimirTalao(console_out *conout, string **stock, string **clientes, strin
     }
     int Xpos = conout->getsize().X / 2 - big / 2;
     int width = biggestString[0] + biggestString[1] + biggestString[2] + 5;
-    
+
     if (width < 17)
     {
         width = 17;
@@ -954,7 +958,7 @@ void imprimirTalao(console_out *conout, string **stock, string **clientes, strin
     {
         width = nomeCliente.length() + 3 + numCliente.length();
     }
-    
+
     // top
     cout << setposy(3)
          << setposx(Xpos)
@@ -1503,6 +1507,61 @@ void alterarNomeCliente(console_out *conout, string **clientes, int *sizeCliente
     clientes[checkLineOf(clientes, 0, to_string(id))][1] = newName;
 };
 
+// todo a fazer
+
+void deleteTables(string **stock, string **clientes, string **vendas, string **compras, string **cart)
+{
+    for (int i = 0; i < 100; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            stock[i][j] = "";
+            clientes[i][j] = "";
+            vendas[i][j] = "";
+        }
+        for (int j = 0; j < 3; j++)
+        {
+            compras[i][j] = "";
+        }
+        for (int j = 0; j < 2; j++)
+        {
+            cart[i][j] = "";
+        }
+    }
+};
+
+void tableRestart(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
+{
+    string bd;
+    do
+    {
+        system("cls||clear");
+        cout << setposx(conout->getsize().X / 2 - 8 / 2)
+             << setposy(1)
+             << settextcolor(console_text_colors::red)
+             << "ATENCAO";
+        customCout(conout, "Queres mesmo voltar a base de dados default? (S/N)");
+        bd = customCins(conout);
+        customCout(conout, "");
+        cout << settextcolor(console_text_colors::white);
+    } while (bd != "s" && bd != "S" && bd != "n" && bd != "N");
+    if (bd == "s" || bd == "S")
+    {
+        deleteTables(stock, clientes, vendas, compras, cart);
+        *sizeStock = 0;
+        *sizeClientes = 0;
+        *sizeVendas = 0;
+        *sizeCompras = 0;
+        *sizeCart = 0;
+        defaultValues(stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras);
+        system("mkdir Tables");
+        txtSet("Tables/stock.txt", stock, *sizeStock, 4);
+        txtSet("Tables/clientes.txt", clientes, *sizeClientes, 4);
+        txtSet("Tables/vendas.txt", vendas, *sizeVendas, 4);
+        txtSet("Tables/compras.txt", compras, *sizeCompras, 3);
+    }
+};
+
 // ! Main Menus
 
 /* Display Menu 1 EFECTUAR VENDA */
@@ -1754,8 +1813,8 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Main Menu */
 void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[5] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - Gestao de clientes", "0 - Sair"};
-    const int biggestString = getBiggestStringSize(text, 5);
+    string text[6] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - Gestao de clientes", "5 - Base de dados default", "0 - Sair"};
+    const int biggestString = getBiggestStringSize(text, 6);
     bool repetition = true;
     while (repetition)
     {
@@ -1782,12 +1841,15 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
                  << endl;
             cout << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[4]
+                 << endl;
+            cout << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[5]
                  << endl
                  << endl;
             customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
             customCout(conout, "");
-        } while (choice < 0 || choice > 4);
+        } while (choice < 0 || choice > 5);
         switch (choice)
         {
         case 1:
@@ -1806,8 +1868,12 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
             /* Manipulacao de clientes */
             displayMenu4(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             break;
+        case 5:
+            /* Base de dados default */
+            tableRestart(conout, stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+            break;
         default:
-            string choice;
+            string ex;
             do
             {
                 system("cls||clear");
@@ -1816,10 +1882,10 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
                      << settextcolor(console_text_colors::red)
                      << "ATENCAO";
                 customCout(conout, "Queres mesmo fechar a aplicacao? (S/N)");
-                choice = customCins(conout);
+                ex = customCins(conout);
                 customCout(conout, "");
-            } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
-            if (choice == "s" || choice == "S")
+            } while (ex != "s" && ex != "S" && ex != "n" && ex != "N");
+            if (ex == "s" || ex == "S")
             {
                 repetition = false;
             }
@@ -1875,21 +1941,8 @@ int main()
         vendas[i] = new string[4];
         compras[i] = new string[3];
         cart[i] = new string[2];
-        for (int j = 0; j < 4; j++)
-        {
-            stock[i][j] = "";
-            clientes[i][j] = "";
-            vendas[i][j] = "";
-        }
-        for (int j = 0; j < 3; j++)
-        {
-            compras[i][j] = "";
-        }
-        for (int j = 0; j < 2; j++)
-        {
-            cart[i][j] = "";
-        }
     }
+    deleteTables(stock, clientes, vendas, compras, cart);
     /*clientes[0][0] = "-1";
     clientes[0][1] = "Anonymous";
     clientes[0][2] = "NA";

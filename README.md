@@ -82,29 +82,29 @@ Dicionário
 `chave primaria`
 
 #### Stock
-| `0` | 1 | 2 | 3 |
-|-|-|-|-|
-| `id` |  nome | quantidade | preço de fabrica |
+| `0`  | 1    | 2          | 3                |
+| ---- | ---- | ---------- | ---------------- |
+| `id` | nome | quantidade | preço de fabrica |
 
 #### Clientes
-| `0` | 1 | 2 | 3 |
-|-|-|-|-|
-| `id` |  nome | telefone | morada |
+| `0`  | 1    | 2        | 3      |
+| ---- | ---- | -------- | ------ |
+| `id` | nome | telefone | morada |
 
 #### Vendas
-| `0` | 1 | 2 | 3 |
-|-|-|-|-|
+| `0`            | 1          | 2              | 3    |
+| -------------- | ---------- | -------------- | ---- |
 | `id de fatura` | id cliente | valor entregue | data |
 
 #### Compras
-| `0` | `1` | 2 |
-|-|-|-|
+| `0`         | `1`          | 2          |
+| ----------- | ------------ | ---------- |
 | `id fatura` | `id produto` | quantidade |
 
 #### Cart
 (é uma tabela que guarda valores temporariamente)
-| `0` | 1 |
-|-|-|
+| `0`          | 1          |
+| ------------ | ---------- |
 | `id produto` | quantidade |
 
 ---
