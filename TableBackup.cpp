@@ -141,9 +141,10 @@ int main()
         }
     }
     defaultValues(stock, &sizeStock, clientes, &sizeClientes, vendas, &sizeVendas, compras, &sizeCompras);
-    txtSet("stock.txt", stock, sizeStock, 4);
-    txtSet("clientes.txt", clientes, sizeClientes, 4);
-    txtSet("vendas.txt", vendas, sizeVendas, 4);
-    txtSet("compras.txt", compras, sizeCompras, 3);
+    system("mkdir Tables");
+    txtSet("Tables/stock.txt", stock, sizeStock, 4);
+    txtSet("Tables/clientes.txt", clientes, sizeClientes, 4);
+    txtSet("Tables/vendas.txt", vendas, sizeVendas, 4);
+    txtSet("Tables/compras.txt", compras, sizeCompras, 3);
     return 0;
 }
