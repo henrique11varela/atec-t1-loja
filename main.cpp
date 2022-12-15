@@ -1037,7 +1037,7 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
     {
         customCout(conout, "quanto?");
         quantidade = customCini(conout);
-    } while (quantStock < quantidade || (numCart + quantidade) < 0);
+    } while (quantStock < quantidade || (numCart + quantidade) < 0 || quantidade < 0);
     customCout(conout, "");
     // tables update
     if (quantidade != 0)
@@ -1052,6 +1052,47 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
         {
             cart[checkLineOf(cart, 0, to_string(id))][1] = to_string(stoi(cart[checkLineOf(cart, 0, to_string(id))][1]) + quantidade);
         }
+    }
+    for (int i = 0; i < *sizeCart; i++)
+    {
+        if (cart[i][1] == "0")
+        {
+            cleanLine(cart, i, 2);
+            compactTable(cart, 2);
+            (*sizeCart)--;
+        }
+    }
+};
+
+/* Remover produto
+submenu */
+void removerProduto(console_out *conout, string **stock, int *sizeStock, string **cart, int *sizeCart)
+{
+    system("cls||clear");
+    cout << setposx(conout->getsize().X / 2 - 28 / 2)
+         << setposy(1)
+         << "SELECIONAR PRODUTO A REMOVER";
+    showStock(conout, stock, sizeStock, true, true);
+    showCart(conout, stock, cart, sizeCart, false);
+    int id, quantidade, quantStock;
+    do // input product
+    {
+        customCout(conout, "O que vais querer remover? (id)");
+        id = customCini(conout);
+    } while (checkLineOf(cart, 0, to_string(id)) == -1);
+    string inCart = selectSQL(1, cart, 0, to_string(id));
+    int numCart = stoi((inCart == "") ? "0" : inCart);
+    quantStock = stoi(selectSQL(2, stock, 0, to_string(id))) - numCart;
+    do // input quantity
+    {
+        customCout(conout, "quanto?");
+        quantidade = customCini(conout);
+    } while (numCart < quantidade || quantidade < 0);
+    customCout(conout, "");
+    // tables update
+    if (quantidade != 0)
+    {
+        cart[checkLineOf(cart, 0, to_string(id))][1] = to_string(stoi(cart[checkLineOf(cart, 0, to_string(id))][1]) - quantidade);
     }
     for (int i = 0; i < *sizeCart; i++)
     {
@@ -1561,8 +1602,8 @@ void readTables(string **stock, int *sizeStock, string **clientes, int *sizeClie
 /* Display Menu 1 EFECTUAR VENDA */
 void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Selecionar produto", "2 - Checkout", "3 - Imprimir talao no ecra", "0 - Voltar"};
-    const int biggestString = getBiggestStringSize(text, 4);
+    string text[] = {"1 - Selecionar produto", "2 - Remover produto", "3 - Checkout", "4 - Imprimir talao no ecra", "0 - Voltar"};
+    const int biggestString = getBiggestStringSize(text, 5);
     bool repetition = true;
     while (repetition)
     {
@@ -1586,15 +1627,18 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
                  << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[2]
                  << endl
-                 << endl
                  << setposx(conout->getsize().X / 2 - biggestString / 2)
                  << text[3]
+                 << endl
+                 << endl
+                 << setposx(conout->getsize().X / 2 - biggestString / 2)
+                 << text[4]
                  << endl
                  << endl;
             customCout(conout, "Escolhe uma opcao");
             choice = customCini(conout);
             customCout(conout, "");
-        } while (choice < 0 || choice > 3);
+        } while (choice < 0 || choice > 4);
         switch (choice)
         {
         case 1:
@@ -1602,13 +1646,20 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
             selecionarProduto(conout, stock, sizeStock, cart, sizeCart);
             break;
         case 2:
+            /* Remover produto */
+            if (*sizeCart > 0)
+            {
+                removerProduto(conout, stock, sizeStock, cart, sizeCart);
+            }
+            break;
+        case 3:
             /* Checkout */
             if (*sizeCart > 0)
             {
                 checkout(conout, stock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
             }
             break;
-        case 3:
+        case 4:
             /* Imprimir talao no ecra */
             if (*sizeVendas > 0)
             {
@@ -1622,7 +1673,6 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
                 } while (checkLineOf(vendas, 0, to_string(fatura)) == -1);
                 imprimirTalao(conout, stock, clientes, vendas, compras, sizeCompras, fatura);
             }
-
             break;
         default:
             repetition = false;
@@ -1863,10 +1913,12 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
             case 1:
                 /* Ler TxT */
                 readTables(stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+                repetition = false;
                 break;
             case 2:
                 /* Escrever TxT */
                 saveTables(stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+                repetition = false;
                 break;
             case 3:
                 /* Voltar a default db */
@@ -1878,6 +1930,7 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
                 *sizeCart = 0;
                 defaultValues(stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras);
                 saveTables(stock, sizeStock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
+                repetition = false;
                 break;
             default:
                 repetition = false;

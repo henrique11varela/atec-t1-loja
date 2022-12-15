@@ -4,6 +4,8 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 
 É um programa para ser utilizado pelo trabalhador numa loja para fazer a gestão de vendas, stock e clientes.
 
+![Print](/Other/Print.png)
+
 ---
 
 # Sobre o programa:
@@ -72,6 +74,10 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 - Nos relatórios por produto/cliente a pesquisa é feita apartir do nome em vez do id.  
 - Para a manipulação da consola usei a livraria [cppconlib](https://github.com/mariusbancila/cppconlib) do [mariusbancila](https://github.com/mariusbancila).
 - Para a importação e exportação da base de dados usei a livraria fstream.
+- No menu das definições há 3 opções: 
+  - "atualizar BD" que obriga o programa a reler os ficheiros txt e atualiza a base de dados,
+  - "Salvar BD" que escreve a base de dados nos ficheiros txt devidos (para o caso de algum se apagar),
+  - "BD default" que põe os valores default nas tabelas e ficheiros txt devidos.
 - O sorteio da venda tem 20% de chance de oferecer a compra.
 
 
