@@ -13,6 +13,10 @@ to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
 
+//todo 
+//todo pagamento venda e compra 100+
+//todo offer venda e compra 100+
+
 /* fills tables with default and example values*/
 void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
 {
@@ -504,6 +508,13 @@ void showClientes(console_out *conout, string **clientes, int *sizeClientes, boo
              << settextcolor(console_text_colors::light_blue)
              << "id|name|phone|address"
              << settextcolor(console_text_colors::white);
+        cout << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl;
     }
 };
 
@@ -566,6 +577,13 @@ void showStock(console_out *conout, string **stock, int *sizeStock, bool left, b
              << settextcolor(console_text_colors::light_blue)
              << "id|name|quant|price"
              << settextcolor(console_text_colors::white);
+        cout << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl;
     }
 };
 
@@ -636,6 +654,13 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
              << settextcolor(console_text_colors::light_blue)
              << "nome|quant"
              << settextcolor(console_text_colors::white);
+        cout << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl;
     }
 };
 
@@ -719,6 +744,13 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
              << settextcolor(console_text_colors::light_blue)
              << "fatura|nome|data"
              << settextcolor(console_text_colors::white);
+        cout << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl
+             << endl;
     }
 };
 
@@ -1011,6 +1043,13 @@ void imprimirTalao(console_out *conout, string **stock, string **clientes, strin
              << setposx(Xpos) << whiteBG(conout, width);
     }
     cout << setbgcolor(console_bg_colors::black) << settextcolor(console_text_colors::white) << endl;
+    cout << endl
+         << endl
+         << endl
+         << endl
+         << endl
+         << endl
+         << endl;
     pressEnter(conout, 2, false);
 };
 
