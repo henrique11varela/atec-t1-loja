@@ -1,4 +1,0 @@
--1 | Anonymous | NA | NA ||
-0 | Henrique | 935560176 | R. Henrique, 240 ||
-1 | Maria | 992485115 | R. Maria, 169 ||
-2 | Manuel | 112 | R. do Hospital, WeeWoo |||
