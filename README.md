@@ -4,7 +4,12 @@ Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Espec
 
 É um programa para ser utilizado pelo trabalhador numa loja para fazer a gestão de vendas, stock e clientes.
 
+### Setup
+
+Na primeira vez que se abre o programa, não há base de dados, as tabelas estão todas vazias então é necessário usar a opção "BD default" nas "Definições" de modo a criar a base de dados com valores de teste.
+
 ![Print](/Other/Print.png)
+
 
 ---
 
