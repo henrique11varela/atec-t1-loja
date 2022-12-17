@@ -1,5 +1,6 @@
 # ignore executable
 a.exe
 
-# ignore .vscode
+# ignore folders
 .vscode/
+Tables/
