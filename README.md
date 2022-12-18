@@ -79,11 +79,11 @@ Na primeira vez que se abre o programa, não há base de dados, as tabelas estã
 - Sempre que se elimina algo, pede para confirmar a ação.
 - Nos relatórios por produto/cliente a pesquisa é feita apartir do nome em vez do id.  
 - Para a manipulação da consola usei a livraria [cppconlib](https://github.com/mariusbancila/cppconlib) do [mariusbancila](https://github.com/mariusbancila).
-- Para a importação e exportação da base de dados usei a livraria fstream.
-- No menu das definições há 3 opções: 
-  - "atualizar BD" que obriga o programa a reler os ficheiros txt e atualiza a base de dados,
-  - "Salvar BD" que escreve a base de dados nos ficheiros txt devidos (para o caso de algum se apagar),
-  - "BD default" que põe os valores default nas tabelas e ficheiros txt devidos.
+- Para a importação e exportação da base de dados usei a livraria [fstream](https://cplusplus.com/reference/fstream/fstream/).
+- No menu das "Settings" há 3 opções: 
+  - "Update DB" que obriga o programa a reler os ficheiros txt e atualiza a base de dados,
+  - "Save DB" que escreve a base de dados nos ficheiros txt devidos (para o caso de algum se apagar),
+  - "DB default" que põe os valores default nas tabelas e ficheiros txt devidos.
 - O sorteio da venda tem 20% de chance de oferecer a compra.
 
 
