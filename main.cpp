@@ -191,7 +191,7 @@ bool txtSet(string fileName, string **table, int sizeTable, int C)
 /* Displays an apple on screen */
 void apple(console_out *conout, int xr, int yr)
 {
-    int x = xr - 18;
+    int x = xr - 18;// - largura da imagem
     cout << setposy(yr) << setposx(x + 29) << settextcolor(console_text_colors::green) << "___\n"
          << setposx(x + 26) << "_/`.-'`.\n"
          << setposx(x + 16) << settextcolor(console_text_colors::yellow) << "_" << setposx(x + 24) << settextcolor(console_text_colors::green) << "_/` .  _.'\n"
@@ -215,6 +215,30 @@ void apple(console_out *conout, int xr, int yr)
          << setposx(x + 7) << "`doooooooob dooooooob'\n"
          << setposx(x + 8) << "`\"\"\"\"\"\"\"' `\"\"\"\"\"\"'\"\n"
          << settextcolor(console_text_colors::white);
+};
+
+/* Displays a caution sign on screen */
+void caution(console_out *conout, int xr, int yr)
+{
+    int x = xr - 16;// - largura da imagem
+    cout << setposy(yr)
+         << setposx(x) << "               88" << endl
+         << setposx(x) << "              8888" << endl
+         << setposx(x) << "             888888" << endl
+         << setposx(x) << "            888  888" << endl
+         << setposx(x) << "           888    888" << endl
+         << setposx(x) << "          888      888" << endl
+         << setposx(x) << "         888   888  888" << endl
+         << setposx(x) << "        888    888   888" << endl
+         << setposx(x) << "       888     888    888" << endl
+         << setposx(x) << "      888      888     888" << endl
+         << setposx(x) << "     888       88       888" << endl
+         << setposx(x) << "    888        88        888" << endl
+         << setposx(x) << "   888                    888" << endl
+         << setposx(x) << "  888          88          888" << endl
+         << setposx(x) << " 888                        888" << endl
+         << setposx(x) << "88888888888888888888888888888888" << endl
+         << setposx(x) << "88888888888888888888888888888888" << endl;
 };
 
 /* Displays the white background in for width chars */
@@ -405,6 +429,21 @@ bool compactTable(string **table, int C)
         line++;
     }
     return false;
+};
+
+/* deletes every line where X == value and compacts table */
+void deleteEntry(string **table, int *sizeTable, int X, string value, int C)
+{
+    for (int i = 0; i < *sizeTable; i++)
+    {
+        if (table[i][X] == value)
+        {
+            cleanLine(table, i, C);
+            compactTable(table, C);
+            (*sizeTable)--;
+            i--;
+        }
+    }
 };
 
 // ! Usefull funcs
@@ -833,9 +872,9 @@ void pagamento(console_out *conout, string **stock, string **clientes, int *size
     string idFatura = to_string(checkHighestId(vendas, 0) + 1);
     if (*sizeVendas == 100)
     {
-        cleanLine(vendas, 0, 4);
-        (*sizeVendas)--;
-        compactTable(vendas, 4);
+        string idToDelete = vendas[0][0];
+        deleteEntry(vendas, sizeVendas, 0, idToDelete, 4);
+        deleteEntry(compras, sizeCompras, 0, idToDelete, 3);
         vendas[*sizeVendas][0] = idFatura;
         vendas[*sizeVendas][1] = to_string(idCliente);
         vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
@@ -845,9 +884,9 @@ void pagamento(console_out *conout, string **stock, string **clientes, int *size
         {
             if (*sizeCompras == 100)
             {
-                cleanLine(compras, 0, 3);
-                (*sizeCompras)--;
-                compactTable(compras, 3);
+                string idToDelete = compras[0][0];
+                deleteEntry(compras, sizeCompras, 0, idToDelete, 3);
+                deleteEntry(vendas, sizeVendas, 0, idToDelete, 4);
                 compras[*sizeCompras][0] = idFatura;
                 compras[*sizeCompras][1] = cart[i][0];
                 compras[*sizeCompras][2] = cart[i][1];
@@ -878,13 +917,29 @@ void pagamento(console_out *conout, string **stock, string **clientes, int *size
         (*sizeVendas)++;
         for (int i = 0; i < *sizeCart; i++)
         {
-            compras[*sizeCompras][0] = idFatura;
-            compras[*sizeCompras][1] = cart[i][0];
-            compras[*sizeCompras][2] = cart[i][1];
-            (*sizeCompras)++;
-            int lineInStock = checkLineOf(stock, 0, cart[i][0]);
-            stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
-            cleanLine(cart, i, 2);
+            if (*sizeCompras == 100)
+            {
+                string idToDelete = compras[0][0];
+                deleteEntry(compras, sizeCompras, 0, idToDelete, 3);
+                deleteEntry(vendas, sizeVendas, 0, idToDelete, 4);
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
+            else
+            {
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
         }
         *sizeCart = 0;
     }
@@ -934,9 +989,9 @@ void offer(console_out *conout, string **stock, string **clientes, int *sizeClie
     string idFatura = to_string(checkHighestId(vendas, 0) + 1);
     if (*sizeVendas == 100)
     {
-        cleanLine(vendas, 0, 4);
-        (*sizeVendas)--;
-        compactTable(vendas, 4);
+        string idToDelete = vendas[0][0];
+        deleteEntry(vendas, sizeVendas, 0, idToDelete, 4);
+        deleteEntry(compras, sizeCompras, 0, idToDelete, 3);
         vendas[*sizeVendas][0] = idFatura;
         vendas[*sizeVendas][1] = to_string(idCliente);
         vendas[*sizeVendas][2] = to_string(-1);
@@ -946,9 +1001,9 @@ void offer(console_out *conout, string **stock, string **clientes, int *sizeClie
         {
             if (*sizeCompras == 100)
             {
-                cleanLine(compras, 0, 3);
-                (*sizeCompras)--;
-                compactTable(compras, 3);
+                string idToDelete = compras[0][0];
+                deleteEntry(compras, sizeCompras, 0, idToDelete, 3);
+                deleteEntry(vendas, sizeVendas, 0, idToDelete, 4);
                 compras[*sizeCompras][0] = idFatura;
                 compras[*sizeCompras][1] = cart[i][0];
                 compras[*sizeCompras][2] = cart[i][1];
@@ -979,13 +1034,29 @@ void offer(console_out *conout, string **stock, string **clientes, int *sizeClie
         (*sizeVendas)++;
         for (int i = 0; i < *sizeCart; i++)
         {
-            compras[*sizeCompras][0] = idFatura;
-            compras[*sizeCompras][1] = cart[i][0];
-            compras[*sizeCompras][2] = cart[i][1];
-            (*sizeCompras)++;
-            int lineInStock = checkLineOf(stock, 0, cart[i][0]);
-            stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
-            cleanLine(cart, i, 2);
+            if (*sizeCompras == 100)
+            {
+                string idToDelete = compras[0][0];
+                deleteEntry(compras, sizeCompras, 0, idToDelete, 3);
+                deleteEntry(vendas, sizeVendas, 0, idToDelete, 4);
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
+            else
+            {
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
         }
         *sizeCart = 0;
     }
@@ -1995,6 +2066,7 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
              << setposy(1)
              << settextcolor(console_text_colors::red)
              << "ATENCAO";
+        caution(conout, conout->getsize().X / 2, 3);
         customCout(conout, "Queres mesmo alterar a base de dados? (S/N)");
         bd = customCins(conout);
         customCout(conout, "");
@@ -2138,6 +2210,7 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
                      << setposy(1)
                      << settextcolor(console_text_colors::red)
                      << "ATENCAO";
+                caution(conout, conout->getsize().X / 2, 3);
                 customCout(conout, "Queres mesmo fechar a aplicacao? (S/N)");
                 ex = customCins(conout);
                 customCout(conout, "");
