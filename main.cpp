@@ -16,6 +16,11 @@ https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-
 //todo 
 //todo pagamento venda e compra 100+
 //todo offer venda e compra 100+
+/*  //? logic
+    "compact table" but eliminates the lowest id                //? shiftTable(string **table, int C)  clear first line and compact normally
+    and add new line to last place                              //? basic table[i][j] = someValue
+    (sizeVariable - lowestId) should always be multiple of 100
+*/
 
 /* fills tables with default and example values*/
 void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
