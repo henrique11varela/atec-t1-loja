@@ -32,12 +32,12 @@ void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeC
     stock[*sizeStock][3] = "0.70";
     (*sizeStock)++;
     stock[*sizeStock][0] = to_string(*sizeStock); // 1
-    stock[*sizeStock][1] = "Pera";
+    stock[*sizeStock][1] = "Pear";
     stock[*sizeStock][2] = "10";
     stock[*sizeStock][3] = "1.00";
     (*sizeStock)++;
     stock[*sizeStock][0] = to_string(*sizeStock); // 2
-    stock[*sizeStock][1] = "Morango";
+    stock[*sizeStock][1] = "Strawberry";
     stock[*sizeStock][2] = "42";
     stock[*sizeStock][3] = "0.50";
     (*sizeStock)++;
@@ -51,17 +51,17 @@ void defaultValues(string **stock, int *sizeStock, string **clientes, int *sizeC
     clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 0
     clientes[*sizeClientes][1] = "Henrique";
     clientes[*sizeClientes][2] = "935560176";
-    clientes[*sizeClientes][3] = "R. Henrique, 240";
+    clientes[*sizeClientes][3] = "Henrique St., 240";
     (*sizeClientes)++;
     clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 1
     clientes[*sizeClientes][1] = "Maria";
     clientes[*sizeClientes][2] = "992485115";
-    clientes[*sizeClientes][3] = "R. Maria, 169";
+    clientes[*sizeClientes][3] = "Maria St., 169";
     (*sizeClientes)++;
     clientes[*sizeClientes][0] = to_string(*sizeClientes - 1); // 2
     clientes[*sizeClientes][1] = "Manuel";
     clientes[*sizeClientes][2] = "112";
-    clientes[*sizeClientes][3] = "R. do Hospital, WeeWoo";
+    clientes[*sizeClientes][3] = "Hospital St., WeeWoo";
     (*sizeClientes)++;
 
     // default values for vendas e compras
@@ -294,7 +294,7 @@ int customCini(console_out *conout)
         cout << setposy(conout->getpos().Y + 2)
              << setposx(conout->getsize().X / 2 - 14)
              << settextcolor(console_text_colors::yellow)
-             << "insira um numero"
+             << "Insert a number"
              << setposx(conout->getsize().X / 2 - 12)
              << setposy(conout->getpos().Y - 2)
              << settextcolor(console_text_colors::white);
@@ -326,7 +326,7 @@ float customCinf(console_out *conout)
         cout << setposy(conout->getpos().Y + 2)
              << setposx(conout->getsize().X / 2 - 14)
              << settextcolor(console_text_colors::yellow)
-             << "insira um numero"
+             << "Insert a number"
              << setposx(conout->getsize().X / 2 - 12)
              << setposy(conout->getpos().Y - 2)
              << settextcolor(console_text_colors::white);
@@ -341,10 +341,7 @@ void customCout(console_out *conout, string text)
 {
     cout << setposx(0)
          << setposy(conout->getsize().Y - 6);
-    for (int i = 0; i < conout->getsize().X; i++)
-    {
-        cout << " ";
-    }
+    cout << setposx(0) << setw(conout->getsize().X) << "";
     cout << setposx(conout->getsize().X / 2 - text.length() / 2 + (text.length() % 2 ? 0 : 1))
          << text;
 };
@@ -522,7 +519,7 @@ void showClientes(console_out *conout, string **clientes, int *sizeClientes, boo
         cout << setposx(Xpos)
              << setposy(1)
              << settextcolor(console_text_colors::red)
-             << ("CLIENTES")
+             << ("CLIENTS")
              << settextcolor(console_text_colors::white)
              << endl;
         cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + biggestString[3] + 4) << "O" << setfill(' ') << endl;
@@ -659,6 +656,11 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
                 }
             }
         }
+        if (biggestString[0] < 5)
+        {
+            biggestString[0] = 5;
+        }
+        
         int Xpos = left ? 1 : (conout->getsize().X - (biggestString[0] + biggestString[1] + 3) - 1);
         // top box
         cout << setposx(Xpos)
@@ -696,7 +698,7 @@ void showCart(console_out *conout, string **stock, string **cart, int *sizeCart,
         // legend
         cout << setposx(Xpos)
              << settextcolor(console_text_colors::light_blue)
-             << "nome|quant"
+             << "name|quant"
              << settextcolor(console_text_colors::white);
         cout << endl
              << endl
@@ -748,14 +750,14 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
         }
         if (biggestString[1] == 0)
         {
-            biggestString[1] = 9;
+            biggestString[1] = 7;
         }
         int Xpos = left ? 1 : (conout->getsize().X / 2 - (biggestString[0] + biggestString[1] + biggestString[2] + 4) / 2);
         // top box
         cout << setposx(Xpos)
              << setposy(1)
              << settextcolor(console_text_colors::red)
-             << ("Vendas")
+             << ("Sales")
              << settextcolor(console_text_colors::white)
              << endl;
         cout << setposx(Xpos) << "O" << setfill('-') << setw(biggestString[0] + biggestString[1] + biggestString[2] + 3) << "O" << setfill(' ') << endl;
@@ -765,7 +767,7 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
             string nomeCliente = selectSQL(1, clientes, 0, vendas[i][1]);
             if (nomeCliente == "")
             {
-                nomeCliente = "Eliminado";
+                nomeCliente = "Deleted";
             }
             cout << setposx(Xpos)
                  << "|"
@@ -786,7 +788,7 @@ void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **
         // legend
         cout << setposx(Xpos)
              << settextcolor(console_text_colors::light_blue)
-             << "fatura|nome|data"
+             << "invoice|name|date"
              << settextcolor(console_text_colors::white);
         cout << endl
              << endl
@@ -805,16 +807,16 @@ returns id*/
 int clienteNovo(console_out *conout, string **clientes, int *sizeClientes)
 {
     string nome, telefone, morada;
-    customCout(conout, "Insira o nome:"); // input do nome
+    customCout(conout, "Insert a name:"); // input do nome
     nome = customCins(conout);
     while (checkLineOf(clientes, 1, nome) != -1)
     {
-        customCout(conout, "Cliente ja existente, insira de novo:");
+        customCout(conout, "Client already exists, insert a new one:");
         nome = customCins(conout);
     }
-    customCout(conout, "Insira o numero de telefone:"); // input do tlf
+    customCout(conout, "Insert a phone number:"); // input do tlf
     telefone = customCins(conout);
-    customCout(conout, "Insira a morada:"); // input da morada
+    customCout(conout, "Insert an address:"); // input da morada
     morada = customCins(conout);
     // tables update
     clientes[*sizeClientes][0] = to_string(checkHighestId(clientes, 0) + 1);
@@ -831,37 +833,37 @@ void pagamento(console_out *conout, string **stock, string **clientes, int *size
     float precoAPagar = precoTotalCart(stock, cart, sizeCart);
     system("cls||clear");
     showCart(conout, stock, cart, sizeCart, false);
-    cout << setposx(conout->getsize().X / 2 - 9 / 2)
+    cout << setposx(conout->getsize().X / 2 - 7 / 2)
          << setposy(1)
-         << "PAGAMENTO";
-    customCout(conout, "Insira o valor entregue"); // input do valor entregue pelo cliente
+         << "PAYMENT";
+    customCout(conout, "Insert the money:"); // input do valor entregue pelo cliente
     float valorEntregue = customCinf(conout);
     while (valorEntregue < (precoAPagar * 1.30 * 1.23))
     {
-        customCout(conout, "Valor baixo, insira o valor entregue");
+        customCout(conout, "Value's too low, insert the money:");
         valorEntregue = customCinf(conout);
     }
     int idCliente = -1;
     string resposta;
     do // ja e cliente?
     {
-        customCout(conout, "Ja e cliente? (S/N)");
+        customCout(conout, "Already a client? (Y/N)");
         resposta = customCins(conout);
-    } while (resposta != "s" && resposta != "S" && resposta != "n" && resposta != "N");
-    if (resposta == "s" || resposta == "S")
+    } while (resposta != "y" && resposta != "Y" && resposta != "n" && resposta != "N");
+    if (resposta == "y" || resposta == "Y")
     {
         showClientes(conout, clientes, sizeClientes, false);
-        customCout(conout, "Insira o numero de cliente");
+        customCout(conout, "Insert client's number:");
         idCliente = customCini(conout);
     }
     else
     {
         do // quer ser cliente?
         {
-            customCout(conout, "Quer ser cliente? (S/N)");
+            customCout(conout, "Want to be a client? (Y/N)");
             resposta = customCins(conout);
-        } while (resposta != "s" && resposta != "S" && resposta != "n" && resposta != "N");
-        if (resposta == "s" || resposta == "S")
+        } while (resposta != "y" && resposta != "Y" && resposta != "n" && resposta != "N");
+        if (resposta == "y" || resposta == "Y")
         {
             idCliente = clienteNovo(conout, clientes, sizeClientes);
         }
@@ -951,34 +953,34 @@ void offer(console_out *conout, string **stock, string **clientes, int *sizeClie
     float precoAPagar = precoTotalCart(stock, cart, sizeCart);
     system("cls||clear");
     showCart(conout, stock, cart, sizeCart, false);
-    cout << setposx(conout->getsize().X / 2 - 9 / 2)
+    cout << setposx(conout->getsize().X / 2 - 8 / 2)
          << setposy(1)
-         << "PARABENS"
+         << "CONGRATS"
          << endl
          << endl
-         << setposx(conout->getsize().X / 2 - 27 / 2)
-         << "Ganhou um sorteio da compra";
+         << setposx(conout->getsize().X / 2 - 9 / 2)
+         << "YOU WON!!";
     int idCliente = -1;
     string resposta;
     do // ja e cliente?
     {
-        customCout(conout, "Ja e cliente? (S/N)");
+        customCout(conout, "Already a client? (Y/N)");
         resposta = customCins(conout);
-    } while (resposta != "s" && resposta != "S" && resposta != "n" && resposta != "N");
-    if (resposta == "s" || resposta == "S")
+    } while (resposta != "y" && resposta != "Y" && resposta != "n" && resposta != "N");
+    if (resposta == "y" || resposta == "Y")
     {
         showClientes(conout, clientes, sizeClientes, false);
-        customCout(conout, "Insira o numero de cliente");
+        customCout(conout, "Insert client's number:");
         idCliente = customCini(conout);
     }
     else
     {
         do // quer ser cliente?
         {
-            customCout(conout, "Quer ser cliente? (S/N)");
+            customCout(conout, "Want to be a client? (Y/N)");
             resposta = customCins(conout);
-        } while (resposta != "s" && resposta != "S" && resposta != "n" && resposta != "N");
-        if (resposta == "s" || resposta == "S")
+        } while (resposta != "y" && resposta != "Y" && resposta != "n" && resposta != "N");
+        if (resposta == "y" || resposta == "Y")
         {
             idCliente = clienteNovo(conout, clientes, sizeClientes);
         }
@@ -1126,7 +1128,7 @@ void imprimirTalao(console_out *conout, string **stock, string **clientes, strin
     }
     string numCliente = selectSQL(1, vendas, 0, to_string(idFatura));
     string nomeCliente = selectSQL(1, clientes, 0, numCliente);
-    nomeCliente = nomeCliente == "" ? "Eliminado" : nomeCliente;
+    nomeCliente = nomeCliente == "" ? "Deleted" : nomeCliente;
     numCliente = numCliente == "-1" ? " " : numCliente;
     string data = selectSQL(3, vendas, 0, to_string(idFatura));
     string total = setPrecision2(precoTotalCart(stock, tempTable, &sizeTempTable) * 1.30);
@@ -1155,7 +1157,7 @@ void imprimirTalao(console_out *conout, string **stock, string **clientes, strin
          << whiteBG(conout, width) << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - 9 / 2) << "FRUIT INC" << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - (7 + to_string(idFatura).length()) / 2) << "Fatura " << idFatura << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - (7 + to_string(idFatura).length()) / 2) << "Invoice " << idFatura << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - nomeCliente.length() / 2 - (nomeCliente.length() % 2 ? 1 : 0) - numCliente.length() / 2 - 1) << numCliente << " " << nomeCliente << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width / 2 - data.length() / 2) << data << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl;
@@ -1184,30 +1186,23 @@ void imprimirTalao(console_out *conout, string **stock, string **clientes, strin
     // tail
     cout << setposx(Xpos) << whiteBG(conout, width) << endl
          << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - total.length()) << "Total " << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - total.length()) << "s/IVA " << total << euro(conout) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 12 - total.length()) << "Valor IVA " << setPrecision2(stof(total) * 0.23) << euro(conout) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 9 - total.length()) << "wo/IVA " << total << euro(conout) << endl
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 6 - total.length()) << "IVA " << setPrecision2(stof(total) * 0.23) << euro(conout) << endl
          << setposx(Xpos) << whiteBG(conout, width) << endl
-         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - setPrecision2(stof(total) * 1.23).length()) << "c/IVA " << setPrecision2(stof(total) * 1.23) << euro(conout) << endl;
+         << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - setPrecision2(stof(total) * 1.23).length()) << "w/IVA " << setPrecision2(stof(total) * 1.23) << euro(conout) << endl;
     if (stoi(entregue) == -1)
     {
         cout << setposx(Xpos) << whiteBG(conout, width) << endl
-             << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - setPrecision2(stof(total) * 1.23).length()) << "OFERTA" << endl
+             << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 7 - setPrecision2(stof(total) * 1.23).length()) << "OFFER" << endl
              << setposx(Xpos) << whiteBG(conout, width);
     }
     else
     {
-        cout << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 11 - entregue.length()) << "Entregue " << entregue << euro(conout) << endl
-             << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - troco.length()) << "Troco " << troco << euro(conout) << endl
+        cout << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 8 - entregue.length()) << "Payed " << entregue << euro(conout) << endl
+             << setposx(Xpos) << whiteBG(conout, width) << setposx(Xpos + width - 9 - troco.length()) << "Change " << troco << euro(conout) << endl
              << setposx(Xpos) << whiteBG(conout, width);
     }
     cout << setbgcolor(console_bg_colors::black) << settextcolor(console_text_colors::white) << endl;
-    cout << endl
-         << endl
-         << endl
-         << endl
-         << endl
-         << endl
-         << endl;
     pressEnter(conout, 2, false);
 };
 
@@ -1216,15 +1211,15 @@ submenu */
 void selecionarProduto(console_out *conout, string **stock, int *sizeStock, string **cart, int *sizeCart)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 18 / 2)
+    cout << setposx(conout->getsize().X / 2 - 15 / 2)
          << setposy(1)
-         << "SELECIONAR PRODUTO";
+         << "SELECT PRODUCT";
     showStock(conout, stock, sizeStock, true, true);
     showCart(conout, stock, cart, sizeCart, false);
     int id, quantidade, quantStock;
     do // input product
     {
-        customCout(conout, "O que vais querer comprar? (id)");
+        customCout(conout, "Select a product? (id)");
         id = customCini(conout);
     } while (checkLineOf(stock, 0, to_string(id)) == -1);
     string inCart = selectSQL(1, cart, 0, to_string(id));
@@ -1232,7 +1227,7 @@ void selecionarProduto(console_out *conout, string **stock, int *sizeStock, stri
     quantStock = stoi(selectSQL(2, stock, 0, to_string(id))) - numCart;
     do // input quantity
     {
-        customCout(conout, "quanto?");
+        customCout(conout, "Quantity?");
         quantidade = customCini(conout);
     } while (quantStock < quantidade || (numCart + quantidade) < 0 || quantidade < 0);
     customCout(conout, "");
@@ -1266,15 +1261,15 @@ submenu */
 void removerProduto(console_out *conout, string **stock, int *sizeStock, string **cart, int *sizeCart)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 28 / 2)
+    cout << setposx(conout->getsize().X / 2 - 26 / 2)
          << setposy(1)
-         << "SELECIONAR PRODUTO A REMOVER";
+         << "REMOVE A PRODUCT";
     showStock(conout, stock, sizeStock, true, true);
     showCart(conout, stock, cart, sizeCart, false);
     int id, quantidade, quantStock;
     do // input product
     {
-        customCout(conout, "O que vais querer remover? (id)");
+        customCout(conout, "Select what to remove? (id)");
         id = customCini(conout);
     } while (checkLineOf(cart, 0, to_string(id)) == -1);
     string inCart = selectSQL(1, cart, 0, to_string(id));
@@ -1282,7 +1277,7 @@ void removerProduto(console_out *conout, string **stock, int *sizeStock, string 
     quantStock = stoi(selectSQL(2, stock, 0, to_string(id))) - numCart;
     do // input quantity
     {
-        customCout(conout, "quanto?");
+        customCout(conout, "Quantity?");
         quantidade = customCini(conout);
     } while (numCart < quantidade || quantidade < 0);
     customCout(conout, "");
@@ -1314,11 +1309,11 @@ void checkout(console_out *conout, string **stock, string **clientes, int *sizeC
         cout << setposx(conout->getsize().X / 2 - 8 / 2)
              << setposy(1)
              << "CHECKOUT";
-        customCout(conout, "Confirmar que quer pagar (S/N)");
+        customCout(conout, "Confirm you want to pay (Y/N)");
         choice = customCins(conout);
         customCout(conout, "");
-    } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
-    if (choice == "s" || choice == "S")
+    } while (choice != "y" && choice != "Y" && choice != "n" && choice != "N");
+    if (choice == "y" || choice == "Y")
     {
         sorteio(conout, stock, clientes, sizeClientes, vendas, sizeVendas, compras, sizeCompras, cart, sizeCart);
         imprimirTalao(conout, stock, clientes, vendas, compras, sizeCompras, checkHighestId(vendas, 0));
@@ -1331,19 +1326,19 @@ void checkout(console_out *conout, string **stock, string **clientes, int *sizeC
 void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 22 / 2)
+    cout << setposx(conout->getsize().X / 2 - 21 / 2)
          << setposy(1)
-         << "CRIACAO DE ARTIGO NOVO";
+         << "CREATE A NEW PRODUCT";
     float preco_fabrica;
     string nome;
-    customCout(conout, "Insira o nome do artigo: "); // input product name
+    customCout(conout, "Insert the name of the product: "); // input product name
     nome = customCins(conout);
     while (checkLineOf(stock, 1, nome) != -1)
     {
-        customCout(conout, "Artigo ja existente, insira novo: ");
+        customCout(conout, "Product already exists, insert a new one: ");
         nome = customCins(conout);
     }
-    customCout(conout, "Preco base do artigo: "); // input value
+    customCout(conout, "Base price: "); // input value
     preco_fabrica = customCinf(conout);
     // tables update
     stock[*sizeStock][0] = to_string(checkHighestId(stock, 0) + 1);
@@ -1357,19 +1352,19 @@ void criacaoArtigo(console_out *conout, string **stock, int *sizeStock)
 void adicionarStock(console_out *conout, string **stock, int *sizeStock)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 15 / 2)
+    cout << setposx(conout->getsize().X / 2 - 9 / 2)
          << setposy(1)
-         << "ADICIONAR STOCK";
+         << "ADD STOCK";
     showStock(conout, stock, sizeStock, true, false);
     int id, quantidade;
     do // input product
     {
-        customCout(conout, "Insira o id do artigo");
+        customCout(conout, "Select the product (id)");
         id = customCini(conout);
     } while (checkLineOf(stock, 0, to_string(id)) == -1);
     do // quantity
     {
-        customCout(conout, "Quanto vai adicionar?");
+        customCout(conout, "Quantity to add?");
         quantidade = customCini(conout);
     } while (quantidade < 0);
     stock[checkLineOf(stock, 0, to_string(id))][2] = to_string(stoi(stock[checkLineOf(stock, 0, to_string(id))][2]) + quantidade);
@@ -1379,23 +1374,23 @@ void adicionarStock(console_out *conout, string **stock, int *sizeStock)
 void eliminarProduto(console_out *conout, string **stock, int *sizeStock)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 16 / 2)
+    cout << setposx(conout->getsize().X / 2 - 14 / 2)
          << setposy(1)
-         << "ELIMINAR PRODUTO";
+         << "DELETE PRODUCT";
     showStock(conout, stock, sizeStock, true, false);
     int id;
     do // input product
     {
-        customCout(conout, "Insira o id do artigo");
+        customCout(conout, "Select the product: (id)");
         id = customCini(conout);
     } while (checkLineOf(stock, 0, to_string(id)) == -1);
     string choice;
     do // input confirm
     {
-        customCout(conout, "Queres mesmo eliminar o produto? (S/N)");
+        customCout(conout, "Confirm you want to delete? (Y/N)");
         choice = customCins(conout);
-    } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
-    if (choice == "s" || choice == "S") // tables update
+    } while (choice != "y" && choice != "Y" && choice != "n" && choice != "N");
+    if (choice == "y" || choice == "Y") // tables update
     {
         cleanLine(stock, checkLineOf(stock, 0, to_string(id)), 4);
         compactTable(stock, 4);
@@ -1422,8 +1417,8 @@ void relatorioStock(console_out *conout, string **stock, int *sizeStock)
         valorTotal += quantidadeAtual * stof(stock[i][3]);
     }
     cout << setposx(Xpos - 15 - setPrecision2(valorTotal).length()) << "Total stock: " << settextcolor(console_text_colors::light_yellow) << stockTotal << settextcolor(console_text_colors::white) << endl
-         << setposx(Xpos - 21 - setPrecision2(valorTotal).length()) << "Valor total s/IVA: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 1.30) << euro(conout) << settextcolor(console_text_colors::white) << endl
-         << setposx(Xpos - 18 - setPrecision2(valorTotal).length()) << "Possivel lucro: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 0.3) << euro(conout) << settextcolor(console_text_colors::white) << endl;
+         << setposx(Xpos - 21 - setPrecision2(valorTotal).length()) << "Total value wo/IVA: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 1.30) << euro(conout) << settextcolor(console_text_colors::white) << endl
+         << setposx(Xpos - 18 - setPrecision2(valorTotal).length()) << "Possible gains: " << settextcolor(console_text_colors::light_yellow) << setPrecision2(valorTotal * 0.3) << euro(conout) << settextcolor(console_text_colors::white) << endl;
     pressEnter(conout, 2, true);
 };
 
@@ -1432,16 +1427,16 @@ void relatorioVendasProduto(console_out *conout, string **stock, int *sizeStock,
 {
     system("cls||clear");
     showStock(conout, stock, sizeStock, true, false);
-    customCout(conout, "Insira o nome do produto"); // input product name
+    customCout(conout, "Insert the product name:"); // input product name
     string produto = customCins(conout);
     while (checkLineOf(stock, 1, produto) == -1)
     {
-        customCout(conout, "Produto nao encontrado, insira de novo");
+        customCout(conout, "Product not found, insert again:");
         produto = customCins(conout);
     }
     system("cls||clear");
     int quantidadeInfo = 4;
-    string text[] = {"Quantidade em stock: ", "Quantidade vendida: ", "Possivel lucro: ", "Lucro ja adquirido: "};
+    string text[] = {"Quantity in stock: ", "Quantity sold: ", "Possible gains: ", "Gains until now: "};
     string output[] = {"", "", "", ""};
     // quantos em stock
     output[0] = selectSQL(2, stock, 1, produto);
@@ -1482,7 +1477,7 @@ void relatorioVendasProduto(console_out *conout, string **stock, int *sizeStock,
         }
     }
     cout << setposy(2)
-         << setposx(middle - 31 / 2) << "RELATORIO DE VENDAS POR PRODUTO" << endl
+         << setposx(middle - 24 / 2) << "SALE SUMMARY PER PRODUCT" << endl
          << endl
          << setposx(middle - produto.length() / 2) << produto << endl
          << endl;
@@ -1503,15 +1498,31 @@ void relatorioVendasCliente(console_out *conout, string **stock, string **client
 {
     system("cls||clear");
     showClientes(conout, clientes, sizeClientes, false);
-    customCout(conout, "Insira o nome do cliente"); // input client name
+    customCout(conout, "Insert clients name:"); // input client name
     string cliente = customCins(conout);
     while (checkLineOf(clientes, 1, cliente) == -1)
     {
-        customCout(conout, "Cliente nao encontrado, insira de novo");
+        customCout(conout, "Client not found, insert again:");
         cliente = customCins(conout);
     }
+        int middle = conout->getsize().X / 2;
+
+    if (checkLineOf(vendas, 1, selectSQL(0, clientes, 1, cliente)) == -1)
+    {
+        system("cls||clear");
+        cout << setposy(2)
+         << setposx(middle - 24 / 2) << "SALES SUMMARY PER CLIENT" << endl
+         << endl
+         << setposx(middle - cliente.length() / 2) << cliente << endl
+         << endl;
+        customCout(conout, "Client hasn't bought anything yet");
+        pressEnter(conout, 1, false);
+        return;
+    }
+    
+
     system("cls||clear");
-    string text[] = {"Quantidade de compras: ", "Quantidade de produtos comprados: ", "Valor gasto: ", "Lucro dado: "};
+    string text[] = {"Number of transactions: ", "Quantity bought: ", "Money spent: ", "Gains given: "};
     string output[] = {"", "", "", ""};
     int quantDeCompras = 0;
     int quantItemComprado = 0;
@@ -1536,7 +1547,6 @@ void relatorioVendasCliente(console_out *conout, string **stock, string **client
     output[2] = setPrecision2(valorGasto * 1.30 * 1.23);
     output[3] = setPrecision2(valorGasto * 0.30);
     // Display output
-    int middle = conout->getsize().X / 2;
     int biggestString[] = {0, 0};
     for (int i = 0; i < 4; i++)
     {
@@ -1559,7 +1569,7 @@ void relatorioVendasCliente(console_out *conout, string **stock, string **client
         }
     }
     cout << setposy(2)
-         << setposx(middle - 31 / 2) << "RELATORIO DE VENDAS POR CLIENTE" << endl
+         << setposx(middle - 24 / 2) << "SALES SUMMARY PER CLIENT" << endl
          << endl
          << setposx(middle - cliente.length() / 2) << cliente << endl
          << endl;
@@ -1579,7 +1589,7 @@ void relatorioVendasCliente(console_out *conout, string **stock, string **client
 void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras)
 {
     system("cls||clear");
-    string text[] = {"Produto mais vendido: ", "Produto menos vendido: ", "Produto com mais lucro: ", "Cliente que mais comprou: "};
+    string text[] = {"Most sold product: ", "Least sold product: ", "Product with highest gains: ", "Best customer: "};
     string output[] = {"", "", "", ""}; // maisVendido, menosVendido, maisLucro, melhorCliente
     // produto mais vendido e menos vendido
     int quantMaior = INT_MIN;
@@ -1668,7 +1678,7 @@ void relatorioTotalVendas(console_out *conout, string **stock, int *sizeStock, s
         }
     }
     cout << setposy(2)
-         << setposx(middle - 25 / 2) << "RELATORIO TOTAL DE VENDAS" << endl
+         << setposx(middle - 25 / 2) << "TOTAL SALES SUMMARY" << endl
          << endl;
     for (int i = 0; i < 4; i++)
     {
@@ -1696,23 +1706,23 @@ void criarCliente(console_out *conout, string **clientes, int *sizeClientes)
 void eliminarCliente(console_out *conout, string **clientes, int *sizeClientes)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 16 / 2)
+    cout << setposx(conout->getsize().X / 2 - 13 / 2)
          << setposy(1)
-         << "ELIMINAR CLIENTE";
+         << "DELETE CLIENT";
     showClientes(conout, clientes, sizeClientes, false);
     int id;
     do // input client number
     {
-        customCout(conout, "Insira o numero de cliente");
+        customCout(conout, "Insert clients id:");
         id = customCini(conout);
     } while (checkLineOf(clientes, 0, to_string(id)) == -1);
     string choice;
     do // input confirm
     {
-        customCout(conout, "Queres mesmo eliminar o cliente? (S/N)");
+        customCout(conout, "Confirm you want to delete? (Y/N)");
         choice = customCins(conout);
-    } while (choice != "s" && choice != "S" && choice != "n" && choice != "N");
-    if (choice == "s" || choice == "S")
+    } while (choice != "y" && choice != "Y" && choice != "n" && choice != "N");
+    if (choice == "y" || choice == "Y")
     {
         cleanLine(clientes, checkLineOf(clientes, 0, to_string(id)), 4);
         compactTable(clientes, 4);
@@ -1724,22 +1734,22 @@ void eliminarCliente(console_out *conout, string **clientes, int *sizeClientes)
 void alterarNomeCliente(console_out *conout, string **clientes, int *sizeClientes)
 {
     system("cls||clear");
-    cout << setposx(conout->getsize().X / 2 - 23 / 2)
+    cout << setposx(conout->getsize().X / 2 - 19 / 2)
          << setposy(1)
-         << "ALTERAR NOME DO CLIENTE";
+         << "CHANGE CLIENTS NAME";
     showClientes(conout, clientes, sizeClientes, false);
     int id;
     do // input client number
     {
-        customCout(conout, "Insira o numero de cliente");
+        customCout(conout, "Insert clients id:");
         id = customCini(conout);
     } while (checkLineOf(clientes, 0, to_string(id)) == -1);
     string newName;
-    customCout(conout, "Insira o novo nome"); // input new name
+    customCout(conout, "Insert a new name:"); // input new name
     newName = customCins(conout);
     while (checkLineOf(clientes, 1, newName) != -1)
     {
-        customCout(conout, "Cliente ja existe, insira o novo nome"); // input new name
+        customCout(conout, "Client already exists, insert a new name:"); // input new name
         newName = customCins(conout);
     }
     clientes[checkLineOf(clientes, 0, to_string(id))][1] = newName;
@@ -1799,7 +1809,7 @@ void readTables(string **stock, int *sizeStock, string **clientes, int *sizeClie
 /* Display Menu 1 EFECTUAR VENDA */
 void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Selecionar produto", "2 - Remover produto", "3 - Checkout", "4 - Imprimir talao no ecra", "0 - Voltar"};
+    string text[] = {"1 - Select product", "2 - Remove product", "3 - Checkout", "4 - Print invoice", "0 - Back"};
     const int biggestString = getBiggestStringSize(text, 5);
     bool repetition = true;
     while (repetition)
@@ -1810,9 +1820,9 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
             system("cls||clear");
             showStock(conout, stock, sizeStock, true, true);
             showCart(conout, stock, cart, sizeCart, false);
-            cout << setposx(conout->getsize().X / 2 - 14 / 2)
+            cout << setposx(conout->getsize().X / 2 - 9 / 2)
                  << setposy(1)
-                 << "EFECTUAR VENDA"
+                 << "MAKE A SALE"
                  << endl
                  << endl
                  << setposx(conout->getsize().X / 2 - biggestString / 2)
@@ -1832,7 +1842,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
                  << text[4]
                  << endl
                  << endl;
-            customCout(conout, "Escolhe uma opcao");
+            customCout(conout, "Choose an option");
             choice = customCini(conout);
             customCout(conout, "");
         } while (choice < 0 || choice > 4);
@@ -1865,7 +1875,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
                 int fatura;
                 do
                 {
-                    customCout(conout, "Escolha fatura");
+                    customCout(conout, "Choose invoice");
                     fatura = customCini(conout);
                 } while (checkLineOf(vendas, 0, to_string(fatura)) == -1);
                 imprimirTalao(conout, stock, clientes, vendas, compras, sizeCompras, fatura);
@@ -1881,7 +1891,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Menu 2 COMPRAR STOCK */
 void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Criacao de artigo novo", "2 - Adicionar stock a artigo existente", "3 - Eliminar produto", "0 - Voltar"};
+    string text[] = {"1 - Create a new product", "2 - Add stock to product", "3 - Delete product", "0 - Back"};
     const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
@@ -1891,9 +1901,9 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
         {
             system("cls||clear");
             showStock(conout, stock, sizeStock, true, false);
-            cout << setposx(conout->getsize().X / 2 - 13 / 2)
+            cout << setposx(conout->getsize().X / 2 - 9 / 2)
                  << setposy(1)
-                 << "COMPRAR STOCK"
+                 << "BUY STOCK"
                  << endl
                  << endl
                  << setposx(conout->getsize().X / 2 - biggestString / 2)
@@ -1910,7 +1920,7 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
                  << text[3]
                  << endl
                  << endl;
-            customCout(conout, "Escolhe uma opcao");
+            customCout(conout, "Choose an option");
             choice = customCini(conout);
             customCout(conout, "");
         } while (choice < 0 || choice > 3);
@@ -1938,7 +1948,7 @@ void displayMenu2(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Menu 3 CRIACAO DE RELATOROS */
 void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Relatorio de stock", "2 - Relatorio de vendas por produto", "3 - Relatorio de vendas por cliente", "4 - Relatorio total de vendas", "0 - Voltar"};
+    string text[] = {"1 - Stock summary", "2 - Sales summary per product", "3 - Sales summary per client", "4 - Total sales summary", "0 - Back"};
     const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
@@ -1947,9 +1957,9 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
         do
         {
             system("cls||clear");
-            cout << setposx(conout->getsize().X / 2 - 20 / 2)
+            cout << setposx(conout->getsize().X / 2 - 9 / 2)
                  << setposy(1)
-                 << "CRIACAO DE RELATOROS"
+                 << "SUMMARIES"
                  << endl
                  << endl
                  << setposx(conout->getsize().X / 2 - biggestString / 2)
@@ -1969,7 +1979,7 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
                  << text[4]
                  << endl
                  << endl;
-            customCout(conout, "Escolhe uma opcao");
+            customCout(conout, "Choose an option");
             choice = customCini(conout);
             customCout(conout, "");
         } while (choice < 0 || choice > 4);
@@ -2001,7 +2011,7 @@ void displayMenu3(console_out *conout, string **stock, int *sizeStock, string **
 /* Display Menu 4 OPCOES DE CLIENTE */
 void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[] = {"1 - Criar cliente", "2 - Alterar nome", "3 - Eliminar cliente", "0 - Voltar"};
+    string text[] = {"1 - Create client", "2 - Change clients name", "3 - Delete client", "0 - Back"};
     const int biggestString = getBiggestStringSize(text, 4);
     bool repetition = true;
     while (repetition)
@@ -2013,7 +2023,7 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
             showClientes(conout, clientes, sizeClientes, true);
             cout << setposx((conout->getsize().X / 4) * 3 - 17 / 2)
                  << setposy(1)
-                 << "OPCOES DE CLIENTE"
+                 << "CLIENT OPTIONS"
                  << endl
                  << endl
                  << setposx((conout->getsize().X / 4) * 3 - biggestString / 2)
@@ -2030,7 +2040,7 @@ void displayMenu4(console_out *conout, string **stock, int *sizeStock, string **
                  << text[3]
                  << endl
                  << endl;
-            customCout(conout, "Escolhe uma opcao");
+            customCout(conout, "Choose an option");
             choice = customCini(conout);
             customCout(conout, "");
         } while (choice < 0 || choice > 3);
@@ -2065,16 +2075,16 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
         cout << setposx(conout->getsize().X / 2 - 7 / 2)
              << setposy(1)
              << settextcolor(console_text_colors::red)
-             << "ATENCAO";
+             << "CAUTION";
         caution(conout, conout->getsize().X / 2, 4);
-        customCout(conout, "Queres mesmo alterar a base de dados? (S/N)");
+        customCout(conout, "Do you really want to change the data base? (Y/N)");
         bd = customCins(conout);
         customCout(conout, "");
         cout << settextcolor(console_text_colors::white);
-    } while (bd != "s" && bd != "S" && bd != "n" && bd != "N");
-    if (bd == "s" || bd == "S")
+    } while (bd != "y" && bd != "Y" && bd != "n" && bd != "N");
+    if (bd == "y" || bd == "Y")
     {
-        string text[4] = {"1 - Atualizar BD", "2 - Salvar BD", "3 - BD default", "0 - Voltar"};
+        string text[4] = {"1 - Update DB", "2 - Save DB", "3 - DB default", "0 - Back"};
         const int biggestString = getBiggestStringSize(text, 4);
         bool repetition = true;
         while (repetition)
@@ -2085,7 +2095,7 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
                 system("cls||clear");
                 cout << setposx(conout->getsize().X / 2 - 10 / 2)
                      << setposy(1)
-                     << "DEFINICOES"
+                     << "SETTINGS"
                      << endl
                      << endl
                      << setposx(conout->getsize().X / 2 - biggestString / 2)
@@ -2102,7 +2112,7 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
                      << text[3]
                      << endl
                      << endl;
-                customCout(conout, "Escolhe uma opcao");
+                customCout(conout, "Choose an option");
                 choice = customCini(conout);
                 customCout(conout, "");
             } while (choice < 0 || choice > 3);
@@ -2141,7 +2151,7 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
 /* Display Main Menu */
 void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string **clientes, int *sizeClientes, string **vendas, int *sizeVendas, string **compras, int *sizeCompras, string **cart, int *sizeCart)
 {
-    string text[6] = {"1 - Efectuar venda", "2 - Compra Stock", "3 - Criacao de relatorios", "4 - Gestao de clientes", "5 - Definicoes", "0 - Sair"};
+    string text[6] = {"1 - Make a sale", "2 - Buy stock", "3 - Summaries", "4 - Manage clients", "5 - Settings", "0 - Quit"};
     const int biggestString = getBiggestStringSize(text, 6);
     bool repetition = true;
     while (repetition)
@@ -2175,7 +2185,7 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
                  << text[5]
                  << endl
                  << endl;
-            customCout(conout, "Escolhe uma opcao");
+            customCout(conout, "Choose an option");
             choice = customCini(conout);
             customCout(conout, "");
         } while (choice < 0 || choice > 5);
@@ -2209,13 +2219,13 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
                 cout << setposx(conout->getsize().X / 2 - 7 / 2)
                      << setposy(1)
                      << settextcolor(console_text_colors::red)
-                     << "ATENCAO";
+                     << "CAUTION";
                 caution(conout, conout->getsize().X / 2, 4);
-                customCout(conout, "Queres mesmo fechar a aplicacao? (S/N)");
+                customCout(conout, "Do you really want to quit? (Y/N)");
                 ex = customCins(conout);
                 customCout(conout, "");
-            } while (ex != "s" && ex != "S" && ex != "n" && ex != "N");
-            if (ex == "s" || ex == "S")
+            } while (ex != "y" && ex != "Y" && ex != "n" && ex != "N");
+            if (ex == "y" || ex == "Y")
             {
                 repetition = false;
             }

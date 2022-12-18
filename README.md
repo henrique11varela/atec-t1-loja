@@ -72,6 +72,7 @@ Na primeira vez que se abre o programa, não há base de dados, as tabelas estã
 ## Outros
 
 - Todas as tabelas têm um maximo de 100 linhas e são matrizes de strings.
+- Caso as tabelas de preenchimento automático (*Vendas* e *Compras*) estejam cheias (com 100 linhas) a tabela arranja espaço suficiente apagando as linhas mais antigas. Ao apagar essas linhas, para não deixar informação não relacionada, apaga também as linhas referentes à mesma transação da outra tabela.
 - Para fazer a confirmação das inputs usei os `customCini` e `customCinf` de maneira a só aceitar números quando necessário.
 - Para ler strings completas (incluindo espaços) usei o `customCins`.  
 - Para evitar repetições de dados usei o `checkLineOf`, se retornasse *-1* então não existia na tabela e aceitava a input.  
