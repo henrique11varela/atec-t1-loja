@@ -191,7 +191,7 @@ bool txtSet(string fileName, string **table, int sizeTable, int C)
 /* Displays an apple on screen */
 void apple(console_out *conout, int xr, int yr)
 {
-    int x = xr - 18;// - largura da imagem
+    int x = xr - 18; // - largura da imagem
     cout << setposy(yr) << setposx(x + 29) << settextcolor(console_text_colors::green) << "___\n"
          << setposx(x + 26) << "_/`.-'`.\n"
          << setposx(x + 16) << settextcolor(console_text_colors::yellow) << "_" << setposx(x + 24) << settextcolor(console_text_colors::green) << "_/` .  _.'\n"
@@ -220,25 +220,25 @@ void apple(console_out *conout, int xr, int yr)
 /* Displays a caution sign on screen */
 void caution(console_out *conout, int xr, int yr)
 {
-    int x = xr - 16;// - largura da imagem
+    int x = xr - 16; // - largura da imagem
     cout << setposy(yr)
-         << setposx(x) << "               88" << endl
-         << setposx(x) << "              8888" << endl
-         << setposx(x) << "             888888" << endl
-         << setposx(x) << "            888  888" << endl
-         << setposx(x) << "           888    888" << endl
-         << setposx(x) << "          888      888" << endl
-         << setposx(x) << "         888   888  888" << endl
-         << setposx(x) << "        888    888   888" << endl
-         << setposx(x) << "       888     888    888" << endl
-         << setposx(x) << "      888      888     888" << endl
-         << setposx(x) << "     888       88       888" << endl
-         << setposx(x) << "    888        88        888" << endl
-         << setposx(x) << "   888                    888" << endl
-         << setposx(x) << "  888          88          888" << endl
-         << setposx(x) << " 888                        888" << endl
-         << setposx(x) << "88888888888888888888888888888888" << endl
-         << setposx(x) << "88888888888888888888888888888888" << endl;
+         << setposx(x + 15) << "888" << endl
+         << setposx(x + 14) << "88888" << endl
+         << setposx(x + 13) << "8888888" << endl
+         << setposx(x + 12) << "888   888" << endl
+         << setposx(x + 11) << "888     888" << endl
+         << setposx(x + 10) << "888       888" << endl
+         << setposx(x + 9) << "888   888   888" << endl
+         << setposx(x + 8) << "888    888    888" << endl
+         << setposx(x + 7) << "888     888     888" << endl
+         << setposx(x + 6) << "888      888      888" << endl
+         << setposx(x + 5) << "888       888       888" << endl
+         << setposx(x + 4) << "888        888        888" << endl
+         << setposx(x + 3) << "888                     888" << endl
+         << setposx(x + 2) << "888          888          888" << endl
+         << setposx(x + 1) << "888                         888" << endl
+         << setposx(x) << "888888888888888888888888888888888" << endl
+         << setposx(x) << "888888888888888888888888888888888" << endl;
 };
 
 /* Displays the white background in for width chars */
@@ -2062,11 +2062,11 @@ void def(console_out *conout, string **stock, int *sizeStock, string **clientes,
     do
     {
         system("cls||clear");
-        cout << setposx(conout->getsize().X / 2 - 8 / 2)
+        cout << setposx(conout->getsize().X / 2 - 7 / 2)
              << setposy(1)
              << settextcolor(console_text_colors::red)
              << "ATENCAO";
-        caution(conout, conout->getsize().X / 2, 3);
+        caution(conout, conout->getsize().X / 2, 4);
         customCout(conout, "Queres mesmo alterar a base de dados? (S/N)");
         bd = customCins(conout);
         customCout(conout, "");
@@ -2206,11 +2206,11 @@ void displayMainMenu(console_out *conout, string **stock, int *sizeStock, string
             do
             {
                 system("cls||clear");
-                cout << setposx(conout->getsize().X / 2 - 8 / 2)
+                cout << setposx(conout->getsize().X / 2 - 7 / 2)
                      << setposy(1)
                      << settextcolor(console_text_colors::red)
                      << "ATENCAO";
-                caution(conout, conout->getsize().X / 2, 3);
+                caution(conout, conout->getsize().X / 2, 4);
                 customCout(conout, "Queres mesmo fechar a aplicacao? (S/N)");
                 ex = customCins(conout);
                 customCout(conout, "");
