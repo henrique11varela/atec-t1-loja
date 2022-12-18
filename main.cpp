@@ -13,9 +13,9 @@ to learn inicio do main
 https://stackoverflow.com/questions/3471520/how-to-remove-scrollbars-in-console-windows-c
 */
 
-//todo 
-//todo pagamento venda e compra 100+
-//todo offer venda e compra 100+
+// todo
+// todo pagamento venda e compra 100+
+// todo offer venda e compra 100+
 /*  //? logic
     "compact table" but eliminates the lowest id                //? shiftTable(string **table, int C)  clear first line and compact normally
     and add new line to last place                              //? basic table[i][j] = someValue
@@ -388,7 +388,7 @@ returns true if successful, false if it failed*/
 bool compactTable(string **table, int C)
 {
     int line = 0;
-    while (line < 100)
+    while (line < 99)
     {
         if (table[line][0] == "" && table[line + 1][0] == "")
         {
@@ -831,22 +831,63 @@ void pagamento(console_out *conout, string **stock, string **clientes, int *size
     time_t t = time(nullptr);
     tm *now = localtime(&t);
     string idFatura = to_string(checkHighestId(vendas, 0) + 1);
-    vendas[*sizeVendas][0] = idFatura;
-    vendas[*sizeVendas][1] = to_string(idCliente);
-    vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
-    vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
-    (*sizeVendas)++;
-    for (int i = 0; i < *sizeCart; i++)
+    if (*sizeVendas == 100)
     {
-        compras[*sizeCompras][0] = idFatura;
-        compras[*sizeCompras][1] = cart[i][0];
-        compras[*sizeCompras][2] = cart[i][1];
-        (*sizeCompras)++;
-        int lineInStock = checkLineOf(stock, 0, cart[i][0]);
-        stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
-        cleanLine(cart, i, 2);
+        cleanLine(vendas, 0, 4);
+        (*sizeVendas)--;
+        compactTable(vendas, 4);
+        vendas[*sizeVendas][0] = idFatura;
+        vendas[*sizeVendas][1] = to_string(idCliente);
+        vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
+        vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
+        (*sizeVendas)++;
+        for (int i = 0; i < *sizeCart; i++)
+        {
+            if (*sizeCompras == 100)
+            {
+                cleanLine(compras, 0, 3);
+                (*sizeCompras)--;
+                compactTable(compras, 3);
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
+            else
+            {
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
+        }
+        *sizeCart = 0;
     }
-    *sizeCart = 0;
+    else
+    {
+        vendas[*sizeVendas][0] = idFatura;
+        vendas[*sizeVendas][1] = to_string(idCliente);
+        vendas[*sizeVendas][2] = setPrecision2(valorEntregue);
+        vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
+        (*sizeVendas)++;
+        for (int i = 0; i < *sizeCart; i++)
+        {
+            compras[*sizeCompras][0] = idFatura;
+            compras[*sizeCompras][1] = cart[i][0];
+            compras[*sizeCompras][2] = cart[i][1];
+            (*sizeCompras)++;
+            int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+            stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+            cleanLine(cart, i, 2);
+        }
+        *sizeCart = 0;
+    }
 };
 
 /* oferece a compra */
@@ -891,22 +932,63 @@ void offer(console_out *conout, string **stock, string **clientes, int *sizeClie
     time_t t = time(nullptr);
     tm *now = localtime(&t);
     string idFatura = to_string(checkHighestId(vendas, 0) + 1);
-    vendas[*sizeVendas][0] = idFatura;
-    vendas[*sizeVendas][1] = to_string(idCliente);
-    vendas[*sizeVendas][2] = to_string(-1);
-    vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
-    (*sizeVendas)++;
-    for (int i = 0; i < *sizeCart; i++)
+    if (*sizeVendas == 100)
     {
-        compras[*sizeCompras][0] = idFatura;
-        compras[*sizeCompras][1] = cart[i][0];
-        compras[*sizeCompras][2] = cart[i][1];
-        (*sizeCompras)++;
-        int lineInStock = checkLineOf(stock, 0, cart[i][0]);
-        stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
-        cleanLine(cart, i, 2);
+        cleanLine(vendas, 0, 4);
+        (*sizeVendas)--;
+        compactTable(vendas, 4);
+        vendas[*sizeVendas][0] = idFatura;
+        vendas[*sizeVendas][1] = to_string(idCliente);
+        vendas[*sizeVendas][2] = to_string(-1);
+        vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
+        (*sizeVendas)++;
+        for (int i = 0; i < *sizeCart; i++)
+        {
+            if (*sizeCompras == 100)
+            {
+                cleanLine(compras, 0, 3);
+                (*sizeCompras)--;
+                compactTable(compras, 3);
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
+            else
+            {
+                compras[*sizeCompras][0] = idFatura;
+                compras[*sizeCompras][1] = cart[i][0];
+                compras[*sizeCompras][2] = cart[i][1];
+                (*sizeCompras)++;
+                int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+                stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+                cleanLine(cart, i, 2);
+            }
+        }
+        *sizeCart = 0;
     }
-    *sizeCart = 0;
+    else
+    {
+        vendas[*sizeVendas][0] = idFatura;
+        vendas[*sizeVendas][1] = to_string(idCliente);
+        vendas[*sizeVendas][2] = to_string(-1);
+        vendas[*sizeVendas][3] = to_string(now->tm_mday) + "/" + to_string(now->tm_mon + 1) + "/" + to_string(now->tm_year + 1900);
+        (*sizeVendas)++;
+        for (int i = 0; i < *sizeCart; i++)
+        {
+            compras[*sizeCompras][0] = idFatura;
+            compras[*sizeCompras][1] = cart[i][0];
+            compras[*sizeCompras][2] = cart[i][1];
+            (*sizeCompras)++;
+            int lineInStock = checkLineOf(stock, 0, cart[i][0]);
+            stock[lineInStock][2] = to_string(stoi(stock[lineInStock][2]) - stoi(cart[i][1]));
+            cleanLine(cart, i, 2);
+        }
+        *sizeCart = 0;
+    }
 };
 
 /* faz o sorteio */
@@ -2101,7 +2183,7 @@ int main()
     // vec[item][atributo]
     string **stock = new string *[100];    // STOCK 0-id 1-nome 2-quantidade 3-preço_fabrica
     string **clientes = new string *[100]; // CLIENTE 0-id 1-nome 2-telefone 3-morada
-    string **vendas = new string *[100];   // VENDA 0-id_fatura 1-#id_cliente 3-quantidade 4-valor_entregue 5-data_(auto)
+    string **vendas = new string *[100];   // VENDA 0-id_fatura 1-#id_cliente 3-valor_entregue 4-data_(auto)
     string **compras = new string *[100];  // COMPRAS 0-#id_fatura 1-#id_produto 2-quantidade
     string **cart = new string *[100];     // cart 0-id_produto 1-quantidade **tabela deitada**
     int sizeStock = 0;
