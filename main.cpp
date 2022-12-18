@@ -1820,7 +1820,7 @@ void displayMenu1(console_out *conout, string **stock, int *sizeStock, string **
             system("cls||clear");
             showStock(conout, stock, sizeStock, true, true);
             showCart(conout, stock, cart, sizeCart, false);
-            cout << setposx(conout->getsize().X / 2 - 9 / 2)
+            cout << setposx(conout->getsize().X / 2 - 11 / 2)
                  << setposy(1)
                  << "MAKE A SALE"
                  << endl
