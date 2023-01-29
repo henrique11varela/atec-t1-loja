@@ -1,19 +1,20 @@
 ![top image](./Other/cabecalho.png)
 
-Este projecto é um trabalho em C++ para a UFCD 0789 do Curso de *Técnico Especialista em Tecnologias e Programação de Sistemas de Informação* que estou a tirar na ATEC.
+This is a C++ project for the UFCD 0789 of the *Specialist Technician in Technologies and Information Systems Programming* course that I am taking at ATEC.
 
-É um programa para ser utilizado pelo trabalhador numa loja para fazer a gestão de vendas, stock e clientes.
+It is a program to be used by a worker in a store to manage sales, stock, and customers.
+
+[PT](README_portuguese.md)
 
 ### Setup
 
-Na primeira vez que se abre o programa, não há base de dados, as tabelas estão todas vazias então é necessário usar a opção "BD default" nas "Definições" de modo a criar a base de dados com valores de teste.
+The first time the program is opened, there is no database, the tables are all empty, so it is necessary to use the "Default DB" option in the "Settings" in order to create the database with example values.
 
 ![Print](/Other/Print.png)
 
-
 ---
 
-# Sobre o programa:
+# About the program:
 
 ## Custom IO functions
 
@@ -21,106 +22,104 @@ Na primeira vez que se abre o programa, não há base de dados, as tabelas estã
 
 `int customCini(console_out conout)`
 `float customCinf(console_out conout)`
->Custom input que só aceita numeros, "i" só retorna int, "f" só retorna float.
+>Custom input that only accepts numbers, "i" only returns int, "f" only returns float.
 
 `string customCins(conout_out conout)`
->Custom input que retorna a linha toda como uma string.
+>Custom input that returns the whole line as a string.
 
 ### Custom Output
 
 `void customCout(console_out *conout, string text)`
->Imprime o *text* centrado por cima da input box.
+>Prints the *text* centered above the input box.
 
 `string setPrecision2(float input)`
->Retorna uma string da *input* com duas casas decimais.
+>Returns a string of the *input* with two decimal places.
 
 ## ImprovSQL
 
 ### Select
 
 `string selectSQL(int index_return, string **table, int index_value, string value)`
->Retorna o valor da *table* na coluna *index_return* onde a coluna *index_value* é igual a *value*.
+>Returns the value of the *table* in the *index_return* column where the *index_value* column is equal to *value*.
 
-### Gestão de tabelas
+### Table management
 
 `int checkLineOf(string **table, int X, string value)` 
->Retorna o index da linha da *table* onde a coluna *X* é igual a *value*, retorna *-1* se não existe.
+>Returns the index of the row in the *table* where the column *X* is equal to *value*, returns *-1* if it doesn't exist.
 
 `int checkHighestId(string **table, int X)`
->Retorna o maior valor numérico da coluna *X* da *table* .
+>Returns the highest numeric value of column *X* in table.
 
 `void cleanLine(string **table, int Y, int C)`
->Apaga os valores da *table* na linha *Y*. *C* é o número de colunas da *table*.
+>Deletes the values in *table* in row *Y*. *C* is the number of columns in *table*.
 
 `bool compactTable(string **table, int C)`
->Movimenta todos os valores da *table* "para cima" de modo a compactar a tabela eliminando espaços vazios.
+>Moves all values in the *table* "up" to compact the table and eliminate empty spaces.
 
 `bool txtGet(string fileName, string **table, int *sizeTable)`
->Importa os valores do ficheiro *fileName* para a tabela *table*.
+>Imports the values from the file *fileName* to the *table*.
 
 `bool txtSet(string fileName, string **table, int sizeTable, int C)`
->Exporta os valores da tabela *table* para o ficheiro *fileName*.
+>Exports the values of the *table* to the file *fileName*.
 
-### Display das tabelas
+### Table display
 
 `void showClientes(console_out *conout, string **clientes, int *sizeClientes, bool left)`  
 `void showStock(console_out *conout, string **stock, int *sizeStock, bool left, bool venda)`  
 `void showCart(console_out *conout, string **stock, string **cart, int *sizeCart, bool left)`  
 `void showVendas(console_out *conout, string **vendas, int *sizeVendas, string **clientes, bool left)`  
->Imprime as tabelas de *clientes*, *stock*, *cart* e *vendas* na consola.
+>Prints the *clientes*, stock, cart, and *vendas* tables in the console.
 
-## Outros
+## Other
 
-- Todas as tabelas têm um maximo de 100 linhas e são matrizes de strings.
-- Caso as tabelas de preenchimento automático (*Vendas* e *Compras*) estejam cheias (com 100 linhas) a tabela arranja espaço suficiente apagando as linhas mais antigas. Ao apagar essas linhas, para não deixar informação não relacionada, apaga também as linhas referentes à mesma transação da outra tabela.
-- Para fazer a confirmação das inputs usei os `customCini` e `customCinf` de maneira a só aceitar números quando necessário.
-- Para ler strings completas (incluindo espaços) usei o `customCins`.  
-- Para evitar repetições de dados usei o `checkLineOf`, se retornasse *-1* então não existia na tabela e aceitava a input.  
-- Sempre que se elimina algo, pede para confirmar a ação.
-- Nos relatórios por produto/cliente a pesquisa é feita apartir do nome em vez do id.  
-- Para a manipulação da consola usei a livraria [cppconlib](https://github.com/mariusbancila/cppconlib) do [mariusbancila](https://github.com/mariusbancila).
-- Para a importação e exportação da base de dados usei a livraria [fstream](https://cplusplus.com/reference/fstream/fstream/).
-- No menu das "Settings" há 3 opções: 
-  - "Update DB" que obriga o programa a reler os ficheiros txt e atualiza a base de dados,
-  - "Save DB" que escreve a base de dados nos ficheiros txt devidos (para o caso de algum se apagar),
-  - "DB default" que põe os valores default nas tabelas e ficheiros txt devidos.
-- O sorteio da venda tem 20% de chance de oferecer a compra.
+- All tables have a maximum of 100 rows and are string matrices.
+- In case the automatic fill tables (Sales and Purchases) are full (with 100 rows), the table makes enough space by deleting the oldest rows. When deleting these lines, in order to not leave unrelated information behind, it also deletes the lines related to the same transaction in the other table.
+- To confirm inputs, I used `customCini` and `customCinf` to only accept numbers when necessary.
+- To read complete strings (including spaces) I used customCins.
+- To avoid data repetition, I used checkLineOf, if it returned -1 then it did not exist in the table and accepted the input.
+- Whenever something is removed, it asks for confirmation of the action.
+- In the product/customer reports, the search is based on the name instead of the id.
+- For console manipulation, I used the library [cppconlib](https://github.com/mariusbancila/cppconlib) by [mariusbancila](https://github.com/mariusbancila).
+- For importing and exporting the database, I used the [fstream](https://cplusplus.com/reference/fstream/fstream/) library.
+- In the "Settings" menu there are 3 options:
+  - "Update DB" which makes the program read the txt files and updates the database,
+  - "Save DB" which writes the database to the txt files (in case one of them gets deleted),
+  - "DB default" which puts default values in the tables and txt files.
+- The sale raffle has a 20% chance of offering the purchase.
 
+## Data bases in matrices
 
-
-## Base de dados em Matrizes
-
-Dicionário  
-`chave primaria`
+Dictionary  
+`primary key`
 
 #### Stock
-| `0`  | 1    | 2          | 3                |
-| ---- | ---- | ---------- | ---------------- |
-| `id` | nome | quantidade | preço de fabrica |
+| `0`  | 1    | 2        | 3               |
+| ---- | ---- | -------- | --------------- |
+| `id` | name | quantity | "factory" price |
 
-#### Clientes
-| `0`  | 1    | 2        | 3      |
-| ---- | ---- | -------- | ------ |
-| `id` | nome | telefone | morada |
+#### Clientes (Clients)
+| `0`  | 1    | 2     | 3       |
+| ---- | ---- | ----- | ------- |
+| `id` | name | phone | address |
 
-#### Vendas
-| `0`            | 1          | 2              | 3    |
-| -------------- | ---------- | -------------- | ---- |
-| `id de fatura` | id cliente | valor entregue | data |
+#### Vendas (Sales)
+| `0`           | 1         | 2     | 3    |
+| ------------- | --------- | ----- | ---- |
+| `id purchase` | id client | money | date |
 
-#### Compras
-| `0`         | `1`          | 2          |
-| ----------- | ------------ | ---------- |
-| `id fatura` | `id produto` | quantidade |
+#### Compras (Products sold)
+| `0`           | `1`          | 2        |
+| ------------- | ------------ | -------- |
+| `id purchase` | `id product` | quantity |
 
 #### Cart
-(é uma tabela que guarda valores temporariamente)
-| `0`          | 1          |
-| ------------ | ---------- |
-| `id produto` | quantidade |
+(it's a temporary table)
+| `0`          | 1        |
+| ------------ | -------- |
+| `id product` | quantity |
 
 ---
 
-## Esquema dos menus + Tabelas das bases de dados
+## Menu scheme
 
-![Esquema dos menus](./Other/esquema.png)
+![Menu scheme](./Other/esquema.png)
